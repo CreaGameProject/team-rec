@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class CompasRader : MonoBehaviour
+public class CompassRader : MonoBehaviour
 {
     
 }
