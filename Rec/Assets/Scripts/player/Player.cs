@@ -60,4 +60,9 @@ public class Player : MonoBehaviour
     {
         laserGauge++;
     }
+
+    public void decreaseLife()
+    {
+        life--;
+    }
 }
