@@ -7,29 +7,33 @@ public class Player : MonoBehaviour
     private int life;
     private float laserGauge;
 
+    private float angle;
+
     // Start is called before the first frame update
     void Start()
     {
         life = 3;
         laserGauge = 5;
+        angle = 1f / 180f * Mathf.PI;
     }
 
     // Update is called once per frame
     void Update()
     {
         getInput();
+        
     }
 
     void getInput()
     {
         if (Input.GetKey(KeyCode.A))
         {
-            transform.Translate(-0.01f,0,0);
+            transform.Translate(-0.01f*Mathf.Cos(transform.rotation.y * angle),0, -0.01f * Mathf.Sin(transform.rotation.y * angle));
         }
 
         if (Input.GetKey(KeyCode.D))
         {
-            transform.Translate(0.01f, 0, 0);
+            transform.Translate(0.01f*Mathf.Cos(transform.rotation.y * angle), 0, 0.01f * Mathf.Sin(transform.rotation.y * angle));
         }
         
         if (Input.GetKey(KeyCode.W))

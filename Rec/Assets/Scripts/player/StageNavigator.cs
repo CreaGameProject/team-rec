@@ -18,4 +18,6 @@ public class StageNavigator : MonoBehaviour
     {
         transform.position = navigatorPosition;
     }
+
+
 }
