@@ -17,7 +17,7 @@ public class DissolveEffect : MonoBehaviour
     }
 
     private void Update() {
-        dissolveProportion += Time.deltaTime * 0.8f;
+        dissolveProportion += Time.deltaTime * 0.7f;
         rend.material.SetFloat("_DissolveProportion",dissolveProportion);
     }
 }
