@@ -6,6 +6,7 @@ using UnityEngine.UI;
 public class Marker : MonoBehaviour
 {
     private Image marker;
+    private GameObject markerObj;
     [SerializeField] private Image markerImage;
     private GameObject compass;
     private GameObject target;
@@ -17,8 +18,10 @@ public class Marker : MonoBehaviour
         target = GameObject.Find("Main Camera");
         
         marker = Instantiate(markerImage, compass.transform.transform.position, Quaternion.identity) as Image;
+        markerObj = marker.gameObject;
+        enemyMarkerText = markerObj.GetComponent<EnemyMarkerText>();
         marker.transform.SetParent(compass.transform, false);
-        enemyMarkerText = marker.gameObject.GetComponent<EnemyMarkerText>();
+
     }
 
     private void Update() {
@@ -32,6 +35,6 @@ public class Marker : MonoBehaviour
     }
 
     private void OnDestroy() {
-        Destroy(marker.gameObject);    
+        Destroy(markerObj);    
     }
 }
