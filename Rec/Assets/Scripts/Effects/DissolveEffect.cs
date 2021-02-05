@@ -4,20 +4,38 @@ using UnityEngine;
 
 public class DissolveEffect : MonoBehaviour
 {
-    [SerializeField] private float waitDissolveTime = 0.4f;
-    private float dissolveProportion = 0.0f;
-    private Renderer rend;
+    [ColorUsage(true, true), SerializeField] private Color edgeColor;
+    [Range(0f,2f), SerializeField] private float waitDissolveTime = 0.4f;
+    private float dissolveTime;
+    private float timer = 0.0f;
+    private Renderer _renderer;
 
     private void Start() {
-        rend = GetComponent<Renderer>();
-        Debug.Log(rend.material);
-        dissolveProportion -= waitDissolveTime;
+        _renderer = this.GetComponent<Renderer>();
+        _renderer.material.SetColor("_EdgeColor", edgeColor);
+        timer -= waitDissolveTime;
+        dissolveTime = this.GetComponent<ParticleSystem>().main.startLifetimeMultiplier - waitDissolveTime;
+        //Debug.Log(GetComponent<ParticleSystem>().main.startLifetimeMultiplier);
+
         //MeshFilter mf = GetComponent<MeshFilter>();
         //mf.mesh.SetIndices(mf.mesh.GetIndices(0), MeshTopology.LineStrip,0);
     }
 
     private void Update() {
-        dissolveProportion += Time.deltaTime * 0.7f;
-        rend.material.SetFloat("_DissolveProportion",dissolveProportion);
+        timer += Time.deltaTime;
+        _renderer.material.SetFloat("_DissolveProportion",toDissolveProportion(timer));
     }
+
+    private float toDissolveProportion(float time){
+        float proportion = 0.0f;
+        if(time >= 0){
+            proportion = time / dissolveTime;
+        }
+
+        return proportion;
+    }
+
+
+
+    
 }
