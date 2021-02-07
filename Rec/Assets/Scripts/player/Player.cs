@@ -9,12 +9,16 @@ public class Player : MonoBehaviour
 
     private float angle;
 
+    [SerializeField] Texture2D pointTexture;
+
     // Start is called before the first frame update
     void Start()
     {
         life = 3;
         laserGauge = 5;
         angle = 1f / 180f * Mathf.PI;
+
+        Cursor.SetCursor(pointTexture, new Vector2(pointTexture.width/2 , pointTexture.height/2), CursorMode.ForceSoftware);
     }
 
     // Update is called once per frame
