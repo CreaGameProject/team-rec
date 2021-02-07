@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 /// <summary>
@@ -8,6 +9,10 @@ using UnityEngine;
 /// </summary>
 public class StageRunner : MonoBehaviour
 {
+    private StageData stageData;
+    private Coroutine routine;
+    private Action<bool> stageEndCallback;
+    
     /// <summary>
     /// ステージの経過時間を返す
     /// </summary>
@@ -29,7 +34,7 @@ public class StageRunner : MonoBehaviour
     /// <param name="stageData">セットするステージ</param>
     public void SetStageData(StageData stageData)
     {
-
+        this.stageData = stageData;
     }
 
     /// <summary>
@@ -38,15 +43,36 @@ public class StageRunner : MonoBehaviour
     /// <param name="callback">ステージ終了時に実行する関数　引数はステージを最後まで実行できたか</param>
     public void StartStage(Action<bool> callback = null)
     {
-
+        stageEndCallback = callback;
+        routine = StartCoroutine(Run());
+        IsRunning = true;
     }
 
     /// <summary>
     /// ステージの実行を停止する。
     /// </summary>
-    public void StopStage()
+    public void StopStage(bool clear)
     {
+        IsRunning = false;
+        StopCoroutine(routine);
+        stageEndCallback?.Invoke(clear);
+    }
 
+    private IEnumerator Run()
+    {
+        Time = 0;
+        Queue<IStageEvent> events = new Queue<IStageEvent>(stageData.Events);
+        while (stageData.Events.Any())
+        {
+            if (Time > events.Peek().Time)
+            {
+                events.Dequeue().Call();
+            }
+
+            Time += UnityEngine.Time.unscaledDeltaTime;
+            yield return null;
+        }
+        StopStage(true);
     }
     
     // Start is called before the first frame update

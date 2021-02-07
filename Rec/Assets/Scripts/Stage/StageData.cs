@@ -47,6 +47,11 @@ public class StageData
 public interface IStageEvent
 {
     /// <summary>
+    /// 実行するタイミングを返す
+    /// </summary>
+    float Time { get; }
+    
+    /// <summary>
     /// イベントの呼び出し
     /// </summary>
     void Call();
