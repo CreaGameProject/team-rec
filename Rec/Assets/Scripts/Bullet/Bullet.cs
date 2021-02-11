@@ -4,8 +4,13 @@ using UnityEngine;
 
 public class Bullet
 {
+<<<<<<< HEAD
     public float velocity = 0f;
     protected Rigidbody rb;
+=======
+    public virtual void Start()
+    {
+>>>>>>> upstream/bulletpool
 
     protected GameObject bulletObj;
 
@@ -23,9 +28,16 @@ public class Bullet
         //Destroy(this.gameObject, 5f);
     }
 
+<<<<<<< HEAD
     public virtual void FixedUpdate() {
         rb.velocity = rb.velocity.normalized * velocity;
     }
 
     
+=======
+    public virtual void FixedUpdate()
+    {
+
+    }
+>>>>>>> upstream/bulletpool
 }
