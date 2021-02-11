@@ -28,7 +28,6 @@ public class BulletObject : MonoBehaviour
     public void SetBullet(Bullet bullet)
     {
         bulletclass = bullet;
-        bulletclass.obj = gameObject;
     }
 
     private void OnTriggerEnter(Collider other)

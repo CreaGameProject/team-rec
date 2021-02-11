@@ -4,17 +4,13 @@ using UnityEngine;
 
 public class Bullet
 {
-
-    public GameObject obj;
-
-    BulletObject _bulletobj;
-    
-    public virtual void Start(){
+    public virtual void Start()
+    {
 
     }
 
-    public virtual void FixedUpdate(){
-        
-    }
+    public virtual void FixedUpdate()
+    {
 
+    }
 }
