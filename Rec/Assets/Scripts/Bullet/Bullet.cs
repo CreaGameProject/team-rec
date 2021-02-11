@@ -6,8 +6,6 @@ public class Bullet
 {
     public float velocity = 0f;
     protected Rigidbody rb;
-
-
     protected GameObject bulletObj;
     //[System.NonSerialized] 
     public GameObject bulletParticle;
