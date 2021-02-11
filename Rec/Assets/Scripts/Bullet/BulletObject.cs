@@ -39,7 +39,7 @@ public class BulletObject : MonoBehaviour
     void Start()
     {
         // bullet.csのStart(this.gameObject)を呼び出す
-        bulletclass.Start();
+        bulletclass.Start(this.gameObject);
     }
 
     // Update is called once per frame
