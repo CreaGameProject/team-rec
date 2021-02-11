@@ -36,7 +36,11 @@ public class Enemy : MonoBehaviour
     /// <param name="damage">与えるダメージ量</param>
     private void Damage(int damage)
     {
-
+        Hp -= damage;
+        if (Hp <= 0)
+        {
+            Kill();
+        }
     }
 
     /// <summary>
@@ -44,7 +48,7 @@ public class Enemy : MonoBehaviour
     /// </summary>
     private void Kill()
     {
-
+        Destroy(this.gameObject);
     }
     
     // Start is called before the first frame update
