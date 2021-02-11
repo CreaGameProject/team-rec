@@ -9,14 +9,17 @@ public class BulletObject : MonoBehaviour
 {
     
     /// <summary>
-    /// 弾の勢力（敵・見方など）を表現する
+    /// 弾の勢力（敵・味方など）を表現する
     /// </summary>
-    public Force Force { get; private set; }
+    public Force Force { get; private set; } 
     
     /// <summary>
     /// ぶつかったときにダメージがあるか
     /// </summary>
-    public bool DealDamage { get; }
+    public bool DealDamage { get; } 
+
+    // Bulletクラス型の変数
+    private Bullet bulletclass;
 
     /// <summary>
     /// 弾の特性を表すBulletインスタンスをセットする
@@ -24,7 +27,7 @@ public class BulletObject : MonoBehaviour
     /// <param name="bullet"></param>
     public void SetBullet(Bullet bullet)
     {
-
+        bulletclass = bullet;
     }
 
     private void OnTriggerEnter(Collider other)
@@ -35,12 +38,14 @@ public class BulletObject : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        
+        // bullet.csのStart(this.gameObject)を呼び出す
+        bulletclass.Start();
     }
 
     // Update is called once per frame
-    void Update()
+    void FixedUpdate()
     {
-        
+        // bullet.csのFixedUpdate()を呼び出す
+        bulletclass.FixedUpdate();
     }
 }
