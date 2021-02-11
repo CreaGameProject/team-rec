@@ -2,23 +2,28 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Bullet : MonoBehaviour
+public class Bullet
 {
     public float velocity = 0f;
     protected Rigidbody rb;
+
+    protected GameObject bulletObj;
+
     //[System.NonSerialized] 
     public GameObject bulletParticle;
+ 
     [ColorUsage(true, true), SerializeField] private Color particleColor;
 
 
-    protected virtual void Start(){
-        rb = GetComponent<Rigidbody>();
-        rb.AddForce(transform.up * 50f * velocity);
+    public virtual void Start(GameObject bulletObject){
+        bulletObj = bulletObject;
+        rb = bulletObj.GetComponent<Rigidbody>();
+        rb.AddForce(bulletObj.transform.up * 50f * velocity);
         bulletParticle.GetComponent<Renderer>().material.SetColor("_EmissionColor",particleColor);
         //Destroy(this.gameObject, 5f);
     }
 
-    protected virtual void FixedUpdate() {
+    public virtual void FixedUpdate() {
         rb.velocity = rb.velocity.normalized * velocity;
     }
 

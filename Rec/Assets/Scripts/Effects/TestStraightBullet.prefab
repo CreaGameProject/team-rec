@@ -4829,6 +4829,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f96b8a31ca8792740917216dbe1d5871, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  velocity: 12
+  velocity: 10
   bulletParticle: {fileID: 6554035704637283949}
   particleColor: {r: 0.3110245, g: 1.6055588, b: 0.51277006, a: 1}

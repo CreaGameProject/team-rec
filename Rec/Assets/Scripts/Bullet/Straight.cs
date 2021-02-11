@@ -4,12 +4,12 @@ using UnityEngine;
 
 public class Straight : Bullet
 {
-    protected override void Start()
+    public override void Start(GameObject bulletObject)
     {
-        base.Start();
+        base.Start(bulletObject);
     }
 
-    protected override void FixedUpdate()
+    public override void FixedUpdate()
     {
         base.FixedUpdate();
     }

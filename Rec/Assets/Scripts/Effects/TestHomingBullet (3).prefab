@@ -4829,7 +4829,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a4c18b5f2882e8646861177cbb9aac2f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  velocity: 8
+  velocity: 5
   bulletParticle: {fileID: 6035539471959086199}
   particleColor: {r: 0, g: 1.309804, b: 1.4980392, a: 1}
   target: {fileID: 0}

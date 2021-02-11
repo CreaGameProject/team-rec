@@ -7,15 +7,15 @@ public class Homing : Bullet
     [SerializeField] private GameObject target;
     [SerializeField] private float homingStrength;
 
-    protected override void Start()
+    public override void Start(GameObject bulletObject)
     {
-        base.Start();
-        target = GameObject.Find("Target");
+        base.Start(bulletObject);
+        target = GameObject.Find("Target");//Target名は後で書き換えます。
     }
 
-    protected override void FixedUpdate()
+    public override void FixedUpdate()
     {
         base.FixedUpdate();
-        rb.AddForce((target.transform.position - this.transform.position) * homingStrength);
+        rb.AddForce((target.transform.position - bulletObj.gameObject.transform.position) * homingStrength);
     }
 }
