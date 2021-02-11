@@ -4,8 +4,15 @@ using UnityEngine;
 
 public class Bullet
 {
+<<<<<<< HEAD
     public float velocity = 0f;
     protected Rigidbody rb;
+=======
+
+    public float velocity = 0f;
+    protected Rigidbody rb;
+
+>>>>>>> upstream/bulletpool
     protected GameObject bulletObj;
     //[System.NonSerialized] 
     public GameObject bulletParticle;
@@ -21,6 +28,10 @@ public class Bullet
     }
 
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> upstream/bulletpool
     public virtual void FixedUpdate() {
         rb.velocity = rb.velocity.normalized * velocity;
     }
