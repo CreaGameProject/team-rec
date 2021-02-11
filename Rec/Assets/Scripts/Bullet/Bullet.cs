@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class Bullet
 {
+
     public float velocity = 0f;
     protected Rigidbody rb;
 
@@ -23,9 +24,10 @@ public class Bullet
         //Destroy(this.gameObject, 5f);
     }
 
+
+
     public virtual void FixedUpdate() {
         rb.velocity = rb.velocity.normalized * velocity;
     }
 
-    
 }
