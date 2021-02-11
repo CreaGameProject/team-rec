@@ -62,12 +62,13 @@ public class SystemSoundManager : SingletonMonoBehaviour<SystemSoundManager>
         }
     }
 
-    //受け取ったキーに対応する音声ファイルを一度だけ再生する
+    //受け取ったキーに対応する音声ファイルを再生する
     public void PlaySystemSound(int index)
     {
         index = Mathf.Clamp(index, 0, se.Length);
 
-        seAudioSource.PlayOneShot(se[index], seVolume);
+        seAudioSource.clip = se[index];
+        seAudioSource.Play();
     }
 
     //カプセル化してみました
