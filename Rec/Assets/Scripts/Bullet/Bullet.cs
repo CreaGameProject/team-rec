@@ -4,19 +4,13 @@ using UnityEngine;
 
 public class Bullet
 {
-<<<<<<< HEAD
     public float velocity = 0f;
     protected Rigidbody rb;
-=======
-    public virtual void Start()
-    {
->>>>>>> upstream/bulletpool
+
 
     protected GameObject bulletObj;
-
     //[System.NonSerialized] 
     public GameObject bulletParticle;
- 
     [ColorUsage(true, true), SerializeField] private Color particleColor;
 
 
@@ -28,16 +22,9 @@ public class Bullet
         //Destroy(this.gameObject, 5f);
     }
 
-<<<<<<< HEAD
+
     public virtual void FixedUpdate() {
         rb.velocity = rb.velocity.normalized * velocity;
     }
 
-    
-=======
-    public virtual void FixedUpdate()
-    {
-
-    }
->>>>>>> upstream/bulletpool
 }
