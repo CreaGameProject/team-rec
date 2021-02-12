@@ -19,7 +19,7 @@ public class BulletObject : MonoBehaviour
     public bool DealDamage { get; } 
 
     // Bulletクラス型の変数
-    private Bullet bulletclass;
+    public Bullet bulletclass;
 
     /// <summary>
     /// 弾の特性を表すBulletインスタンスをセットする
