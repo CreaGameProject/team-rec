@@ -7,6 +7,12 @@ using UnityEngine;
 /// </summary>
 public class BulletPool : SingletonMonoBehaviour<BulletPool>
 {
+    ///<summary>
+    /// 仮の弾
+    ///</summary>
+    public GameObject testbullet;
+
+
     /// <summary>
     /// プールに使う弾のリスト
     /// </summary>
@@ -88,7 +94,7 @@ public class BulletPool : SingletonMonoBehaviour<BulletPool>
     void Start()
     {
         // 仮の値
-        GameObject obj = null;
+        GameObject obj = testbullet;
         int maxCount = 20;
 
         // オブジェクトプールを作成する
