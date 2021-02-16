@@ -4,6 +4,9 @@ using UnityEngine;
 
 public class Bullet
 {
+
+    //Bulletのステータスはすべてこちらで管理する。
+
     ///<summary>
     ///弾の速度
     ///</summary>

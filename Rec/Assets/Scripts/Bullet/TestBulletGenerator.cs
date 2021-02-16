@@ -22,16 +22,20 @@ public class TestBulletGenerator : MonoBehaviour
     {
         if(Input.GetKeyDown(KeyCode.Space)){
             bullet = bulletPool.GetInstance(new Homing());
-            particleColor = homingColor;
             Homing homing = bullet.GetComponent<BulletObject>().bulletclass as Homing;
             homing.velocity = 6f;
             homing.homingStrength = 1f;
             homing.target = GameObject.Find("Target");
+            homing.attackPoint = 10f;
+
+            particleColor = homingColor;
             Generate();
         }else if(Input.GetKeyDown(KeyCode.LeftShift)){
             bullet = bulletPool.GetInstance(new Straight());
             Straight straight = bullet.GetComponent<BulletObject>().bulletclass as Straight;
             straight.velocity = 12f + Random.Range(-4f, 4f);
+            straight.attackPoint = 10f;
+
             particleColor = straightColor;
             Generate();
         }
