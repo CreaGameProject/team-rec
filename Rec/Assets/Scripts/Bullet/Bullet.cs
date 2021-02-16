@@ -4,7 +4,19 @@ using UnityEngine;
 
 public class Bullet
 {
+
+    //Bulletのステータスはすべてこちらで管理する。
+
+    ///<summary>
+    ///弾の速度
+    ///</summary>
     public float velocity;
+
+    ///<summary>
+    ///弾の攻撃力
+    ///</summary>
+    public float attackPoint;
+    
     protected Rigidbody rb;
 
     protected GameObject bulletObj;
