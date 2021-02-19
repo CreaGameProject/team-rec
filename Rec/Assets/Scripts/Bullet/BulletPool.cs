@@ -7,12 +7,12 @@ using UnityEngine;
 /// </summary>
 public class BulletPool : SingletonMonoBehaviour<BulletPool>
 {
-    ///<summary>
-    /// 仮の弾
-    ///</summary>
-    public GameObject testbullet;
 
-
+    /// <summary>
+    /// プールの元オブジェクト
+    /// </summary>
+    public GameObject defaultObject;
+    
     /// <summary>
     /// プールに使う弾のリスト
     /// </summary>
@@ -38,8 +38,6 @@ public class BulletPool : SingletonMonoBehaviour<BulletPool>
             _poolObjList.Add(newObj);
         }
     }
-
-    // Bulletの引数にHomingかStraightかを判断できるものを入れておく
 
     /// <summary>
     /// BulletObjectインスタンスをプールから取り出す
@@ -94,7 +92,9 @@ public class BulletPool : SingletonMonoBehaviour<BulletPool>
     void Start()
     {
         // 仮の値
-        GameObject obj = testbullet;
+
+        GameObject obj = defaultObject;
+
         int maxCount = 20;
 
         // オブジェクトプールを作成する

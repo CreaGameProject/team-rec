@@ -11,15 +11,20 @@ public class BulletObject : MonoBehaviour
     /// <summary>
     /// 弾の勢力（敵・味方など）を表現する
     /// </summary>
+
     
+
     
     /// <summary>
     /// ぶつかったときにダメージがあるか
     /// </summary>
-    public bool DealDamage { get; } 
+    public bool DealDamage { get; }
 
-    // Bulletクラス型の変数
-    public Bullet bulletclass;
+    /// <summary>
+    /// Bulletクラス型の変数
+    /// </summary>
+    [HideInInspector] public Bullet bulletclass;
+
 
     /// <summary>
     /// 弾の特性を表すBulletインスタンスをセットする
