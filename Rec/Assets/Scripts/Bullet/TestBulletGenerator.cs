@@ -5,14 +5,13 @@ using UnityEngine;
 public class TestBulletGenerator : MonoBehaviour
 {
     // Start is called before the first frame update
-    public BulletPool bulletPool;
-    GameObject bullet;
+    public BulletPool BulletPool;
+    private GameObject _bullet;
     GameObject bulletParticle;
 
-    [ColorUsage(true, true), SerializeField] private Color straightColor;
-    [ColorUsage(true, true), SerializeField] private Color homingColor;
+    [ColorUsage(true, true), SerializeField] private Color _straightColor;
+    [ColorUsage(true, true), SerializeField] private Color _homingColor;
     [ColorUsage(true, true)] private Color particleColor;
-    [ColorUsage(true, true)] private Color randomHDR;
     void Start()
     {
     }
@@ -21,22 +20,22 @@ public class TestBulletGenerator : MonoBehaviour
     void Update()
     {
         if(Input.GetKeyDown(KeyCode.Space)){
-            bullet = bulletPool.GetInstance(new Homing());
-            Homing homing = bullet.GetComponent<BulletObject>().bulletclass as Homing;
-            homing.velocity = 6f;
-            homing.homingStrength = 1f;
-            homing.target = GameObject.Find("Target");
-            homing.attackPoint = 10f;
+            _bullet = BulletPool.GetInstance(new Homing());
+            Homing homing = _bullet.GetComponent<BulletObject>().bulletclass as Homing;
+            homing.Velocity = 6f;
+            homing.HomingStrength = 1f;
+            homing.Target = GameObject.Find("Target");
+            homing.AttackPoint = 10f;
 
-            particleColor = homingColor;
+            particleColor = _homingColor;
             Generate();
         }else if(Input.GetKeyDown(KeyCode.LeftShift)){
-            bullet = bulletPool.GetInstance(new Straight());
-            Straight straight = bullet.GetComponent<BulletObject>().bulletclass as Straight;
-            straight.velocity = 12f + Random.Range(-4f, 4f);
-            straight.attackPoint = 10f;
+            _bullet = BulletPool.GetInstance(new Straight());
+            Straight straight = _bullet.GetComponent<BulletObject>().bulletclass as Straight;
+            straight.Velocity = 12f + Random.Range(-4f, 4f);
+            straight.AttackPoint = 10f;
 
-            particleColor = straightColor;
+            particleColor = _straightColor;
             Generate();
         }
         
@@ -47,13 +46,13 @@ public class TestBulletGenerator : MonoBehaviour
         float y = Random.Range(-7f, 7f);
         float z = Random.Range(-7f, 7f);
 
-        bullet.transform.position = new Vector3(x, y, 20 + z);
-        bullet.transform.rotation = transform.rotation;
-        bulletParticle = bullet.transform.GetChild(0).gameObject;
+        _bullet.transform.position = new Vector3(x, y, 20 + z);
+        _bullet.transform.rotation = transform.rotation;
+        bulletParticle = _bullet.transform.GetChild(0).gameObject;
         
 
         //randomHDR = new Color(Random.Range(0f, 1f), Random.Range(0f, 1f), Random.Range(0f, 1f), 1f);
-        bulletParticle.GetComponent<Renderer>().material.SetColor("_EmissionColor", (particleColor + randomHDR * 2f));
+        bulletParticle.GetComponent<Renderer>().material.SetColor("_EmissionColor", particleColor);
 
     }
 }

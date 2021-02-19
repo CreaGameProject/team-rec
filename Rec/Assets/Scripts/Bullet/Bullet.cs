@@ -10,25 +10,27 @@ public class Bullet
     ///<summary>
     ///弾の速度
     ///</summary>
-    public float velocity;
+    public float Velocity;
 
     ///<summary>
     ///弾の攻撃力
     ///</summary>
-    public float attackPoint;
+    public float AttackPoint;
+    
+    public Force Force { get; private set; } 
     
     protected Rigidbody rb;
 
-    protected GameObject bulletObj;
+    protected GameObject _bulletObject;
     //[System.NonSerialized] 
     [ColorUsage(true, true), SerializeField] private Color particleColor;
     public virtual void Start(GameObject bulletObject){
-        bulletObj = bulletObject;
-        rb = bulletObj.GetComponent<Rigidbody>();
-        rb.AddForce(bulletObj.transform.up * 50f * velocity);
+        _bulletObject = bulletObject;
+        rb = _bulletObject.GetComponent<Rigidbody>();
+        rb.AddForce(_bulletObject.transform.up * 50f * Velocity);
         //Destroy(this.gameObject, 5f);
     }
     public virtual void FixedUpdate() {
-        rb.velocity = rb.velocity.normalized * velocity;
+        rb.velocity = rb.velocity.normalized * Velocity;
     }
 }

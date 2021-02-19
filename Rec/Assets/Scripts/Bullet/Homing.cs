@@ -4,18 +4,24 @@ using UnityEngine;
 
 public class Homing : Bullet
 {
-    public GameObject target;
-    public float homingStrength;
+    ///<summary>
+    ///ターゲットのゲームオブジェクト
+    ///</summary>
+    public GameObject Target;
+
+    ///<summary>
+    ///ホーミングの強さ
+    ///</summary>
+    public float HomingStrength;
 
     public override void Start(GameObject bulletObject)
     {
-        //target = GameObject.Find("Target");//Target名は後で書き換えます。
         base.Start(bulletObject);
     }
 
     public override void FixedUpdate()
     {
         base.FixedUpdate();
-        rb.AddForce((target.transform.position - bulletObj.gameObject.transform.position) * homingStrength);
+        rb.AddForce((Target.transform.position - _bulletObject.gameObject.transform.position) * HomingStrength);
     }
 }
