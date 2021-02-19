@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Camera : MonoBehaviour
+public class CameraManager : MonoBehaviour
 {
     private int nowPosition;
     private int cameraAngle;
@@ -23,6 +23,8 @@ public class Camera : MonoBehaviour
 
     void getInput()
     {
+
+
         if (Input.GetKeyDown(KeyCode.E) && nowPosition <2)
         {
             nowPosition++;
