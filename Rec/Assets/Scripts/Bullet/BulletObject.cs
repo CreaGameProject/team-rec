@@ -11,7 +11,9 @@ public class BulletObject : MonoBehaviour
     /// <summary>
     /// 弾の勢力（敵・味方など）を表現する
     /// </summary>
-    public Force Force { get; set; } // Bullet.csに引っ越した方がいいかもしれない。ステータスを表すのは基本Bullet.csのほうがいい【】
+
+    
+
     
     /// <summary>
     /// ぶつかったときにダメージがあるか
@@ -22,6 +24,7 @@ public class BulletObject : MonoBehaviour
     /// Bulletクラス型の変数
     /// </summary>
     [HideInInspector] public Bullet bulletclass;
+
 
     /// <summary>
     /// 弾の特性を表すBulletインスタンスをセットする

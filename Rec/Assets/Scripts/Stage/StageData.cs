@@ -50,14 +50,4 @@ public interface IStageEvent
     /// イベントの呼び出し
     /// </summary>
     void Call();
-
-
-
-
-
-    ////
-    
-
-
-
 }

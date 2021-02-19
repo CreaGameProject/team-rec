@@ -4,6 +4,9 @@ using UnityEngine;
 
 public class DissolveEffect : MonoBehaviour
 {
+    ///<summary>
+    ///発光する角の色(HDRで設定)
+    ///</summary>
     [ColorUsage(true, true), SerializeField] private Color edgeColor;
     [Range(0f,2f), SerializeField] private float waitDissolveTime = 0.4f;
     private float dissolveTime;
@@ -16,7 +19,6 @@ public class DissolveEffect : MonoBehaviour
         timer -= waitDissolveTime;
         dissolveTime = this.GetComponent<ParticleSystem>().main.startLifetimeMultiplier - waitDissolveTime;
         //Debug.Log(GetComponent<ParticleSystem>().main.startLifetimeMultiplier);
-
         //MeshFilter mf = GetComponent<MeshFilter>();
         //mf.mesh.SetIndices(mf.mesh.GetIndices(0), MeshTopology.LineStrip,0);
     }

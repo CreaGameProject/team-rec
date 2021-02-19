@@ -54,7 +54,7 @@ Material:
     - _BumpScale: 1
     - _Cull: 2
     - _Cutoff: 0.5
-    - _DissolveProportion: 0.5
+    - _DissolveProportion: 0.468
     - _DissolveSpeed: 1.5
     - _DstBlend: 0
     - _EdgeWidth: 0.05

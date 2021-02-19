@@ -5,29 +5,32 @@ using UnityEngine;
 public class Bullet
 {
 
-    public float velocity = 0f;
+    //Bulletのステータスはすべてこちらで管理する。
+
+    ///<summary>
+    ///弾の速度
+    ///</summary>
+    public float Velocity;
+
+    ///<summary>
+    ///弾の攻撃力
+    ///</summary>
+    public float AttackPoint;
+    
+    public Force Force { get; private set; } 
+    
     protected Rigidbody rb;
 
-    protected GameObject bulletObj;
-
+    protected GameObject _bulletObject;
     //[System.NonSerialized] 
-    public GameObject bulletParticle;
- 
     [ColorUsage(true, true), SerializeField] private Color particleColor;
-
-
     public virtual void Start(GameObject bulletObject){
-        bulletObj = bulletObject;
-        rb = bulletObj.GetComponent<Rigidbody>();
-        rb.AddForce(bulletObj.transform.up * 50f * velocity);
-        bulletParticle.GetComponent<Renderer>().material.SetColor("_EmissionColor",particleColor);
+        _bulletObject = bulletObject;
+        rb = _bulletObject.GetComponent<Rigidbody>();
+        rb.AddForce(_bulletObject.transform.up * 50f * Velocity);
         //Destroy(this.gameObject, 5f);
     }
-
-
-
     public virtual void FixedUpdate() {
-        rb.velocity = rb.velocity.normalized * velocity;
+        rb.velocity = rb.velocity.normalized * Velocity;
     }
-
 }
