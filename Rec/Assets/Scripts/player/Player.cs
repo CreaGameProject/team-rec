@@ -6,7 +6,7 @@ using UnityEngine.UI;
 public class Player : MonoBehaviour
 {
     private int life;
-    private float laserGauge;
+    private float laserGauge =500f;
 
     private float angle;
 
@@ -41,12 +41,6 @@ public class Player : MonoBehaviour
     {
         getInput();
 
-        //mousePos = Input.mousePosition;
-        //mousePos.z = 10f;
-        //mousePos = mainCamera.ScreenToWorldPoint(mousePos);
-        //testObject.transform.position = mousePos;
-
-        //Debug.Log("x:"+mousePos.x+"y:"+mousePos.y+"z:"+mousePos.z);
     }
 
     void getInput()
@@ -88,7 +82,7 @@ public class Player : MonoBehaviour
         }
         else if (Input.GetMouseButton(1))
         {
-            homingRange += 0.05f;
+            homingRange += 0.01f;
 
             if (homingRange >10)
             {
@@ -105,10 +99,15 @@ public class Player : MonoBehaviour
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
         RaycastHit hit;
 
-        if (Physics.Raycast(ray, out hit, Mathf.Infinity))
+        Debug.DrawRay(ray.origin,ray.direction*100,Color.green,5,false);
+
+        if (Physics.Raycast(ray, out hit, 100f))
         {
             Debug.Log(hit.collider.gameObject.name);
             Debug.Log(hit.collider.gameObject.transform.position);
+
+            //ここでストレートを打つ
+            //hit.collider.gameObjectでぶつかったオブジェクトのことを指す
         }
     }
 
@@ -119,23 +118,38 @@ public class Player : MonoBehaviour
         mousePos.z = 10f;
         mousePos = mainCamera.ScreenToWorldPoint(mousePos);
 
-        RaycastHit[] hits = Physics.BoxCastAll(mousePos, Vector3.one*homingRange, Camera.main.transform.forward, Quaternion.identity, 100f, LayerMask.GetMask("Default"));
+        RaycastHit[] hits = Physics.BoxCastAll(mousePos, Vector3.one*homingRange, (mousePos-Camera.main.transform.position), Quaternion.identity, 100f, LayerMask.GetMask("Default"));
+
 
         if (homingShot == true)
         {
             foreach (RaycastHit hit in hits)
             {
-                Debug.Log(hit.collider.gameObject.name);
+                if (laserGauge >=50)
+                {
+                    Debug.Log(hit.collider.gameObject.name);
+                    laserGauge -= 50;
+                    //ここでホーミングを打つ(つまり単発を高速レートで打つ感じ)
+                    //hit.collider.gameObjectでぶつかったオブジェクトのことを指す
+                }
             }
 
             homingRange = 1f;
             homingShot = false;
+
+            Debug.Log(laserGauge);
         }
     }
 
-    public void increaseLaserGauge()
+    private void OnDrawGizmos()
     {
-        laserGauge++;
+        Gizmos.color = Color.blue;
+        Gizmos.DrawWireCube(mousePos, Vector3.one * homingRange);
+    }
+
+    public void increaseLaserGauge(float num)
+    {
+        laserGauge +=num;
     }
 
     public void decreaseLife()
