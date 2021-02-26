@@ -29,7 +29,7 @@ public class Player : MonoBehaviour
     void Start()
     {
         life = 3;
-        laserGauge = 5;
+        laserGauge = 500;
         angle = 1f / 180f * Mathf.PI;
 
         mainCamera = Camera.main;
@@ -125,6 +125,7 @@ public class Player : MonoBehaviour
         {
             foreach (RaycastHit hit in hits)
             {
+                
                 if (laserGauge >=50)
                 {
                     Debug.Log(hit.collider.gameObject.name);
