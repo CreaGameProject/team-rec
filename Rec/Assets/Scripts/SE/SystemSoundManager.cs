@@ -38,6 +38,9 @@ public class SystemSoundManager : SingletonMonoBehaviour<SystemSoundManager>
         //AudioSourceをアタッチ
         seAudioSource = gameObject.AddComponent<AudioSource>();
 
+        //音調調節
+        seAudioSource.volume = seVolume;
+
         //AudioClipの読み込み
         se = Resources.LoadAll<AudioClip>("Audio/SE");
 
