@@ -39,8 +39,6 @@ public class MusicManager : SingletonMonoBehaviour<MusicManager>
         mmAudioSource = gameObject.AddComponent<AudioSource>();
         
         mmAudioSource.loop = !mmAudioSource.loop;
-
-        mmAudioSource.volume = mmVolume;
         //AudioClipの読み込み
         mm = Resources.LoadAll<AudioClip>("Audio/BGM");
 
