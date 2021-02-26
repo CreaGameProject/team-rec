@@ -4,12 +4,33 @@ using UnityEngine;
 
 public class Bullet : MonoBehaviour
 {
-    protected virtual void Start(){
 
+    //Bulletのステータスはすべてこちらで管理する。
+
+    ///<summary>
+    ///弾の速度
+    ///</summary>
+    public float Velocity;
+
+    ///<summary>
+    ///弾の攻撃力
+    ///</summary>
+    public float AttackPoint;
+    
+    public Force Force { get; private set; } 
+    
+    protected Rigidbody rb;
+
+    protected GameObject _bulletObject;
+    //[System.NonSerialized] 
+    [ColorUsage(true, true), SerializeField] private Color particleColor;
+    public virtual void Start(GameObject bulletObject){
+        _bulletObject = bulletObject;
+        rb = _bulletObject.GetComponent<Rigidbody>();
+        rb.AddForce(_bulletObject.transform.up * 50f * Velocity);
+        //Destroy(this.gameObject, 5f);
     }
-
-    protected virtual void Update(){
-        
+    public virtual void FixedUpdate() {
+        rb.velocity = rb.velocity.normalized * Velocity;
     }
-
 }
