@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Bullet : MonoBehaviour
+public class Bullet
 {
 
     //Bulletのステータスはすべてこちらで管理する。
