@@ -16,7 +16,9 @@ public class SystemSoundManager : SingletonMonoBehaviour<SystemSoundManager>
     public void SetVolume(float value)
     {
         seVolume = Mathf.Clamp01(value);
-        seAudioSource.volume = seVolume * value;
+        seAudioSource.volume = seVolume;
+        GameParameterBank.Instance.SEVolume = seVolume;
+        GameParameterBank.Instance.SaveData();
     }
 
     public float GetVolume()
@@ -38,6 +40,7 @@ public class SystemSoundManager : SingletonMonoBehaviour<SystemSoundManager>
         //AudioSourceをアタッチ
         seAudioSource = gameObject.AddComponent<AudioSource>();
 
+        SetVolume(GameParameterBank.Instance.SEVolume);
         seAudioSource.volume = seVolume;
         //AudioClipの読み込み
         se = Resources.LoadAll<AudioClip>("Audio/SE");
@@ -82,5 +85,14 @@ public class SystemSoundManager : SingletonMonoBehaviour<SystemSoundManager>
     {
         seAudioSource.Stop();
         seAudioSource.clip = null;
+    }
+
+    //αでは外部からSetしないのでαだけの実装です
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            SetVolume(seVolume);
+        }
     }
 }

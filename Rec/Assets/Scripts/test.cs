@@ -11,8 +11,7 @@ public class test : MonoBehaviour
         //SystemSoundManager testSE = GetComponent<SystemSoundManager>();
         //testSE.PlaySystemSound("ashita");
 
-        MusicManager testBGM = GetComponent<MusicManager>();
-        testBGM.PlayMusic("zunou");
+        MusicManager.Instance.PlayMusic("zunou");
     }
     // Update is called once per frame
     void Update()

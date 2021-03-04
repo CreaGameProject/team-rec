@@ -11,7 +11,7 @@ public class StageRunner : MonoBehaviour
     /// <summary>
     /// ステージの経過時間を返す
     /// </summary>
-    public float Time { get; private set; }
+    public float time { get; private set; }
 
     /// <summary>
     /// ステージが実行中であるか
@@ -50,10 +50,10 @@ public class StageRunner : MonoBehaviour
     }
 
     private void Start() {
-        
+        //SetStageData(new StageData(events,controlPoints,musicPath));
     }
 
     private void Update() {
-        
+        time += Time.deltaTime;
     }
 }

@@ -16,7 +16,9 @@ public class MusicManager : SingletonMonoBehaviour<MusicManager>
     public void SetMMVolume(float value)
     {
         mmVolume = Mathf.Clamp01(value);
-        mmAudioSource.volume = mmVolume * value;
+        mmAudioSource.volume = mmVolume;
+        GameParameterBank.Instance.BGMVolume = mmVolume;
+        GameParameterBank.Instance.SaveData();
     }
 
     public float GetMMVolume()
@@ -40,6 +42,7 @@ public class MusicManager : SingletonMonoBehaviour<MusicManager>
         
         mmAudioSource.loop = !mmAudioSource.loop;
 
+        SetMMVolume(GameParameterBank.Instance.BGMVolume);
         mmAudioSource.volume = mmVolume;
         //AudioClipの読み込み
         mm = Resources.LoadAll<AudioClip>("Audio/BGM");
@@ -88,4 +91,13 @@ public class MusicManager : SingletonMonoBehaviour<MusicManager>
         mmAudioSource.Stop();
         mmAudioSource.clip = null;
     }
+
+    //αでは外部からSetしないのでαだけの実装です
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.Space)){
+            SetMMVolume(mmVolume);
+        }
+    }
+
 }

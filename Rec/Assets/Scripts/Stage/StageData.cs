@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System.Linq;
 
 /// <summary>
 /// ステージに関する情報を格納する。StageRunnerにインスタンスを渡すことで実行できる。
@@ -51,3 +52,7 @@ public interface IStageEvent
     /// </summary>
     void Call();
 }
+
+
+
+
