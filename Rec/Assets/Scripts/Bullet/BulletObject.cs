@@ -7,7 +7,7 @@ using UnityEngine;
 /// </summary>
 public class BulletObject : MonoBehaviour
 {
-    
+
     /// <summary>
     /// 弾の勢力（敵・味方など）を表現する
     /// </summary>
