@@ -5,6 +5,8 @@ using UnityEngine.UI;
 
 public class Player : MonoBehaviour
 {
+    [SerializeField] BulletPool bulletPool;
+
     private int life;
     private float laserGauge =500f;
 
@@ -23,6 +25,12 @@ public class Player : MonoBehaviour
     bool homingShot = false;
 
     [SerializeField] GameObject testObject;
+
+    [Header("調整可")]
+    /// <summary>
+    /// 移動速度
+    /// </summary>
+    [SerializeField] private float speed = 5f;
 
 
     // Start is called before the first frame update
@@ -47,22 +55,22 @@ public class Player : MonoBehaviour
     {
         if (Input.GetKey(KeyCode.A))
         {
-            transform.Translate(-0.01f*Mathf.Cos(transform.rotation.y * angle),0, -0.01f * Mathf.Sin(transform.rotation.y * angle));
+            transform.Translate(new Vector3(-0.01f*Mathf.Cos(transform.rotation.y * angle),0, -0.01f * Mathf.Sin(transform.rotation.y * angle)) * speed);
         }
 
         if (Input.GetKey(KeyCode.D))
         {
-            transform.Translate(0.01f*Mathf.Cos(transform.rotation.y * angle), 0, 0.01f * Mathf.Sin(transform.rotation.y * angle));
+            transform.Translate(new Vector3(0.01f*Mathf.Cos(transform.rotation.y * angle), 0, 0.01f * Mathf.Sin(transform.rotation.y * angle)) * speed);
         }
         
         if (Input.GetKey(KeyCode.W))
         {
-            transform.Translate(0, 0.01f, 0);           
+            transform.Translate(0, 0.01f * speed, 0);           
         }
 
         if (Input.GetKey(KeyCode.S))
         {
-            transform.Translate(0, -0.01f, 0, 0);
+            transform.Translate(0, -0.01f * speed, 0, 0);
         }
 
         transform.localPosition = new Vector3(Mathf.Clamp(transform.localPosition.x,-moveXMax,moveXMax)
@@ -105,9 +113,18 @@ public class Player : MonoBehaviour
         {
             Debug.Log(hit.collider.gameObject.name);
             Debug.Log(hit.collider.gameObject.transform.position);
+            Debug.Log("衝突位置 : "+hit.point);
 
             //ここでストレートを打つ
             //hit.collider.gameObjectでぶつかったオブジェクトのことを指す
+            Vector3 array = (hit.point - this.transform.position).normalized;
+
+            Straight straight = new Straight();
+            straight.Velocity = 10f; // 仮の値
+            straight.Direction = array;
+            GameObject bullet = bulletPool.GetInstance(straight);
+            bullet.GetComponent<BulletObject>().Force = Force.Player;
+            bullet.transform.position = this.transform.position;
         }
     }
 
@@ -130,8 +147,17 @@ public class Player : MonoBehaviour
                 {
                     Debug.Log(hit.collider.gameObject.name);
                     laserGauge -= 50;
+
                     //ここでホーミングを打つ(つまり単発を高速レートで打つ感じ)
                     //hit.collider.gameObjectでぶつかったオブジェクトのことを指す
+                    Homing homing = new Homing();
+                    homing.Velocity = 10f; // 仮の値
+                    homing.HomingStrength = 10f; // 仮の値
+                    homing.Direction = transform.forward;
+                    homing.Target = hit.collider.gameObject;
+                    GameObject bullet = bulletPool.GetInstance(homing);
+                    bullet.GetComponent<BulletObject>().Force = Force.Player;
+                    bullet.transform.position = this.transform.position;
                 }
             }
 
@@ -156,5 +182,37 @@ public class Player : MonoBehaviour
     public void decreaseLife()
     {
         life--;
+
+        if (life <= 0)
+        {
+            OnDeath();
+        }
+    }
+
+    /// <summary>
+    /// 死亡時の処理
+    /// </summary>
+    private void OnDeath()
+    {
+        Debug.Log("死");
+    }
+
+    /// <summary>
+    /// 衝突判定
+    /// </summary>
+    /// <param name="other">相手のゲームオブジェクト</param>
+    private void OnTriggerEnter(Collider other)
+    {
+        // 相手がBulletObjectｺﾝﾎﾟｰﾈﾝﾄを持っているかを検知する
+        if (other.gameObject.GetComponent<BulletObject>())
+        {
+            BulletObject bulletObject = other.gameObject.GetComponent<BulletObject>();
+            // 弾が敵の勢力だった場合
+            if (bulletObject.Force == Force.Enemy)
+            {
+                BulletPool.Instance.Destroy(other.gameObject);
+                decreaseLife();
+            }
+        }
     }
 }

@@ -15,7 +15,7 @@ public class Bullet
     ///<summary>
     ///弾の攻撃力
     ///</summary>
-    public float AttackPoint;
+    public int AttackPoint;
 
     /// <summary>
     /// 弾の飛ばす方角
