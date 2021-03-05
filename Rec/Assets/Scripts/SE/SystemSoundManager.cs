@@ -15,6 +15,7 @@ public class SystemSoundManager : SingletonMonoBehaviour<SystemSoundManager>
 
 
 
+
     private void Awake()
     {
         //別のSystemSoundManagerがあれば削除
@@ -32,9 +33,11 @@ public class SystemSoundManager : SingletonMonoBehaviour<SystemSoundManager>
             gameObject.AddComponent<AudioSource>();
         }
 
+
         //作成したオーディオソースを取得して各変数に設定、ボリュームも設定
         AudioSource[] seAudioSource = GetComponents<AudioSource>();
         seSourceList = new List<AudioSource>();
+
 
         for (int i = 0; i < seAudioSource.Length; i++)
         {
@@ -82,4 +85,6 @@ public class SystemSoundManager : SingletonMonoBehaviour<SystemSoundManager>
 
         PlayerPrefs.SetFloat(SE_VOLUME_KEY, SEVolume);
     }
+
+    
 }

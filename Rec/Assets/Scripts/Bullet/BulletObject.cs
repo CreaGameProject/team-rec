@@ -7,7 +7,7 @@ using UnityEngine;
 /// </summary>
 public class BulletObject : MonoBehaviour
 {
-    
+
     /// <summary>
     /// 弾の勢力（敵・味方など）を表現する
     /// </summary>
@@ -23,7 +23,6 @@ public class BulletObject : MonoBehaviour
     /// </summary>
     [HideInInspector] public Bullet bulletclass;
 
-
     /// <summary>
     /// 弾の特性を表すBulletインスタンスをセットする
     /// </summary>
@@ -31,24 +30,32 @@ public class BulletObject : MonoBehaviour
     public void SetBullet(Bullet bullet)
     {
         bulletclass = bullet;
+
+        StartCoroutine(TimeDestroy());
+
+        // bullet.csのStart(this.gameObject)を呼び出す
+        bulletclass.Start(this.gameObject);
     }
 
     private void OnTriggerEnter(Collider other)
     {
 
-    }
-    
-    // Start is called before the first frame update
-    void Start()
-    {
-        // bullet.csのStart(this.gameObject)を呼び出す
-        bulletclass.Start(this.gameObject);
-    }
+    }    
 
     // Update is called once per frame
     void FixedUpdate()
     {
         // bullet.csのFixedUpdate()を呼び出す
         bulletclass.FixedUpdate();
+    }
+
+    /// <summary>
+    /// 時間経過で消える
+    /// </summary>
+    /// <returns></returns>
+    private IEnumerator TimeDestroy()
+    {
+        yield return new WaitForSeconds(8);
+        BulletPool.Instance.Destroy(this.gameObject);
     }
 }

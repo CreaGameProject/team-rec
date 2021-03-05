@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System.Linq;
 
 /// <summary>
 /// ステージに関する情報を格納する。StageRunnerにインスタンスを渡すことで実行できる。
@@ -35,9 +36,13 @@ public class StageData
         private set;
     }
 
-    public StageData(IEnumerable<IStageEvent> events, IEnumerable<Vector3> controlPoints, string musicPath = "")
+    public StageData(IEnumerable<IStageEvent> events, IEnumerable<Vector3> controlPoints)//, string musicPath = "")
     {
 
+    }
+
+    public StageData()
+    {
     }
 }
 
@@ -50,4 +55,17 @@ public interface IStageEvent
     /// イベントの呼び出し
     /// </summary>
     void Call();
+    
+    /// <summary>
+    /// 時間を返す
+    /// </summary>
+    float Time
+    {
+        get;
+        set;
+    }
 }
+
+
+
+

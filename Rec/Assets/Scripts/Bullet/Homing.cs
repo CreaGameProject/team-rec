@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class Homing : Bullet
 {
+
+   
     ///<summary>
     ///ターゲットのゲームオブジェクト
     ///</summary>
@@ -24,4 +26,5 @@ public class Homing : Bullet
         base.FixedUpdate();
         rb.AddForce((Target.transform.position - _bulletObject.gameObject.transform.position) * HomingStrength);
     }
+
 }
