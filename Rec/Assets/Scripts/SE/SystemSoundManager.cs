@@ -4,87 +4,86 @@ using UnityEngine;
 
 public class SystemSoundManager : SingletonMonoBehaviour<SystemSoundManager>
 {
-    [SerializeField, Range(0, 1), Tooltip("SEの音量")]
-    float seVolume = 1;
+    private const string SE_VOLUME_KEY = "SE_VOLUME_KEY";
+    private const float SE_VOLUME_DEFULT = 1.0f;
 
-    AudioClip[] se;
+    private const string SE_PATH = "Audio/SE";
 
-    Dictionary<string, int> seIndex = new Dictionary<string, int>();
+    private Dictionary<string, AudioClip> seDictionary;
 
-    AudioSource seAudioSource;
+    private List<AudioSource> seSourceList;
 
-    public void SetVolume(float value)
-    {
-        seVolume = Mathf.Clamp01(value);
-        seAudioSource.volume = seVolume;
-        GameParameterBank.Instance.SEVolume = seVolume;
-        GameParameterBank.Instance.SaveData();
-    }
 
-    public float GetVolume()
-    {
-        return seVolume;
-    }
 
-    public void Awake()
+
+    private void Awake()
     {
         //別のSystemSoundManagerがあれば削除
         if (this != Instance)
         {
-            Destroy(gameObject);
+            Destroy(this);
             return;
         }
 
-        DontDestroyOnLoad(gameObject);
+        DontDestroyOnLoad(this.gameObject);
 
-        //AudioSourceをアタッチ
-        seAudioSource = gameObject.AddComponent<AudioSource>();
-
-        SetVolume(GameParameterBank.Instance.SEVolume);
-        seAudioSource.volume = seVolume;
-        //AudioClipの読み込み
-        se = Resources.LoadAll<AudioClip>("Audio/SE");
-
-        //Dictionaryに値を追加
-        for (int i = 0; i < se.Length; i++)
+        //AudioSourceを作成
+        for (int i = 0; i < 10; i++)
         {
-            seIndex.Add(se[i].name, i);
+            gameObject.AddComponent<AudioSource>();
+        }
+
+
+        //作成したオーディオソースを取得して各変数に設定、ボリュームも設定
+        AudioSource[] seAudioSource = GetComponents<AudioSource>();
+        seSourceList = new List<AudioSource>();
+
+
+        for (int i = 0; i < seAudioSource.Length; i++)
+        {
+            seAudioSource[i].playOnAwake = false;
+
+            seSourceList.Add(seAudioSource[i]);
+            seAudioSource[i].volume = PlayerPrefs.GetFloat(SE_VOLUME_KEY, SE_VOLUME_DEFULT);
+        }
+
+        //Resorceフォルダから全SEのファイルを読み込みセット
+        seDictionary = new Dictionary<string, AudioClip>();
+
+        object[] seList = Resources.LoadAll("Audio/SE");
+
+        foreach(AudioClip se in seList)
+        {
+            seDictionary[se.name] = se;
+        }
+
+    }
+    public void PlaySE(string seName)
+    {
+        if (!seDictionary.ContainsKey(seName))
+        {
+            Debug.Log(seName + "という名前のSEファイルが存在しません");
+            return;
+        }
+        
+        foreach(AudioSource seSource in seSourceList)
+        {
+            if (!seSource.isPlaying)
+            {
+                seSource.PlayOneShot(seDictionary[seName] as AudioClip);
+                return;
+            }
         }
     }
 
-    //ファイル名を受け取ってキーを渡す
-    public int PlaySystemSoundIndex(string name)
+    public void ChangeVolume(float SEVolume)
     {
-        if (seIndex.ContainsKey(name))
+        foreach(AudioSource seSource in seSourceList)
         {
-            return seIndex[name];
+            seSource.volume = SEVolume;
         }
-        else
-        {
-            Debug.LogError("指定された名前のSEファイルが存在しません。");
-            return 0;
-        }
-    }
 
-    //受け取ったキーに対応する音声ファイルを再生する
-    public void PlaySystemSound(int index)
-    {
-        index = Mathf.Clamp(index, 0, se.Length);
-
-        seAudioSource.clip = se[index];
-        seAudioSource.Play();
-    }
-
-    //カプセル化してみました
-    public void PlaySystemSound(string name)
-    {
-        PlaySystemSound(PlaySystemSoundIndex(name));
-    }
-
-    public void StopSe()
-    {
-        seAudioSource.Stop();
-        seAudioSource.clip = null;
+        PlayerPrefs.SetFloat(SE_VOLUME_KEY, SEVolume);
     }
 
     //αでは外部からSetしないのでαだけの実装です
