@@ -86,12 +86,5 @@ public class SystemSoundManager : SingletonMonoBehaviour<SystemSoundManager>
         PlayerPrefs.SetFloat(SE_VOLUME_KEY, SEVolume);
     }
 
-    //αでは外部からSetしないのでαだけの実装です
-    private void Update()
-    {
-        if (Input.GetKeyDown(KeyCode.Space))
-        {
-            SetVolume(seVolume);
-        }
-    }
+
 }
