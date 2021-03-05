@@ -56,7 +56,7 @@ public class Enemy : MonoBehaviour
     /// <summary>
     /// このキャラクターの攻撃タイプ
     /// </summary>
-    public EnemyType enemyType { get; private set; }
+    public EnemyType enemyType = EnemyType.None;
 
     /// <summary>
     /// Playerの座標
@@ -371,7 +371,7 @@ public class Enemy : MonoBehaviour
     }
 
     // Update is called once per frame
-    void Update()
+    void FixedUpdate()
     {
         Move();
 

@@ -9,11 +9,24 @@ public class StageNavigator : MonoBehaviour
     private Vector3 navigatorPosition;
     public bool taskIsRunning;
 
-   
+    [Header("経由ポイント")]
+    public GameObject[] waypoints;
+
+    /// <summary>
+    /// それぞれの経由ポイントの位置座標
+    /// </summary>
+    [SerializeField] private List<Vector3> wayList;
 
     // Start is called before the first frame update
     void Start()
     {
+        // 位置を取得
+        foreach (GameObject obj in waypoints)
+        {
+
+        }
+
+
         taskIsRunning = true;
         Task t = testTask();
     }
@@ -32,7 +45,9 @@ public class StageNavigator : MonoBehaviour
             {
                 try
                 {
-                    navigatorPosition = new Vector3(0,0,0);
+                    // チェックポイントの座標とそこに到達するまでの時間が分かればそのポイントまでの移動ができる。
+                    // Task内ではtransform.position等へのアクセスは出来ない。
+                    navigatorPosition = new Vector3(0,4,0);
                 }
                 catch (Exception e)
                 {
