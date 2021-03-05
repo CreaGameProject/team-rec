@@ -36,9 +36,13 @@ public class StageData
         private set;
     }
 
-    public StageData(IEnumerable<IStageEvent> events, IEnumerable<Vector3> controlPoints, string musicPath = "")
+    public StageData(IEnumerable<IStageEvent> events, IEnumerable<Vector3> controlPoints)//, string musicPath = "")
     {
 
+    }
+
+    public StageData()
+    {
     }
 }
 
@@ -51,6 +55,15 @@ public interface IStageEvent
     /// イベントの呼び出し
     /// </summary>
     void Call();
+    
+    /// <summary>
+    /// 時間を返す
+    /// </summary>
+    float Time
+    {
+        get;
+        set;
+    }
 }
 
 
