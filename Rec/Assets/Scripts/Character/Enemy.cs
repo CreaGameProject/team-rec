@@ -64,6 +64,11 @@ public class Enemy : MonoBehaviour
     private Vector3 player_pos;
 
     /// <summary>
+    /// StageNavigationの座標
+    /// </summary>
+    private Vector3 navi_pos;
+
+    /// <summary>
     /// Playerの１フレーム前の座標（移動に使用）
     /// </summary>
     private Vector3 before_pos;
@@ -83,12 +88,22 @@ public class Enemy : MonoBehaviour
     /// </summary>
     private float randomMovement;
 
+    /// <summary>
+    /// キルされたときに増えるプレイヤーのゲージポイント
+    /// </summary>
+    private int gaugePoint = 50;
+
     [Header("他スクリプトの指定")]
 
     /// <summary>
     /// Playerのゲームオブジェクト
     /// </summary>
     public GameObject player;
+
+    /// <summary>
+    /// StageNavigation(Playerの親)オブジェクト
+    /// </summary>
+    public GameObject stageNavi;
 
     /// <summary>
     /// BulletPool型の変数
@@ -134,7 +149,7 @@ public class Enemy : MonoBehaviour
     /// <summary>
     /// 敵キャラクターの召喚後の挙動
     /// </summary>
-    [SerializeField] EnemyMove enemyMove = EnemyMove.None;
+    public EnemyMove enemyMove = EnemyMove.None;
 
     /// <summary>
     /// 敵キャラクターの移動力
@@ -177,6 +192,8 @@ public class Enemy : MonoBehaviour
     /// </summary>
     private void Kill()
     {
+        gaugePoint = 50;
+        player.GetComponent<Player>().increaseLaserGauge(gaugePoint);
         Destroy(this.gameObject);
     }
 
@@ -188,11 +205,12 @@ public class Enemy : MonoBehaviour
         // 参考「パンツァードラグーン　ツヴァイ　セガサターン」
 
         // プレイヤーと同じ進行方向へ移動する。
+        navi_pos = stageNavi.transform.position;
         player_pos = player.transform.position;
-        Vector3 direction = (player_pos - before_pos);
+        Vector3 direction = (navi_pos - before_pos);
         this.transform.Translate(direction / 2);
         rig.AddForce(direction * Time.deltaTime * dependency);
-        before_pos = player.transform.position;
+        before_pos = stageNavi.transform.position;
 
         // 敵の挙動
         switch (enemyMove)
@@ -227,7 +245,10 @@ public class Enemy : MonoBehaviour
                 break;
 
             case EnemyMove.RightToFront:
-
+                if (Vector3.Distance(origin_pos, this.transform.position) <= randomMovement * 6)
+                {
+                    rig.AddForce(new Vector3(-1, 0, 1) * Time.deltaTime * movePower);
+                }
                 break;
 
             case EnemyMove.Left:
@@ -238,7 +259,10 @@ public class Enemy : MonoBehaviour
                 break;
 
             case EnemyMove.LeftToFront:
-
+                if (Vector3.Distance(origin_pos, this.transform.position) <= randomMovement * 6)
+                {
+                    rig.AddForce(new Vector3(1, 0, 1) * Time.deltaTime * movePower);
+                }
                 break;
 
             case EnemyMove.Back:
@@ -256,17 +280,21 @@ public class Enemy : MonoBehaviour
     /// <summary>
     /// 敵にプレイヤーの弾が当たったときに衝突判定を行う
     /// </summary>
-    /// <param name="collision">衝突した相手のゲームオブジェクト</param>
-    private void OnCollisionEnter(Collision collision)
+    /// <param name="other">衝突した相手のゲームオブジェクト</param>
+    private void OnTriggerEnter(Collider other)
     {
-        // 衝突した弾がプレイヤーの弾だった場合
-        BulletObject bulletobject = collision.gameObject.GetComponent<BulletObject>();
-        if(bulletobject.Force == Force.Player)
+        // 対象がBulletObjectコンポーネントを持っているかを検知する
+        if (other.gameObject.GetComponent<BulletObject>())
         {
-            //int damage = bulletobject.bulletclass.AttackPoint;
-            int damage = 15;
-            Damage(damage);
-        }
+            // 衝突した弾がプレイヤーの弾だった場合
+            BulletObject bulletobject = other.gameObject.GetComponent<BulletObject>();
+            if (bulletobject.Force == Force.Player)
+            {
+                int damage = bulletobject.bulletclass.AttackPoint;
+                //int damage = 15;
+                Damage(damage);
+            }
+        }        
     }
 
     /// <summary>
@@ -276,12 +304,15 @@ public class Enemy : MonoBehaviour
     private IEnumerator Fire()
     {
         while (true)
-        {
+        {            
             if (enemyType == EnemyType.Normal)
             {             
                 for (var i = 0; i < burstcount; i++)
                 {
-                    GameObject enemyBullet = bulletPool.GetInstance(new Straight());
+                    Straight straight = new Straight();
+                    straight.Velocity = 10f; // 仮の値
+                    straight.Direction = -transform.forward; // 前方向
+                    GameObject enemyBullet = bulletPool.GetInstance(straight);
                     enemyBullet.GetComponent<BulletObject>().Force = Force.Enemy;
                     enemyBullet.transform.position = this.transform.position;
                     yield return new WaitForSeconds(burstTime);
@@ -291,7 +322,12 @@ public class Enemy : MonoBehaviour
             }
             else if (enemyType == EnemyType.Homing)
             {
-                GameObject enemyBullet = bulletPool.GetInstance(new Homing());
+                Homing homing = new Homing();
+                homing.Velocity = 6f; // 仮の値
+                homing.HomingStrength = 6f; // 仮の値
+                homing.Direction = transform.up; // 上方向
+                homing.Target = player;
+                GameObject enemyBullet = bulletPool.GetInstance(homing);
                 enemyBullet.GetComponent<BulletObject>().Force = Force.Enemy;
                 enemyBullet.transform.position = this.transform.position;
 
@@ -329,7 +365,7 @@ public class Enemy : MonoBehaviour
         origin_pos = this.transform.position;
 
         // Playerの初期１フレーム前座標を指定
-        before_pos = player.transform.position;
+        before_pos = stageNavi.transform.position;
 
         StartCoroutine(Fire());
     }
@@ -338,6 +374,13 @@ public class Enemy : MonoBehaviour
     void Update()
     {
         Move();
+
+        // 後で消す
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            // 仮指定
+            enemyType = EnemyType.Homing;
+        }
     }
         
 }

@@ -15,7 +15,12 @@ public class Bullet
     ///<summary>
     ///弾の攻撃力
     ///</summary>
-    public float AttackPoint;
+    public int AttackPoint;
+
+    /// <summary>
+    /// 弾の飛ばす方角
+    /// </summary>
+    public Vector3 Direction;
     
     public Force Force { get; private set; } 
     
@@ -27,7 +32,7 @@ public class Bullet
     public virtual void Start(GameObject bulletObject){
         _bulletObject = bulletObject;
         rb = _bulletObject.GetComponent<Rigidbody>();
-        rb.AddForce(_bulletObject.transform.up * 50f * Velocity);
+        rb.AddForce(Direction * 50f * Velocity);
         //Destroy(this.gameObject, 5f);
     }
     public virtual void FixedUpdate() {

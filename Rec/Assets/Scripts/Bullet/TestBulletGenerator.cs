@@ -25,16 +25,16 @@ public class TestBulletGenerator : MonoBehaviour
             homing.Velocity = 6f;
             homing.HomingStrength = 1f;
             homing.Target = GameObject.Find("Target");
-            homing.AttackPoint = 10f;
-
+            homing.AttackPoint = 10;
+            homing.Direction = new Vector3(0, 0, 1);
             particleColor = _homingColor;
             Generate();
         }else if(Input.GetKeyDown(KeyCode.LeftShift)){
             _bullet = BulletPool.GetInstance(new Straight());
             Straight straight = _bullet.GetComponent<BulletObject>().bulletclass as Straight;
             straight.Velocity = 12f + Random.Range(-4f, 4f);
-            straight.AttackPoint = 10f;
-
+            straight.AttackPoint = 10;
+            straight.Direction = Vector3.Normalize(GameObject.Find("Target").transform.position - this.transform.position);
             particleColor = _straightColor;
             Generate();
         }
@@ -42,12 +42,10 @@ public class TestBulletGenerator : MonoBehaviour
     }
 
     void Generate(){
-        float x = Random.Range(-7f, 7f);
-        float y = Random.Range(-7f, 7f);
-        float z = Random.Range(-7f, 7f);
 
-        _bullet.transform.position = new Vector3(x, y, 20 + z);
-        _bullet.transform.rotation = transform.rotation;
+
+        _bullet.transform.position = transform.position;
+
         bulletParticle = _bullet.transform.GetChild(0).gameObject;
         
 

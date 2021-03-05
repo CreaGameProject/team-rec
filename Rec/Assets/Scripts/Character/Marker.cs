@@ -15,7 +15,7 @@ public class Marker : MonoBehaviour
 
     private void Start() {
         compass = GameObject.Find("CompassMask");
-        target = GameObject.Find("Main Camera");
+        target = GameObject.Find("Main Camera");//Target名はのちのちPlayerのオブジェクトの名前になります.
         
         marker = Instantiate(markerImage, compass.transform.transform.position, Quaternion.identity) as Image;
         markerObj = marker.gameObject;

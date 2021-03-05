@@ -2,16 +2,19 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System.Linq;
 
 /// <summary>
 /// ステージデータを読み込み、敵の出現などを制御する。
 /// </summary>
-public class StageRunner : MonoBehaviour
+public class StageRunner : SingletonMonoBehaviour<StageRunner>
 {
     /// <summary>
     /// ステージの経過時間を返す
     /// </summary>
-    public float Time { get; private set; }
+    public float time { get; private set; }
+
+    private StageData _stageData; 
 
     /// <summary>
     /// ステージが実行中であるか
@@ -29,7 +32,7 @@ public class StageRunner : MonoBehaviour
     /// <param name="stageData">セットするステージ</param>
     public void SetStageData(StageData stageData)
     {
-
+        _stageData = stageData;
     }
 
     /// <summary>
@@ -49,11 +52,62 @@ public class StageRunner : MonoBehaviour
 
     }
 
-    private void Start() {
-        
+
+    protected override void Awake()
+    {
+        base.Awake();
     }
 
+    private void Start() {
+        //SetStageData(new StageData(events,controlPoints,musicPath));
+    }
+
+    
     private void Update() {
-        
+
+    }
+    
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <returns></returns>
+    IEnumerator Timer()
+    {
+        List<IStageEvent> stageEvents = _stageData.Events.ToList();
+
+
+        while (true)
+        {
+            time += Time.deltaTime;
+            //_stageDataはTimeでソートされていることを前提としている。
+            foreach (var x in stageEvents.TakeWhile(x => x.Time > time))
+            {
+                x.Call();
+            }
+            stageEvents = stageEvents.SkipWhile(x => x.Time > time).ToList();
+            yield return null;
+        }
     }
 }
+
+/*
+
+class intArray : IEnumerable<int>
+{
+    int a;
+    int b;
+    int c;
+
+    public IEnumerator<int> GetEnumerator()
+    {
+        yield return a;
+        yield return b;
+        yield return c;
+    }
+
+    IEnumerator IEnumerable.GetEnumerator()
+    {
+        yield return GetEnumerator();
+    }
+}*/
+
