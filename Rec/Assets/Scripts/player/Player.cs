@@ -32,6 +32,9 @@ public class Player : MonoBehaviour
     /// </summary>
     [SerializeField] private float speed = 5f;
 
+    [ColorUsage(true, true), SerializeField] private Color _straightColor;
+    [ColorUsage(true, true), SerializeField] private Color _homingColor;
+
 
     // Start is called before the first frame update
     void Start()
@@ -123,6 +126,8 @@ public class Player : MonoBehaviour
             straight.Velocity = 10f; // 仮の値
             straight.Direction = array;
             GameObject bullet = bulletPool.GetInstance(straight);
+            GameObject effect = bullet.transform.GetChild(0).gameObject;
+            effect.GetComponent<Renderer>().material.SetColor("_EmissionColor", _straightColor);
             bullet.GetComponent<BulletObject>().Force = Force.Player;
             bullet.transform.position = this.transform.position;
         }
@@ -156,6 +161,8 @@ public class Player : MonoBehaviour
                     homing.Direction = transform.forward;
                     homing.Target = hit.collider.gameObject;
                     GameObject bullet = bulletPool.GetInstance(homing);
+                    GameObject effect = bullet.transform.GetChild(0).gameObject;
+                    effect.GetComponent<Renderer>().material.SetColor("_EmissionColor", _homingColor);
                     bullet.GetComponent<BulletObject>().Force = Force.Player;
                     bullet.transform.position = this.transform.position;
                 }
