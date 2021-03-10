@@ -14,7 +14,7 @@ public class StageRunner : SingletonMonoBehaviour<StageRunner>
     /// </summary>
     public float time { get; private set; }
 
-    private StageData _stageData;
+    public StageData StageData { get; private set; };
     private List<IStageEvent> stageEvents;
 
     /// <summary>
@@ -33,7 +33,7 @@ public class StageRunner : SingletonMonoBehaviour<StageRunner>
     /// <param name="stageData">セットするステージ</param>
     public void SetStageData(StageData stageData)
     {
-        _stageData = stageData;
+        StageData = stageData;
         StartCoroutine("Timer");
     }
 
@@ -51,6 +51,7 @@ public class StageRunner : SingletonMonoBehaviour<StageRunner>
     /// </summary>
     public void StopStage()
     {
+        
         
     }
 
@@ -75,12 +76,9 @@ public class StageRunner : SingletonMonoBehaviour<StageRunner>
     /// <returns></returns>
     IEnumerator Timer()
     {
-        stageEvents = _stageData.Events.ToList();
+        stageEvents = StageData.Events.ToList();
 
-        foreach (IStageEvent item in stageEvents)
-        {
-            Debug.Log(item.Time);
-        }
+
 
         while (true)
         {
