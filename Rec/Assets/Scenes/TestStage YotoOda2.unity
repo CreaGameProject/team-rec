@@ -167,8 +167,8 @@ MonoBehaviour:
   enemyObj: {fileID: 4957559379133376597, guid: cd485a3dc2d372348818d95ebf50e00c,
     type: 3}
   enemyType: 1
-  enemyMove: 3
-  summonTime: 5
+  enemyMove: 1
+  summonTime: 1
 --- !u!1 &152215020
 GameObject:
   m_ObjectHideFlags: 0
@@ -602,8 +602,8 @@ MonoBehaviour:
   enemyObj: {fileID: 4957559379133376597, guid: cd485a3dc2d372348818d95ebf50e00c,
     type: 3}
   enemyType: 1
-  enemyMove: 3
-  summonTime: 5
+  enemyMove: 1
+  summonTime: 1
 --- !u!4 &735990528
 Transform:
   m_ObjectHideFlags: 0
@@ -1260,8 +1260,8 @@ MonoBehaviour:
   enemyObj: {fileID: 4957559379133376597, guid: cd485a3dc2d372348818d95ebf50e00c,
     type: 3}
   enemyType: 1
-  enemyMove: 3
-  summonTime: 5
+  enemyMove: 1
+  summonTime: 1
 --- !u!4 &2089640709
 Transform:
   m_ObjectHideFlags: 0
