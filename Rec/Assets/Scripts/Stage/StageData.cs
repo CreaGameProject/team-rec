@@ -38,12 +38,10 @@ public class StageData
 
     public StageData(IEnumerable<IStageEvent> events, IEnumerable<Vector3> controlPoints)//, string musicPath = "")
     {
-
+        Events = events;
+        ControlPoints = controlPoints;
     }
 
-    public StageData()
-    {
-    }
 }
 
 /// <summary>

@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 4957559379133376595}
   - component: {fileID: 4957559379133376596}
   - component: {fileID: 4957559379133376592}
+  - component: {fileID: -8863077152691956934}
   m_Layer: 0
   m_Name: EnemyUITest
   m_TagString: Untagged
@@ -60,7 +61,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 31321ba15b8f8eb4c954353edc038b1d, type: 2}
+  - {fileID: 2100000, guid: 78e70f3ed8fd37649be47ff41639d6ab, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -108,3 +109,30 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   markerImage: {fileID: 2168681920151049203, guid: 87c5acc3f8b83df4a9d03d90ad8cf38c,
     type: 3}
+--- !u!114 &-8863077152691956934
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4957559379133376597}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 341f75207d2f6904e8f0279bb956f2fb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  enemyType: 0
+  player: {fileID: 0}
+  stageNavi: {fileID: 0}
+  bulletPool: {fileID: 0}
+  normalLife: 60
+  homingLife: 30
+  normalRate: 1.5
+  homingRate: 2
+  burstTime: 0.1
+  burstcount: 3
+  enemyMove: 0
+  movePower: 10
+  maxSpeed: 30
+  stopLength: 30
+  dependency: 100
