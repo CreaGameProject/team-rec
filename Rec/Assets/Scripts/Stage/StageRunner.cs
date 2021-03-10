@@ -14,7 +14,7 @@ public class StageRunner : SingletonMonoBehaviour<StageRunner>
     /// </summary>
     public float time { get; private set; }
 
-    public StageData StageData { get; private set; };
+    public StageData StageData { get; private set; }
     private List<IStageEvent> stageEvents;
 
     /// <summary>

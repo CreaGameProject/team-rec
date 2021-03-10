@@ -378,6 +378,7 @@ public class Enemy : MonoBehaviour
 
         // Rigidbodyを設定する
         rig = this.gameObject.GetComponent<Rigidbody>();
+        rig.velocity = Vector3.zero;
 
         // ランダム量指定
         randomMovement = Random.Range(2.0f, 6.0f);

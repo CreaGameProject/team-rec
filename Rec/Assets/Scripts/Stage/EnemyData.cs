@@ -10,7 +10,7 @@ public class EnemyData : MonoBehaviour
     [System.NonSerialized] public Vector3 position;
     public float summonTime;
 
-    private void Start()
+    private void Awake()
     {
         position = this.transform.position;
     }
