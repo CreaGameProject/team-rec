@@ -67,7 +67,7 @@ public class StageRunner : SingletonMonoBehaviour<StageRunner>
 
     
     private void Update() {
-
+       
     }
     
     /// <summary>
