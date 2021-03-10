@@ -4,11 +4,14 @@ using UnityEngine;
 
 public class EnemyData : MonoBehaviour
 {
-    public Enemy enemy;
+    public GameObject enemyObj;
     public EnemyType enemyType;
     public EnemyMove enemyMove;
-    private Vector3 position;
+    [System.NonSerialized] public Vector3 position;
     public float summonTime;
 
-
+    private void Start()
+    {
+        position = this.transform.position;
+    }
 }

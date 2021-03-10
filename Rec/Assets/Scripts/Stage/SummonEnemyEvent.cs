@@ -23,14 +23,17 @@ public class SummonEnemyEvent : IStageEvent
         _enemyType = enemyType;
         _enemyMove = enemyMove;
         _position = position;
-        _time = time;
+        Time = time;
     }
 
     public void Call()
     {
         GameObject enemyInstance = GameObject.Instantiate(_enemy, _position, Quaternion.identity);
-        //enemyInstance.GetComponent<Enemy>().enemyType = _enemyType;　private setのため、できない
-        //enemyInstance.GetComponent<Enemy>().enemyMove = _enemyMove;  privateのためできない
+        Enemy enemyClass = enemyInstance.GetComponent<Enemy>();
+        enemyClass.enemyType = _enemyType;
+        enemyClass.enemyMove = _enemyMove;
+
+        Debug.Log("Called");
     }
 }
 
