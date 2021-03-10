@@ -62,7 +62,7 @@ public class StageFactory : SingletonMonoBehaviour<StageFactory>
     /// </summary>
     private void StageDataCreator()
     {
-        _stageEvents.Sort((a, b) => (int)(a.Time - b.Time));
+        _stageEvents.Sort((a, b) => (int)(a.Time - b.Time));//
 
         _stageData = new StageData(_stageEvents, _controlPoints);
         StageRunner.Instance.SetStageData(_stageData);
