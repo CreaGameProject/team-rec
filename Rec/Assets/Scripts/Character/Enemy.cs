@@ -368,9 +368,11 @@ public class Enemy : MonoBehaviour
         }
 
         // ゲームオブジェクトを見つける
-        player = GameObject.Find("player_pilot_2");
-        stageNavi = GameObject.Find("StageNavigator");
+        //player = GameObject.Find("player_pilot_2");
+        //stageNavi = GameObject.Find("StageNavigator");
         bulletPool = GameObject.Find("BulletPool").GetComponent<BulletPool>();
+
+
 
         // 弾の色を指定する
         _straightColor = new Color(45f / 255f, 217f / 255f, 146f / 255f, 1) * intensity;
