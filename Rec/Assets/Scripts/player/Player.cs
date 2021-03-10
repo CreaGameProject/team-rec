@@ -17,9 +17,9 @@ public class Player : MonoBehaviour
 
     [SerializeField] Texture2D pointTexture;
 
-    float moveXMax = 11f;
-    float moveYMin = 4f;
-    float moveYMax = 6f;
+    float moveXMax = 3f;
+    float moveYMin = 1f;
+    float moveYMax = 2.5f;
 
     float homingRange = 1f;
     bool homingShot = false;
@@ -30,7 +30,7 @@ public class Player : MonoBehaviour
     /// <summary>
     /// 移動速度
     /// </summary>
-    [SerializeField] private float speed = 5f;
+    [SerializeField] private float speed;
 
     [ColorUsage(true, true), SerializeField] private Color _straightColor;
     [ColorUsage(true, true), SerializeField] private Color _homingColor;
@@ -58,22 +58,22 @@ public class Player : MonoBehaviour
     {
         if (Input.GetKey(KeyCode.A))
         {
-            transform.Translate(new Vector3(-0.01f*Mathf.Cos(transform.rotation.y * angle),0, -0.01f * Mathf.Sin(transform.rotation.y * angle)) * speed);
+            transform.Translate(new Vector3(-0.1f*Mathf.Cos(transform.rotation.y * angle),0, -0.1f * Mathf.Sin(transform.rotation.y * angle)) * speed * Time.deltaTime);
         }
 
         if (Input.GetKey(KeyCode.D))
         {
-            transform.Translate(new Vector3(0.01f*Mathf.Cos(transform.rotation.y * angle), 0, 0.01f * Mathf.Sin(transform.rotation.y * angle)) * speed);
+            transform.Translate(new Vector3(0.1f*Mathf.Cos(transform.rotation.y * angle), 0, 0.1f * Mathf.Sin(transform.rotation.y * angle)) * speed * Time.deltaTime);
         }
         
         if (Input.GetKey(KeyCode.W))
         {
-            transform.Translate(0, 0.01f * speed, 0);           
+            transform.Translate(0, 0.1f * speed * Time.deltaTime, 0);           
         }
 
         if (Input.GetKey(KeyCode.S))
         {
-            transform.Translate(0, -0.01f * speed, 0, 0);
+            transform.Translate(0, -0.1f * speed * Time.deltaTime, 0, 0);
         }
 
         transform.localPosition = new Vector3(Mathf.Clamp(transform.localPosition.x,-moveXMax,moveXMax)
@@ -107,29 +107,32 @@ public class Player : MonoBehaviour
 
     void sendRay()
     {
+        Vector3 mousePos = Input.mousePosition;
+        mousePos.z = 20f;
+        Vector3 mousePos3D = Camera.main.ScreenToWorldPoint(mousePos);
+
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
         RaycastHit hit;
 
         Debug.DrawRay(ray.origin,ray.direction*100,Color.green,5,false);
 
-        if (Physics.Raycast(ray, out hit, 100f))
+        if (Physics.Raycast(Camera.main.transform.position, (mousePos3D - Camera.main.transform.position), out hit, 100f))
         {
-            Debug.Log(hit.collider.gameObject.name);
-            Debug.Log(hit.collider.gameObject.transform.position);
-            Debug.Log("衝突位置 : "+hit.point);
+            //Debug.Log(hit.collider.gameObject.name);
+            //Debug.Log("衝突位置 : "+hit.point);
 
             //ここでストレートを打つ
             //hit.collider.gameObjectでぶつかったオブジェクトのことを指す
-            Vector3 array = (hit.point - this.transform.position).normalized;
-
+            Vector3 array = (hit.point - Camera.main.transform.position).normalized;
+            
             Straight straight = new Straight();
             straight.Velocity = 10f; // 仮の値
             straight.Direction = array;
             GameObject bullet = bulletPool.GetInstance(straight);
+            bullet.transform.position = this.transform.position;
             GameObject effect = bullet.transform.GetChild(0).gameObject;
             effect.GetComponent<Renderer>().material.SetColor("_EmissionColor", _straightColor);
             bullet.GetComponent<BulletObject>().Force = Force.Player;
-            bullet.transform.position = this.transform.position;
         }
     }
 
