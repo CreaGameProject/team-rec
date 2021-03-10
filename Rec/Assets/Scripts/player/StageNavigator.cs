@@ -47,7 +47,7 @@ public class StageNavigator : MonoBehaviour
                 {
                     // チェックポイントの座標とそこに到達するまでの時間が分かればそのポイントまでの移動ができる。
                     // Task内ではtransform.position等へのアクセスは出来ない。
-                    navigatorPosition = new Vector3(0,4,0);
+                    navigatorPosition = new Vector3(53.8f, 5, -8);
                 }
                 catch (Exception e)
                 {
