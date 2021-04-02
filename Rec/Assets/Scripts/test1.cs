@@ -9,6 +9,7 @@ public class test1 : MonoBehaviour
     {
         //SystemSoundManager testSE1 = GetComponent<SystemSoundManager>();
         //testSE1.PlaySystemSound("zunou");
+        MusicManager.Instance.PlayBGM("ashita");
 
     }
 
@@ -17,7 +18,7 @@ public class test1 : MonoBehaviour
     {
         if (Input.GetMouseButtonDown(1))
         {
-            SystemSoundManager.Instance.PlaySE("zunou");
+            MusicManager.Instance.PlayBGM("tugi");
         }
     }
 }
