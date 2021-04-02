@@ -1,103 +1,114 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class MusicManager : SingletonMonoBehaviour<MusicManager>
 {
-    [SerializeField, Range(0, 1), Tooltip("MMの音量")]
-    float mmVolume = 1;
+    private const string BGM_VOLUME_KEY = "SE_VOLUME_KEY";
+    private const float BGM_VOLUME_DEFULT = 1.0f;
 
-    AudioClip[] mm;
+    public const float BGM_FADE_SPEED_RATE_HIGH = 0.9f;
+    public const float BGM_FADE_SPEED_RATE_LOW = 0.3f;
+    private float bgmFadeSpeedRate = BGM_FADE_SPEED_RATE_HIGH;
 
-    Dictionary<string, int> mmIndex = new Dictionary<string, int>();
+    private string nextBGMName;
 
-    AudioSource mmAudioSource;
+    private bool isFadeOut = false;
 
-    public void SetMMVolume(float value)
-    {
-        mmVolume = Mathf.Clamp01(value);
-        mmAudioSource.volume = mmVolume;
-        GameParameterBank.Instance.BGMVolume = mmVolume;
-        GameParameterBank.Instance.SaveData();
-    }
+    private Dictionary<string, AudioClip> bgmDictionary;
 
-    public float GetMMVolume()
-    {
-        return mmVolume;
-    }
+    private AudioSource bgmSource;
+
 
     public void Awake()
     {
         //別のMusicManagerがあれば削除
         if (this != Instance)
         {
-        Destroy(gameObject);
-        return;
+            Destroy(this);
+            return;
         }
 
         DontDestroyOnLoad(gameObject);
 
-        //AudioSourceをアタッチ
-        mmAudioSource = gameObject.AddComponent<AudioSource>();
-        
-        mmAudioSource.loop = !mmAudioSource.loop;
+        //オーディオソースを1作成
+        gameObject.AddComponent<AudioSource>();
 
-        SetMMVolume(GameParameterBank.Instance.BGMVolume);
-        mmAudioSource.volume = mmVolume;
-        //AudioClipの読み込み
-        mm = Resources.LoadAll<AudioClip>("Audio/BGM");
+        //作成したオーディオソースを取得して各変数に設定、ボリュームも設定
+        AudioSource bgmAudioSource = GetComponent<AudioSource>();
 
+        bgmAudioSource.playOnAwake = false;
+        bgmAudioSource.loop = true;
+        bgmSource = bgmAudioSource;
+        bgmSource.volume = PlayerPrefs.GetFloat(BGM_VOLUME_KEY, BGM_VOLUME_DEFULT);
 
-        //Dictionaryに値を追加
-        for (int i = 0; i < mm.Length; i++)
+        bgmDictionary = new Dictionary<string, AudioClip>();
+        object[] bgmList = Resources.LoadAll("Audio/BGM");
+
+        foreach (AudioClip bgm in bgmList)
         {
-            mmIndex.Add(mm[i].name, i);
+            bgmDictionary[bgm.name] = bgm;
+        }
+
+    }
+
+    public void PlayBGM(string bgmName, float fadeSpeedRate = BGM_FADE_SPEED_RATE_HIGH)
+    {
+        if (!bgmDictionary.ContainsKey(bgmName))
+        {
+            Debug.Log(bgmName + "という名前のBGMがありません");
+            return;
+        }
+
+        if (!bgmSource.isPlaying)
+        {
+            nextBGMName = "";
+            bgmSource.clip = bgmDictionary[bgmName] as AudioClip;
+            bgmSource.Play();
+        }
+        else if (bgmSource.clip.name != bgmName)
+        {
+            nextBGMName = bgmName;
+            FadeOutBGM(fadeSpeedRate);
         }
     }
     
-    
-
-    //ファイル名を受け取ってキーを渡す
-    public int PlayMusicIndex(string name)
+    public void StopBGM ()
     {
-        if (mmIndex.ContainsKey(name))
-        {
-            return mmIndex[name];
-        }
-        else
-        {
-            Debug.LogError("指定された名前のMMファイルが存在しません。");
-            return 0;
-        }
+        bgmSource.Stop ();
     }
 
-    //受け取ったキーに対応する音声ファイルを再生する
-    public void PlayMusic(int index)
+    public void FadeOutBGM(float fadeSpeedRate = BGM_FADE_SPEED_RATE_LOW)
     {
-        index = Mathf.Clamp(index, 0, mm.Length);
-
-        mmAudioSource.clip = mm[index];
-        mmAudioSource.Play();
+        bgmFadeSpeedRate = fadeSpeedRate;
+        isFadeOut = true;
     }
 
-    //カプセル化してみました
-    public void PlayMusic(string name)
-    {
-        PlayMusic(PlayMusicIndex(name));
-    }
-
-    public void StopMm()
-    {
-        mmAudioSource.Stop();
-        mmAudioSource.clip = null;
-    }
-
-    //αでは外部からSetしないのでαだけの実装です
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Space)){
-            SetMMVolume(mmVolume);
+        if (!isFadeOut)
+        {
+            return;
+        }
+
+        bgmSource.volume -= Time.deltaTime * bgmFadeSpeedRate;
+        if (bgmSource.volume <= 0)
+        {
+            bgmSource.Stop();
+            bgmSource.volume = PlayerPrefs.GetFloat(BGM_VOLUME_KEY, BGM_VOLUME_DEFULT);
+            isFadeOut = false;
+
+            if (!string.IsNullOrEmpty(nextBGMName))
+            {
+                PlayBGM(nextBGMName);
+            }
         }
     }
 
+    public void ChangeBGMVolume(float BGMVolume)
+    {
+        bgmSource.volume = BGMVolume;
+        PlayerPrefs.SetFloat(BGM_VOLUME_KEY, BGMVolume);
+    }
 }

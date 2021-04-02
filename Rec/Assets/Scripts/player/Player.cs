@@ -17,9 +17,11 @@ public class Player : MonoBehaviour
 
     [SerializeField] Texture2D pointTexture;
 
+
     float moveXMax = 3f;
     float moveYMin = 1f;
     float moveYMax = 2.5f;
+
 
     float homingRange = 1f;
     bool homingShot = false;
@@ -35,6 +37,22 @@ public class Player : MonoBehaviour
     [ColorUsage(true, true), SerializeField] private Color _straightColor;
     [ColorUsage(true, true), SerializeField] private Color _homingColor;
 
+    public float moveForceMultiplier;
+
+    // 水平移動時に機首を左右に向けるトルク
+    public float yawTorqueMagnitude = 30.0f;
+
+    // 垂直移動時に機首を上下に向けるトルク
+    public float pitchTorqueMagnitude = 60.0f;
+
+    // 水平移動時に機体を左右に傾けるトルク
+    public float rollTorqueMagnitude = 30.0f;
+
+    // バネのように姿勢を元に戻すトルク
+    public float restoringTorqueMagnitude = 100.0f;
+
+    private Vector3 Player_pos;
+    private new Rigidbody rigidbody;
 
     // Start is called before the first frame update
     void Start()
@@ -45,13 +63,20 @@ public class Player : MonoBehaviour
 
         mainCamera = Camera.main;
         Cursor.SetCursor(pointTexture, new Vector2(pointTexture.width/2 , pointTexture.height/2), CursorMode.ForceSoftware);
+        
     }
 
     // Update is called once per frame
     void Update()
     {
         getInput();
+        FixedUpdate();
+    }
 
+    void Awake()
+    {
+        rigidbody = GetComponent<Rigidbody>();
+        rigidbody.angularDrag = 20.0f;
     }
 
     void getInput()
@@ -224,5 +249,30 @@ public class Player : MonoBehaviour
                 decreaseLife();
             }
         }
+    }
+    
+    void FixedUpdate()
+    {
+        float x = Input.GetAxis("Horizontal");
+        float y = Input.GetAxis("Vertical");
+
+        // xとyにspeedを掛ける
+        rigidbody.AddForce(x * speed, y * speed, 0);
+
+        Vector3 moveVector = Vector3.zero;
+
+        rigidbody.AddForce(moveForceMultiplier * (moveVector - rigidbody.velocity));
+
+        // プレイヤーの入力に応じて姿勢をひねろうとするトルク
+        Vector3 rotationTorque = new Vector3(-y * pitchTorqueMagnitude, x * yawTorqueMagnitude, -x * rollTorqueMagnitude);
+
+        // 現在の姿勢のずれに比例した大きさで逆方向にひねろうとするトルク
+        Vector3 right = transform.right;
+        Vector3 up = transform.up;
+        Vector3 forward = transform.forward;
+        Vector3 restoringTorque = new Vector3(forward.y - up.z, right.z - forward.x, up.x - right.y) * restoringTorqueMagnitude;
+
+        // 機体にトルクを加える
+        rigidbody.AddTorque(rotationTorque + restoringTorque);
     }
 }
