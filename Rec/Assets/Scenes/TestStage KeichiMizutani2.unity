@@ -1464,8 +1464,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   taskIsRunning: 0
-  waypoints: []
   wayList: []
+  timeCount: 5
 --- !u!4 &791449944922620505
 Transform:
   m_ObjectHideFlags: 0
