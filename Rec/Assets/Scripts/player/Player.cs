@@ -37,6 +37,11 @@ public class Player : MonoBehaviour
     [ColorUsage(true, true), SerializeField] private Color _straightColor;
     [ColorUsage(true, true), SerializeField] private Color _homingColor;
 
+    /// <summary>
+    /// 機体
+    /// </summary>
+    [SerializeField] GameObject body;
+
     public float moveForceMultiplier;
 
     // 水平移動時に機首を左右に向けるトルク
@@ -70,12 +75,12 @@ public class Player : MonoBehaviour
     void Update()
     {
         getInput();
-        FixedUpdate();
+        //UnityEngine.PlayerLoop.FixedUpdate();
     }
 
     void Awake()
     {
-        rigidbody = GetComponent<Rigidbody>();
+        rigidbody = body.GetComponent<Rigidbody>();
         rigidbody.angularDrag = 20.0f;
     }
 
@@ -251,28 +256,31 @@ public class Player : MonoBehaviour
         }
     }
     
+    
     void FixedUpdate()
     {
         float x = Input.GetAxis("Horizontal");
         float y = Input.GetAxis("Vertical");
 
         // xとyにspeedを掛ける
-        rigidbody.AddForce(x * speed, y * speed, 0);
+        //rigidbody.AddForce(x * speed, y * speed, 0);
 
-        Vector3 moveVector = Vector3.zero;
+        //Vector3 moveVector = Vector3.zero;
 
-        rigidbody.AddForce(moveForceMultiplier * (moveVector - rigidbody.velocity));
+        // rigidbody.AddForce(moveForceMultiplier * (moveVector - rigidbody.velocity));
 
-        // プレイヤーの入力に応じて姿勢をひねろうとするトルク
         Vector3 rotationTorque = new Vector3(-y * pitchTorqueMagnitude, x * yawTorqueMagnitude, -x * rollTorqueMagnitude);
 
         // 現在の姿勢のずれに比例した大きさで逆方向にひねろうとするトルク
-        Vector3 right = transform.right;
-        Vector3 up = transform.up;
-        Vector3 forward = transform.forward;
+        Vector3 right = body.transform.right;
+        Vector3 up = body.transform.up;
+        Vector3 forward = body.transform.forward;
+
         Vector3 restoringTorque = new Vector3(forward.y - up.z, right.z - forward.x, up.x - right.y) * restoringTorqueMagnitude;
 
         // 機体にトルクを加える
         rigidbody.AddTorque(rotationTorque + restoringTorque);
+
     }
+    
 }
