@@ -368,8 +368,8 @@ public class Enemy : MonoBehaviour
         }
 
         // ゲームオブジェクトを見つける
-        //player = GameObject.Find("player_pilot_2");
-        //stageNavi = GameObject.Find("StageNavigator");
+        player = GameObject.Find("player_pilot_2");
+        stageNavi = GameObject.Find("StageNavigator");
         bulletPool = GameObject.Find("BulletPool").GetComponent<BulletPool>();
 
 

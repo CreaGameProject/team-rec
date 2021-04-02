@@ -133,8 +133,8 @@ MonoBehaviour:
   burstTime: 0.1
   burstcount: 3
   enemyMove: 0
-  movePower: 0
-  maxSpeed: 0
+  movePower: 10
+  maxSpeed: 30
   stopLength: 30
   dependency: 100
   intensity: 2
