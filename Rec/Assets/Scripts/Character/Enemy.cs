@@ -56,7 +56,7 @@ public class Enemy : MonoBehaviour
     /// <summary>
     /// このキャラクターの攻撃タイプ
     /// </summary>
-    public EnemyType enemyType { get; private set; }
+    public EnemyType enemyType = EnemyType.None;
 
     /// <summary>
     /// Playerの座標
@@ -171,6 +171,12 @@ public class Enemy : MonoBehaviour
     /// </summary>
     [SerializeField] float dependency = 100.0f;
 
+    [Header("色調整")]
+    [SerializeField] float intensity = 2.0f;
+    [ColorUsage(true, true), SerializeField] private Color _straightColor;
+    [ColorUsage(true, true), SerializeField] private Color _homingColor;
+
+
     /// <summary>
     /// このキャラクターにダメージを与える
     /// </summary>
@@ -218,7 +224,7 @@ public class Enemy : MonoBehaviour
             case EnemyMove.Front:
                 if (Vector3.Distance(player_pos, this.transform.position) >= stopLength)
                 {
-                    rig.AddForce(new Vector3(0, 0, -1) * Time.deltaTime * movePower);
+                    rig.AddForce(new Vector3(1, 0, 0) * Time.deltaTime * movePower);
                 }
                 break;
 
@@ -240,7 +246,7 @@ public class Enemy : MonoBehaviour
             case EnemyMove.Right:
                 if (Vector3.Distance(origin_pos, this.transform.position) <= randomMovement)
                 {
-                    rig.AddForce(new Vector3(-0.4f, 0, 1) * Time.deltaTime * movePower);
+                    rig.AddForce(new Vector3(-1, 0, -0.4f) * Time.deltaTime * movePower);
                 }
                 break;
 
@@ -254,7 +260,7 @@ public class Enemy : MonoBehaviour
             case EnemyMove.Left:
                 if (Vector3.Distance(origin_pos, this.transform.position) <= randomMovement)
                 {
-                    rig.AddForce(new Vector3(0.4f, 0, 1) * Time.deltaTime * movePower);
+                    rig.AddForce(new Vector3(-1, 0, 0.4f) * Time.deltaTime * movePower);
                 }
                 break;
 
@@ -268,7 +274,7 @@ public class Enemy : MonoBehaviour
             case EnemyMove.Back:
                 if (Vector3.Distance(player_pos, this.transform.position) >= stopLength)
                 {
-                    rig.AddForce(new Vector3(0, 0, 1) * Time.deltaTime * movePower);
+                    rig.AddForce(new Vector3(-1, 0, 0) * Time.deltaTime * movePower);
                 }
                 break;
 
@@ -311,10 +317,14 @@ public class Enemy : MonoBehaviour
                 {
                     Straight straight = new Straight();
                     straight.Velocity = 10f; // 仮の値
-                    straight.Direction = -transform.forward; // 前方向
+                    Vector3 dir = (player.transform.position - this.transform.position).normalized;
+                    //straight.Direction = -transform.forward; // 前方向
+                    straight.Direction = dir; // プレイヤーの方向
                     GameObject enemyBullet = bulletPool.GetInstance(straight);
                     enemyBullet.GetComponent<BulletObject>().Force = Force.Enemy;
                     enemyBullet.transform.position = this.transform.position;
+                    GameObject effect = enemyBullet.transform.GetChild(0).gameObject;
+                    effect.GetComponent<Renderer>().material.SetColor("_EmissionColor", _straightColor);
                     yield return new WaitForSeconds(burstTime);
                 }
                 // クールダウン
@@ -330,6 +340,8 @@ public class Enemy : MonoBehaviour
                 GameObject enemyBullet = bulletPool.GetInstance(homing);
                 enemyBullet.GetComponent<BulletObject>().Force = Force.Enemy;
                 enemyBullet.transform.position = this.transform.position;
+                GameObject effect = enemyBullet.transform.GetChild(0).gameObject;
+                effect.GetComponent<Renderer>().material.SetColor("_EmissionColor", _homingColor);
 
                 // クールダウン
                 yield return new WaitForSeconds(homingRate);
@@ -355,8 +367,20 @@ public class Enemy : MonoBehaviour
             Hp = homingLife;
         }
 
+        // ゲームオブジェクトを見つける
+        //player = GameObject.Find("player_pilot_2");
+        //stageNavi = GameObject.Find("StageNavigator");
+        bulletPool = GameObject.Find("BulletPool").GetComponent<BulletPool>();
+
+
+
+        // 弾の色を指定する
+        _straightColor = new Color(45f / 255f, 217f / 255f, 146f / 255f, 1) * intensity;
+        _homingColor = new Color(82f / 255f, 210f / 255f, 254f / 255f, 1) * intensity;
+
         // Rigidbodyを設定する
         rig = this.gameObject.GetComponent<Rigidbody>();
+        rig.velocity = Vector3.zero;
 
         // ランダム量指定
         randomMovement = Random.Range(2.0f, 6.0f);
@@ -371,7 +395,7 @@ public class Enemy : MonoBehaviour
     }
 
     // Update is called once per frame
-    void Update()
+    void FixedUpdate()
     {
         Move();
 
@@ -379,7 +403,7 @@ public class Enemy : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Space))
         {
             // 仮指定
-            enemyType = EnemyType.Homing;
+            enemyType = EnemyType.Normal;
         }
     }
         

@@ -14,7 +14,8 @@ public class StageRunner : SingletonMonoBehaviour<StageRunner>
     /// </summary>
     public float time { get; private set; }
 
-    private StageData _stageData; 
+    public StageData StageData { get; private set; }
+    private List<IStageEvent> stageEvents;
 
     /// <summary>
     /// ステージが実行中であるか
@@ -32,7 +33,8 @@ public class StageRunner : SingletonMonoBehaviour<StageRunner>
     /// <param name="stageData">セットするステージ</param>
     public void SetStageData(StageData stageData)
     {
-        _stageData = stageData;
+        StageData = stageData;
+        StartCoroutine("Timer");
     }
 
     /// <summary>
@@ -41,15 +43,16 @@ public class StageRunner : SingletonMonoBehaviour<StageRunner>
     /// <param name="callback">ステージ終了時に実行する関数　引数はステージを最後まで実行できたか</param>
     public void StartStage(Action<bool> callback = null)
     {
-
     }
+
 
     /// <summary>
     /// ステージの実行を停止する。
     /// </summary>
     public void StopStage()
     {
-
+        
+        
     }
 
 
@@ -59,12 +62,12 @@ public class StageRunner : SingletonMonoBehaviour<StageRunner>
     }
 
     private void Start() {
-        //SetStageData(new StageData(events,controlPoints,musicPath));
+        //StartCoroutine("Timer");
     }
 
     
     private void Update() {
-
+       
     }
     
     /// <summary>
@@ -73,18 +76,20 @@ public class StageRunner : SingletonMonoBehaviour<StageRunner>
     /// <returns></returns>
     IEnumerator Timer()
     {
-        List<IStageEvent> stageEvents = _stageData.Events.ToList();
+        stageEvents = StageData.Events.ToList();
+
 
 
         while (true)
         {
             time += Time.deltaTime;
             //_stageDataはTimeでソートされていることを前提としている。
-            foreach (var x in stageEvents.TakeWhile(x => x.Time > time))
+            foreach (var x in stageEvents.TakeWhile(x => x.Time < time))
             {
                 x.Call();
             }
-            stageEvents = stageEvents.SkipWhile(x => x.Time > time).ToList();
+            stageEvents = stageEvents.SkipWhile(x => x.Time < time).ToList();
+
             yield return null;
         }
     }
@@ -92,7 +97,7 @@ public class StageRunner : SingletonMonoBehaviour<StageRunner>
 
 /*
 
-class intArray : IEnumerable<int>
+class IntArray : IEnumerable<int>
 {
     int a;
     int b;
@@ -100,8 +105,11 @@ class intArray : IEnumerable<int>
 
     public IEnumerator<int> GetEnumerator()
     {
+
         yield return a;
-        yield return b;
+        if(a < 0){
+            yield return b;
+        }
         yield return c;
     }
 

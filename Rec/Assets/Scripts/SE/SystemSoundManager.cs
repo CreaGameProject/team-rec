@@ -84,5 +84,5 @@ public class SystemSoundManager : SingletonMonoBehaviour<SystemSoundManager>
         PlayerPrefs.SetFloat(SE_VOLUME_KEY, SEVolume);
     }
 
-    
+
 }

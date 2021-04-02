@@ -55,7 +55,17 @@ public class BulletObject : MonoBehaviour
     /// <returns></returns>
     private IEnumerator TimeDestroy()
     {
-        yield return new WaitForSeconds(8);
+        yield return new WaitForSeconds(6);
         BulletPool.Instance.Destroy(this.gameObject);
+    }
+
+    /// <summary>
+    /// 無効化された時の処理
+    /// </summary>
+    private void OnDisable()
+    {
+        Rigidbody rig = this.GetComponent<Rigidbody>();
+        rig.velocity = Vector3.zero;
+        rig.angularVelocity = Vector3.zero;
     }
 }
