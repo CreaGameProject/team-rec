@@ -7,8 +7,6 @@ public class SystemSoundManager : SingletonMonoBehaviour<SystemSoundManager>
     private const string SE_VOLUME_KEY = "SE_VOLUME_KEY";
     private const float SE_VOLUME_DEFULT = 1.0f;
 
-    private const string SE_PATH = "Audio/SE";
-
     private Dictionary<string, AudioClip> seDictionary;
 
     private List<AudioSource> seSourceList;
@@ -85,7 +83,6 @@ public class SystemSoundManager : SingletonMonoBehaviour<SystemSoundManager>
 
         PlayerPrefs.SetFloat(SE_VOLUME_KEY, SEVolume);
     }
-
 
 
 }
