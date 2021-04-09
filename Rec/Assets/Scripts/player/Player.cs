@@ -62,8 +62,8 @@ public class Player : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        life = 3;
-        laserGauge = 500;
+        life = 200;
+        laserGauge = 200;
         angle = 1f / 180f * Mathf.PI;
 
         mainCamera = Camera.main;
@@ -181,10 +181,10 @@ public class Player : MonoBehaviour
             foreach (RaycastHit hit in hits)
             {
                 
-                if (laserGauge >=50)
+                if (laserGauge >=20)
                 {
                     Debug.Log(hit.collider.gameObject.name);
-                    laserGauge -= 50;
+                    laserGauge -= 20;
 
                     //ここでホーミングを打つ(つまり単発を高速レートで打つ感じ)
                     //hit.collider.gameObjectでぶつかったオブジェクトのことを指す
@@ -219,9 +219,9 @@ public class Player : MonoBehaviour
         laserGauge +=num;
     }
 
-    public void decreaseLife()
+    public void decreaseLife(int damagePoint)
     {
-        life--;
+        life -= damagePoint;
 
         if (life <= 0)
         {
@@ -251,7 +251,7 @@ public class Player : MonoBehaviour
             if (bulletObject.Force == Force.Enemy)
             {
                 BulletPool.Instance.Destroy(other.gameObject);
-                decreaseLife();
+                decreaseLife(bulletObject.bulletclass.AttackPoint);
             }
         }
     }

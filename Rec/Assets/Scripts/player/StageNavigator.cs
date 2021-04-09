@@ -126,7 +126,6 @@ public class StageNavigator : MonoBehaviour
                 for (float t = 0f; t < 0.05f; t += Time.deltaTime) // 要修正(第二引数を小さくしすぎるとバグる)
                 {
                     this.transform.rotation = Quaternion.Euler(0, beforeLookAt * (1-t) + aim * t, 0);
-                    Debug.Log(t);
                     //yield return null;
                 }
             }
