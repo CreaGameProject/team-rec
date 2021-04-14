@@ -269,14 +269,14 @@ public class Player : MonoBehaviour
 
         // rigidbody.AddForce(moveForceMultiplier * (moveVector - rigidbody.velocity));
 
-        Vector3 rotationTorque = new Vector3(-y * pitchTorqueMagnitude, x * yawTorqueMagnitude, -x * rollTorqueMagnitude);
+        Vector3 rotationTorque = new Vector3(-y * pitchTorqueMagnitude, 0, -x * rollTorqueMagnitude);
 
         // 現在の姿勢のずれに比例した大きさで逆方向にひねろうとするトルク
         Vector3 right = body.transform.right;
         Vector3 up = body.transform.up;
         Vector3 forward = body.transform.forward;
 
-        Vector3 restoringTorque = new Vector3(forward.y - up.z, right.z - forward.x, up.x - right.y) * restoringTorqueMagnitude;
+        Vector3 restoringTorque = new Vector3(forward.y - up.z, 0, up.x - right.y) * restoringTorqueMagnitude;
 
         // 機体にトルクを加える
         rigidbody.AddTorque(rotationTorque + restoringTorque);
