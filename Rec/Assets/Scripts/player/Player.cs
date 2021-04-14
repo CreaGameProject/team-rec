@@ -75,7 +75,9 @@ public class Player : MonoBehaviour
     void Update()
     {
         getInput();
+
         //UnityEngine.PlayerLoop.FixedUpdate();
+
     }
 
     void Awake()
@@ -255,31 +257,29 @@ public class Player : MonoBehaviour
             }
         }
     }
+    public float roll_decay;
+    public float pitch_decay;
+    public float roll_max;
+    public float pitch_max;
+    public float roll_growth;
+    public float pitch_growth;
     
     
     void FixedUpdate()
     {
-        float x = Input.GetAxis("Horizontal");
-        float y = Input.GetAxis("Vertical");
 
-        // xとyにspeedを掛ける
-        //rigidbody.AddForce(x * speed, y * speed, 0);
-
-        //Vector3 moveVector = Vector3.zero;
-
-        // rigidbody.AddForce(moveForceMultiplier * (moveVector - rigidbody.velocity));
-
-        Vector3 rotationTorque = new Vector3(-y * pitchTorqueMagnitude, 0, -x * rollTorqueMagnitude);
-
-        // 現在の姿勢のずれに比例した大きさで逆方向にひねろうとするトルク
-        Vector3 right = body.transform.right;
-        Vector3 up = body.transform.up;
-        Vector3 forward = body.transform.forward;
-
-        Vector3 restoringTorque = new Vector3(forward.y - up.z, 0, up.x - right.y) * restoringTorqueMagnitude;
-
-        // 機体にトルクを加える
-        rigidbody.AddTorque(rotationTorque + restoringTorque);
+        int x = -(Input.GetKey(KeyCode.A) ? 1 : 0) + (Input.GetKey(KeyCode.D) ? 1 : 0);
+        int y = -(Input.GetKey(KeyCode.S) ? 1 : 0) + (Input.GetKey(KeyCode.W) ? 1 : 0);
+        var ang = body.transform.localEulerAngles;
+        var ang_x = ang.x > 180 ? ang.x - 360 : ang.x;
+        var ang_z = ang.z > 180 ? ang.z - 360 : ang.z;
+        var roll = ang_z + roll_growth * -x;
+        var pitch = ang_x + pitch_growth * -y;
+        roll = roll * (1 - roll_decay * (1 - Mathf.Abs(x)));
+        pitch = pitch * (1 - pitch_decay * (1 - Mathf.Abs(y)));
+        roll = Mathf.Clamp(roll, -roll_max, roll_max);
+        pitch = Mathf.Clamp(pitch, -pitch_max, pitch_max);
+        body.transform.localEulerAngles = new Vector3(pitch, ang.y, roll);
 
     }
     

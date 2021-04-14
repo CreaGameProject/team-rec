@@ -54,6 +54,9 @@
           <e p="UI" t="Include">
             <e p="CompassRader.cs" t="Include" />
             <e p="EnemyMarkerText.cs" t="Include" />
+            <e p="Option.cs" t="Include" />
+            <e p="TitleUISystem.cs" t="Include" />
+            <e p="WindowTransitionData.cs" t="Include" />
           </e>
           <e p="Utils" t="Include">
             <e p="SingletonMonoBehaviour.cs" t="Include" />
