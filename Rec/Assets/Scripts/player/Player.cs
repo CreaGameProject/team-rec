@@ -70,7 +70,6 @@ public class Player : MonoBehaviour
     void Update()
     {
         getInput();
-        FixedUpdate();
     }
 
     void Awake()

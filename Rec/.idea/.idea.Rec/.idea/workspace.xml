@@ -10,6 +10,14 @@
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
   </component>
+  <component name="GitSEFilterConfiguration">
+    <file-type-list>
+      <filtered-out-file-type name="LOCAL_BRANCH" />
+      <filtered-out-file-type name="REMOTE_BRANCH" />
+      <filtered-out-file-type name="TAG" />
+      <filtered-out-file-type name="COMMIT_BY_MESSAGE" />
+    </file-type-list>
+  </component>
   <component name="IdeDocumentHistory">
     <changedPaths>
       <option value="$PROJECT_DIR$/Assets/Scripts/Bgm/MusicManager.cs" />
@@ -63,7 +71,12 @@
       <workItem from="1616471875956" duration="4663000" />
       <workItem from="1617160486076" duration="2469000" />
       <workItem from="1617339799122" duration="4000" />
+<<<<<<< Updated upstream
       <workItem from="1617348679558" duration="1000" />
+=======
+      <workItem from="1617341078839" duration="2000" />
+      <workItem from="1617344382615" duration="3428000" />
+>>>>>>> Stashed changes
     </task>
     <servers />
   </component>
