@@ -267,6 +267,7 @@ public class Player : MonoBehaviour
     
     void FixedUpdate()
     {
+
         int x = -(Input.GetKey(KeyCode.A) ? 1 : 0) + (Input.GetKey(KeyCode.D) ? 1 : 0);
         int y = -(Input.GetKey(KeyCode.S) ? 1 : 0) + (Input.GetKey(KeyCode.W) ? 1 : 0);
         var ang = body.transform.localEulerAngles;
@@ -279,6 +280,7 @@ public class Player : MonoBehaviour
         roll = Mathf.Clamp(roll, -roll_max, roll_max);
         pitch = Mathf.Clamp(pitch, -pitch_max, pitch_max);
         body.transform.localEulerAngles = new Vector3(pitch, ang.y, roll);
+
     }
     
 }
