@@ -317,6 +317,7 @@ public class Enemy : MonoBehaviour
                 {
                     Straight straight = new Straight();
                     straight.Velocity = 10f; // 仮の値
+                    straight.AttackPoint = 10;
                     Vector3 dir = (player.transform.position - this.transform.position).normalized;
                     //straight.Direction = -transform.forward; // 前方向
                     straight.Direction = dir; // プレイヤーの方向
@@ -334,6 +335,7 @@ public class Enemy : MonoBehaviour
             {
                 Homing homing = new Homing();
                 homing.Velocity = 6f; // 仮の値
+                homing.AttackPoint = 20;
                 homing.HomingStrength = 6f; // 仮の値
                 homing.Direction = transform.up; // 上方向
                 homing.Target = player;

@@ -37,6 +37,11 @@ public class Player : MonoBehaviour
     [ColorUsage(true, true), SerializeField] private Color _straightColor;
     [ColorUsage(true, true), SerializeField] private Color _homingColor;
 
+    /// <summary>
+    /// 機体
+    /// </summary>
+    [SerializeField] GameObject body;
+
     public float moveForceMultiplier;
 
     // 水平移動時に機首を左右に向けるトルク
@@ -57,8 +62,8 @@ public class Player : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        life = 3;
-        laserGauge = 500;
+        life = 200;
+        laserGauge = 200;
         angle = 1f / 180f * Mathf.PI;
 
         mainCamera = Camera.main;
@@ -70,11 +75,15 @@ public class Player : MonoBehaviour
     void Update()
     {
         getInput();
+<<<<<<< HEAD
+=======
+        //UnityEngine.PlayerLoop.FixedUpdate();
+>>>>>>> master
     }
 
     void Awake()
     {
-        rigidbody = GetComponent<Rigidbody>();
+        rigidbody = body.GetComponent<Rigidbody>();
         rigidbody.angularDrag = 20.0f;
     }
 
@@ -175,10 +184,10 @@ public class Player : MonoBehaviour
             foreach (RaycastHit hit in hits)
             {
                 
-                if (laserGauge >=50)
+                if (laserGauge >=20)
                 {
                     Debug.Log(hit.collider.gameObject.name);
-                    laserGauge -= 50;
+                    laserGauge -= 20;
 
                     //ここでホーミングを打つ(つまり単発を高速レートで打つ感じ)
                     //hit.collider.gameObjectでぶつかったオブジェクトのことを指す
@@ -213,9 +222,9 @@ public class Player : MonoBehaviour
         laserGauge +=num;
     }
 
-    public void decreaseLife()
+    public void decreaseLife(int damagePoint)
     {
-        life--;
+        life -= damagePoint;
 
         if (life <= 0)
         {
@@ -245,10 +254,11 @@ public class Player : MonoBehaviour
             if (bulletObject.Force == Force.Enemy)
             {
                 BulletPool.Instance.Destroy(other.gameObject);
-                decreaseLife();
+                decreaseLife(bulletObject.bulletclass.AttackPoint);
             }
         }
     }
+    
     
     void FixedUpdate()
     {
@@ -256,22 +266,24 @@ public class Player : MonoBehaviour
         float y = Input.GetAxis("Vertical");
 
         // xとyにspeedを掛ける
-        rigidbody.AddForce(x * speed, y * speed, 0);
+        //rigidbody.AddForce(x * speed, y * speed, 0);
 
-        Vector3 moveVector = Vector3.zero;
+        //Vector3 moveVector = Vector3.zero;
 
-        rigidbody.AddForce(moveForceMultiplier * (moveVector - rigidbody.velocity));
+        // rigidbody.AddForce(moveForceMultiplier * (moveVector - rigidbody.velocity));
 
-        // プレイヤーの入力に応じて姿勢をひねろうとするトルク
         Vector3 rotationTorque = new Vector3(-y * pitchTorqueMagnitude, x * yawTorqueMagnitude, -x * rollTorqueMagnitude);
 
         // 現在の姿勢のずれに比例した大きさで逆方向にひねろうとするトルク
-        Vector3 right = transform.right;
-        Vector3 up = transform.up;
-        Vector3 forward = transform.forward;
+        Vector3 right = body.transform.right;
+        Vector3 up = body.transform.up;
+        Vector3 forward = body.transform.forward;
+
         Vector3 restoringTorque = new Vector3(forward.y - up.z, right.z - forward.x, up.x - right.y) * restoringTorqueMagnitude;
 
         // 機体にトルクを加える
         rigidbody.AddTorque(rotationTorque + restoringTorque);
+
     }
+    
 }
