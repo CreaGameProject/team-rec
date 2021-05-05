@@ -4,13 +4,14 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 
-public class TitleUISystem : MonoBehaviour
+public class UITransitionSystem : MonoBehaviour
 {
     [Header("ウィンドウ一覧")]
     [SerializeField] private GameObject TitleWindow;
     [SerializeField] private GameObject MainMenuWindow;
     [SerializeField] private GameObject StageSelectWindow;
     [SerializeField] private GameObject OptionWindow;
+    [SerializeField] private GameObject PauseWindow;
 
     [Header("UI用3Dゲームオブジェクト")]
     [SerializeField] private GameObject UIStageObj1;
@@ -100,6 +101,7 @@ public class TitleUISystem : MonoBehaviour
             {
                 // オプション画面を開ける
                 WindowTransitionData.Transition = WindowTransition.Option;
+                WindowTransitionData._DefaultUIWindow = DefaultUIWindow.Main;
                 StartCoroutine(OpenWindow(OptionWindow, waitFrame));
                 StartCoroutine(CloseWindow(MainMenuWindow, waitFrame));
             }
@@ -142,9 +144,43 @@ public class TitleUISystem : MonoBehaviour
             string name = this.gameObject.name;
             if (name == "Back")
             {
-                WindowTransitionData.Transition = WindowTransition.MainMenu;
-                StartCoroutine(OpenWindow(MainMenuWindow, waitFrame));
+                if (WindowTransitionData._DefaultUIWindow == DefaultUIWindow.Main)
+                {
+                    WindowTransitionData.Transition = WindowTransition.MainMenu;
+                    StartCoroutine(OpenWindow(MainMenuWindow, waitFrame));
+                }
+                else if (WindowTransitionData._DefaultUIWindow == DefaultUIWindow.Pause)
+                {
+                    WindowTransitionData.Transition = WindowTransition.Pause;
+                    StartCoroutine(OpenWindow(PauseWindow, waitFrame));
+                }
+                else
+                {
+                    Debug.LogError("デフォルトのUIウィンドウが正しくありません。 : " + WindowTransitionData._DefaultUIWindow );
+                }
                 StartCoroutine(CloseWindow(OptionWindow, waitFrame));
+            }
+            else
+            {
+                Debug.LogError("存在しない文字列を指定しています。");
+            }
+        }
+        // ポーズ～
+        else if (WindowTransitionData.Transition == WindowTransition.Pause)
+        {
+            string name = this.gameObject.name;
+            if (name == "Option")
+            {
+                // オプション画面を開く
+                print("test");
+                WindowTransitionData.Transition = WindowTransition.Option;
+                WindowTransitionData._DefaultUIWindow = DefaultUIWindow.Pause;
+                StartCoroutine(OpenWindow(OptionWindow, waitFrame));
+                StartCoroutine(CloseWindow(PauseWindow, waitFrame));
+            }
+            else if (name == "Quit")
+            {
+                // タイトルをロードする
             }
             else
             {
