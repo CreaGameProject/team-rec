@@ -8,6 +8,11 @@ public class WindowTransitionData : MonoBehaviour
     /// UIウィンドウの状態をここに保存する
     /// </summary>
     public static WindowTransition Transition = WindowTransition.None;
+
+    /// <summary>
+    /// デフォルトのUIウィンドウがなにかをここに保存する。
+    /// </summary>
+    public static DefaultUIWindow _DefaultUIWindow = DefaultUIWindow.None;
 }
 
 
@@ -20,5 +25,19 @@ public enum WindowTransition
     Title,
     MainMenu,
     StageSelect,
-    Option
+    Option,
+    Pause,
+    ScoreBoard,
+    StageClear
+}
+
+
+/// <summary>
+/// 開いている元のUIウィンドウの管理を行う
+/// </summary>
+public enum DefaultUIWindow
+{
+    None,
+    Main, // タイトル画面ーステージセレクト
+    Pause // ポーズ画面中
 }
