@@ -20,6 +20,77 @@ public class Scoreboard : MonoBehaviour
     /// </summary>
     [SerializeField] private float[] gaugeFillAmount;
 
+    /// <summary>
+    /// リザルトを表示しているステージ番号
+    /// </summary>
+    private int stage = 1;
+
+
+    [Header("UIスコアゲージ")] // B..Back  F..Front
+
+    [SerializeField] private Image bulletGaugeB;
+    [SerializeField] private Image bulletGaugeF;
+    [SerializeField] private Image laserGaugeB;
+    [SerializeField] private Image laserGaugeF;
+    [SerializeField] private Image HPGaugeB;
+    [SerializeField] private Image HPGaugeF;
+
+    [Header("ゲージカラーデータ")]
+    [SerializeField] private Color stage1Color;
+    [SerializeField] private Color stage2Color;
+    [SerializeField] private Color stage3Color;
+
+
+    /// <summary>
+    /// このオブジェクトが有効になったときに呼び出す
+    /// </summary>
+    private void OnEnable()
+    {
+        switch (stage)
+        {
+            case 1:
+                bulletGaugeB.sprite = Resources.Load<Sprite>("Score/maru_1");
+                bulletGaugeF.sprite = Resources.Load<Sprite>("Score/maru_1");
+                laserGaugeB.sprite = Resources.Load<Sprite>("Score/maru_2");
+                laserGaugeF.sprite = Resources.Load<Sprite>("Score/maru_2");
+                HPGaugeB.sprite = Resources.Load<Sprite>("Score/maru_3");
+                HPGaugeF.sprite = Resources.Load<Sprite>("Score/maru_3");
+                bulletGaugeF.color = stage1Color;
+                laserGaugeF.color = stage1Color;
+                HPGaugeF.color = stage1Color;
+                break;
+
+            case 2:
+                bulletGaugeB.sprite = Resources.Load<Sprite>("Score/3kaku_1");
+                bulletGaugeF.sprite = Resources.Load<Sprite>("Score/3kaku_1");
+                laserGaugeB.sprite = Resources.Load<Sprite>("Score/3kaku_2");
+                laserGaugeF.sprite = Resources.Load<Sprite>("Score/3kaku_2");
+                HPGaugeB.sprite = Resources.Load<Sprite>("Score/3kaku_3");
+                HPGaugeF.sprite = Resources.Load<Sprite>("Score/3kaku_3");
+                bulletGaugeF.color = stage2Color;
+                laserGaugeF.color = stage2Color;
+                HPGaugeF.color = stage2Color;
+                break;
+
+            case 3:
+                bulletGaugeB.sprite = Resources.Load<Sprite>("Score/4kaku_1");
+                bulletGaugeF.sprite = Resources.Load<Sprite>("Score/4kaku_1");
+                laserGaugeB.sprite = Resources.Load<Sprite>("Score/4kaku_2");
+                laserGaugeF.sprite = Resources.Load<Sprite>("Score/4kaku_2");
+                HPGaugeB.sprite = Resources.Load<Sprite>("Score/4kaku_3");
+                HPGaugeF.sprite = Resources.Load<Sprite>("Score/4kaku_3");
+                bulletGaugeF.color = stage3Color;
+                laserGaugeF.color = stage3Color;
+                HPGaugeF.color = stage3Color;
+                break;
+
+            default:
+                Debug.LogError("存在しないステージ番号が指定されています -> " + stage);
+                break;
+        }
+    }
+
+
     // Start is called before the first frame update
     void Start()
     {
