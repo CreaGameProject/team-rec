@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class StageFactory : SingletonMonoBehaviour<StageFactory>
 {
+    /*
     private StageData _stageData;
     private List<IStageEvent> _stageEvents = new List<IStageEvent>();
     private List<Vector3> _controlPoints = new List<Vector3>();
@@ -17,7 +18,8 @@ public class StageFactory : SingletonMonoBehaviour<StageFactory>
 
     private void Start()
     {
-        GetControlPoints();
+        GetControlPoints();//StageNavigator
+
         GetEnemyData();
 
         StageDataCreator();
@@ -63,9 +65,10 @@ public class StageFactory : SingletonMonoBehaviour<StageFactory>
     /// </summary>
     private void StageDataCreator()
     {
-        _stageEvents.Sort((a, b) => (int)(a.Time - b.Time));//
+        _stageEvents.Sort((a, b) => (int)(a.Time - b.Time));//時間でソート
 
         _stageData = new StageData(_stageEvents, _controlPoints);
         StageRunner.Instance.SetStageData(_stageData);
     }
+    */
 }

@@ -2,8 +2,9 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class SummonEnemyEvent : IStageEvent
+public class SummonEnemyEvent// : IStageEvent
 {
+    /*
     private GameObject _enemy;
     private Vector3 _position;
     private float _time;
@@ -33,7 +34,8 @@ public class SummonEnemyEvent : IStageEvent
         enemyClass.enemyType = _enemyType;
         enemyClass.enemyMove = _enemyMove;
 
-        Debug.Log("Called");
+        //Debug.Log("Called");
     }
+    */
 }
 
