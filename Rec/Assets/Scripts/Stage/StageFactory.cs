@@ -6,7 +6,6 @@ using UnityEngine;
 
 public class StageFactory : SingletonMonoBehaviour<StageFactory>
 {
-    /*
     private StageData _stageData;
     private List<IStageEvent> _stageEvents = new List<IStageEvent>();
     private List<Vector3> _controlPoints = new List<Vector3>();
@@ -73,5 +72,4 @@ public class StageFactory : SingletonMonoBehaviour<StageFactory>
         _stageData = new StageData(_stageEvents, _controlPoints);
         StageRunner.Instance.SetStageData(_stageData);
     }
-    */
 }

@@ -7,7 +7,7 @@ public class SummonLoopEnemyMarker : StageEventMarker
 {
     [SerializeField] private float time;
     [SerializeField] private GameObject enemyObj;
-    [SerializeField] private EnemyType enemyType;
+    //[SerializeField] private EnemyType enemyType;
     [SerializeField] private EnemyMove enemyMove;
     
     // Start is called before the first frame update
@@ -24,6 +24,6 @@ public class SummonLoopEnemyMarker : StageEventMarker
 
     public override IStageEvent ToStageEvent()
     {
-        return new SummonLoopEnemyEvent(enemyObj, enemyType, enemyMove, transform.position, time);
+        return new SummonLoopEnemyEvent(enemyObj, /*enemyType,*/ enemyMove, transform.position, time);
     }
 }

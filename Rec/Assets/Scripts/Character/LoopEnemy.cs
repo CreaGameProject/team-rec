@@ -21,7 +21,7 @@ public enum EnemyMove{
 public abstract class LoopEnemy : Enemy
 {
     [Header("敵の移動に関する設定")]
-    [SerializeField] EnemyMove enemyMove = EnemyMove.None;
+    public EnemyMove enemyMove = EnemyMove.None;
     [SerializeField] float movePower;
     [SerializeField] float maxSpeed;
 
