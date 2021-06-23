@@ -94,28 +94,3 @@ public class StageRunner : SingletonMonoBehaviour<StageRunner>
         }
     }
 }
-
-/*
-
-class IntArray : IEnumerable<int>
-{
-    int a;
-    int b;
-    int c;
-
-    public IEnumerator<int> GetEnumerator()
-    {
-
-        yield return a;
-        if(a < 0){
-            yield return b;
-        }
-        yield return c;
-    }
-
-    IEnumerator IEnumerable.GetEnumerator()
-    {
-        yield return GetEnumerator();
-    }
-}*/
-

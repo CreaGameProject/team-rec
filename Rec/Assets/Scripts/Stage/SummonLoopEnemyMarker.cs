@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using Assets.Scripts.Stage;
 using UnityEngine;
 
-public class SummonEventMarker : StageEventMarker
+public class SummonLoopEnemyMarker : StageEventMarker
 {
     [SerializeField] private float time;
     [SerializeField] private GameObject enemyObj;
@@ -24,6 +24,6 @@ public class SummonEventMarker : StageEventMarker
 
     public override IStageEvent ToStageEvent()
     {
-        return new SummonEnemyEvent(enemyObj, enemyType, enemyMove, transform.position, time);
+        return new SummonLoopEnemyEvent(enemyObj, enemyType, enemyMove, transform.position, time);
     }
 }

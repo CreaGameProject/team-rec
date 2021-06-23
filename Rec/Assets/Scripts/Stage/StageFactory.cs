@@ -49,7 +49,7 @@ public class StageFactory : SingletonMonoBehaviour<StageFactory>
         //     if (item.GetComponent<EnemyData>() != null)
         //     {
         //         EnemyData enemyData = item.GetComponent<EnemyData>();
-        //         SummonEnemyEvent summonEnemyEvent = new SummonEnemyEvent(enemyData.enemyObj, enemyData.enemyType, enemyData.enemyMove, enemyData.position, enemyData.summonTime);
+        //         SummonLoopEnemyEvent summonEnemyEvent = new SummonLoopEnemyEvent(enemyData.enemyObj, enemyData.enemyType, enemyData.enemyMove, enemyData.position, enemyData.summonTime);
         //         _stageEvents.Add(summonEnemyEvent);
         //         //Debug.Log(enemyData.position.ToString() + "に" + enemyData.enemyObj.ToString() + "を生成します");
         //     }

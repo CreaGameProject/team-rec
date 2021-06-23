@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class SummonEnemyEvent : IStageEvent
+public class SummonLoopEnemyEvent : IStageEvent
 {
     private GameObject _enemy;
     private Vector3 _position;
@@ -17,7 +17,7 @@ public class SummonEnemyEvent : IStageEvent
         set { _time = value; }
     }
 
-    public SummonEnemyEvent(GameObject enemy, EnemyType enemyType, EnemyMove enemyMove, Vector3 position, float time)
+    public SummonLoopEnemyEvent(GameObject enemy, EnemyType enemyType, EnemyMove enemyMove, Vector3 position, float time)
     {
         _enemy = enemy;
         _enemyType = enemyType;
@@ -28,12 +28,15 @@ public class SummonEnemyEvent : IStageEvent
 
     public void Call()
     {
+        // Instantiate
         GameObject enemyInstance = GameObject.Instantiate(_enemy, _position, Quaternion.identity);
+        // Get component
         Enemy enemyClass = enemyInstance.GetComponent<Enemy>();
+        // Set parameters
         enemyClass.enemyType = _enemyType;
         enemyClass.enemyMove = _enemyMove;
 
-        Debug.Log("Called");
+        // Debug.Log("Called");
     }
 }
 
