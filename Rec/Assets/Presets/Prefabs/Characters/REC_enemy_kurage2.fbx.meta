@@ -14,12 +14,12 @@ ModelImporter:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
       name: haikei
-    second: {fileID: 2100000, guid: a78e4bf73023ad34cb69a4d155ae6350, type: 2}
+    second: {fileID: 2100000, guid: 9b72271d2a92b4c41868e56ef839f1f3, type: 2}
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
       name: waiya-,mizu
-    second: {fileID: 2100000, guid: 8112baddd74a2184cb056d5f60366720, type: 2}
+    second: {fileID: 2100000, guid: 30cea58b8f574df4fbf928d02780c218, type: 2}
   materials:
     materialImportMode: 1
     materialName: 0
@@ -111,7 +111,7 @@ ModelImporter:
     globalScale: 1
     meshCompression: 0
     addColliders: 0
-    useSRGBMaterialColor: 1
+    useSRGBMaterialColor: 0
     sortHierarchyByName: 1
     importVisibility: 1
     importBlendShapes: 1
