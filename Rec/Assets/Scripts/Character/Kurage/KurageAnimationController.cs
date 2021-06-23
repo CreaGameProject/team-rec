@@ -43,7 +43,7 @@ public class KurageAnimationController : MonoBehaviour
             PlayAttackAnimation();
         }
 
-        wire_material.SetColor("_EmissionColor", _emissionColor * intensity);
+        wire_material.SetColor("_Color", _emissionColor * intensity);
 
     }
 

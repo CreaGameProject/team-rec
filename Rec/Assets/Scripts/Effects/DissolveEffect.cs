@@ -1,43 +1,46 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
-public class DissolveEffect : MonoBehaviour
+namespace Effects
 {
-    ///<summary>
-    ///発光する角の色(HDRで設定)
-    ///</summary>
-    [ColorUsage(true, true), SerializeField] private Color edgeColor;
-    [Range(0f,2f), SerializeField] private float waitDissolveTime = 0.4f;
-    private float dissolveTime;
-    private float timer = 0.0f;
-    private Renderer _renderer;
+    public class DissolveEffect : MonoBehaviour
+    {
+        ///<summary>
+        ///発光する角の色(HDRで設定)
+        ///</summary>
+        [ColorUsage(true, true), SerializeField] private Color edgeColor;
+        [Range(0f,2f), SerializeField] private float waitDissolveTime = 0.4f;
+        private float _dissolveTime;
+        private float _timer = 0.0f;
+        private Renderer _renderer;
+        private static readonly int EdgeColor = Shader.PropertyToID("_EdgeColor");
+        private static readonly int DissolveProportion = Shader.PropertyToID("_DissolveProportion");
 
-    private void Start() {
-        _renderer = this.GetComponent<Renderer>();
-        _renderer.material.SetColor("_EdgeColor", edgeColor);
-        timer -= waitDissolveTime;
-        dissolveTime = this.GetComponent<ParticleSystem>().main.startLifetimeMultiplier - waitDissolveTime;
-        //Debug.Log(GetComponent<ParticleSystem>().main.startLifetimeMultiplier);
-        //MeshFilter mf = GetComponent<MeshFilter>();
-        //mf.mesh.SetIndices(mf.mesh.GetIndices(0), MeshTopology.LineStrip,0);
-    }
-
-    private void Update() {
-        timer += Time.deltaTime;
-        _renderer.material.SetFloat("_DissolveProportion",toDissolveProportion(timer));
-    }
-
-    private float toDissolveProportion(float time){
-        float proportion = 0.0f;
-        if(time >= 0){
-            proportion = time / dissolveTime;
+        private void Start() {
+            _renderer = this.GetComponent<Renderer>();
+            _renderer.material.SetColor(EdgeColor, edgeColor);
+            _timer -= waitDissolveTime;
+            _dissolveTime = this.GetComponent<ParticleSystem>().main.startLifetimeMultiplier - waitDissolveTime;
+            //Debug.Log(GetComponent<ParticleSystem>().main.startLifetimeMultiplier);
+            //MeshFilter mf = GetComponent<MeshFilter>();
+            //mf.mesh.SetIndices(mf.mesh.GetIndices(0), MeshTopology.LineStrip,0);
         }
 
-        return proportion;
-    }
+        private void Update() {
+            _timer += Time.deltaTime;
+            _renderer.material.SetFloat(DissolveProportion,ToDissolveProportion(_timer));
+        }
+
+        private float ToDissolveProportion(float time){
+            float proportion = 0.0f;
+            if(time >= 0){
+                proportion = time / _dissolveTime;
+            }
+
+            return proportion;
+        }
 
 
 
     
+    }
 }

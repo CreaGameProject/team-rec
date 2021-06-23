@@ -14,12 +14,12 @@ ModelImporter:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
       name: Body_Back
-    second: {fileID: 2100000, guid: a78e4bf73023ad34cb69a4d155ae6350, type: 2}
+    second: {fileID: 2100000, guid: aa01b6ceaacf32542b54d34787caf410, type: 2}
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
       name: Wire_green
-    second: {fileID: 2100000, guid: 92bdcad1e251cd94fbb2ad2d5dd6f504, type: 2}
+    second: {fileID: 2100000, guid: 121e4e6cea50356428f19514127178a6, type: 2}
   materials:
     materialImportMode: 1
     materialName: 0
