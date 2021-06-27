@@ -7,6 +7,11 @@ public class Player : MonoBehaviour
 {
     [SerializeField] BulletPool bulletPool;
 
+    /// <summary>
+    /// 体力の最大値
+    /// </summary>
+    public static int MaxLife = 200;
+
     private int life;
     private float laserGauge =500f;
 
@@ -62,7 +67,7 @@ public class Player : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        life = 200;
+        life = MaxLife;
         laserGauge = 200;
         angle = 1f / 180f * Mathf.PI;
 

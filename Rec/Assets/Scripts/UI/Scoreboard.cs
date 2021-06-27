@@ -5,6 +5,7 @@ using UnityEngine.UI;
 
 public class Scoreboard : MonoBehaviour
 {
+    [Header("オブジェクトデータ")]
     /// <summary>
     /// ゲージを表示するオブジェクトのリスト(上から順)
     /// </summary>
@@ -23,7 +24,7 @@ public class Scoreboard : MonoBehaviour
     /// <summary>
     /// リザルトを表示しているステージ番号
     /// </summary>
-    private int stage = 1;
+    private int stage = 1; // 外からデータを引っ張ってくる
 
 
     [Header("UIスコアゲージ")] // B..Back  F..Front
@@ -95,7 +96,10 @@ public class Scoreboard : MonoBehaviour
     void Start()
     {
         gaugeObjListCount = 0;
+
+        
     }
+
 
     // Update is called once per frame
     void Update()
@@ -104,13 +108,29 @@ public class Scoreboard : MonoBehaviour
         {
             StartCoroutine(IncreaseGauge(gaugeObjList[gaugeObjListCount], gaugeFillAmount[gaugeObjListCount]));
         }
+
+        // テストプレイ用、後で消す
+        if (Input.GetKeyDown(KeyCode.R))
+        {
+            Score.NormalKills = 4;
+            Score.LazerKills = 2;
+            Score.HPRemains = 100;
+            Score.EnemyCounts = 5;
+            SetScoreValue(); // 本来ならスコア表示の瞬間に実行
+        }
     }
 
 
+    /// <summary>
+    /// ゲージを滑らかに増加させるメソッド
+    /// </summary>
+    /// <param name="obj">増加させる対象のオブジェクト</param>
+    /// <param name="amount">ゲージ量</param>
+    /// <returns></returns>
     private IEnumerator IncreaseGauge(GameObject obj, float amount)
     {
         float nowAmount = 0.0f;
-        float increaseRate = 0.005f;
+        float increaseRate = 0.01f;
 
         GameObject child = obj.transform.GetChild(1).gameObject;
         Image img = child.GetComponent<Image>();
@@ -134,6 +154,28 @@ public class Scoreboard : MonoBehaviour
             {
                 yield return null;
             }
+        }
+    }
+
+
+    /// <summary>
+    /// スコアの値をScore.csから取ってきて計算、代入する。
+    /// </summary>
+    private void SetScoreValue()
+    {
+        int[] scorePoint = { 
+            Score.NormalKills,
+            Score.LazerKills,
+            (int)((float)Score.HPRemains / Player.MaxLife * 10000)
+        };
+
+        gaugeFillAmount[0] = (float)Score.NormalKills / Score.EnemyCounts;
+        gaugeFillAmount[1] = (float)Score.LazerKills / Score.EnemyCounts;
+        gaugeFillAmount[2] = (float)Score.HPRemains / Player.MaxLife;
+
+        foreach (float a in gaugeFillAmount)
+        {
+            Debug.Log(a);
         }
     }
 }
