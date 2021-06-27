@@ -30,5 +30,5 @@ public class Score
     /// <summary>
     /// ステージ番号
     /// </summary>
-    public static int Stage = 1;
+    public static int Stage = 3;
 }
