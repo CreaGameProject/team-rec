@@ -18,11 +18,20 @@ public class UITransitionSystem : MonoBehaviour
     [SerializeField] private GameObject UIStageObj2;
     [SerializeField] private GameObject UIStageObj3;
 
+    [Header("スクリプト類")]
+    public GameOverSystem gameOverSystem;
+    public FrontGround frontGround;
+
     [Space(20)]
     /// <summary>
     /// ウィンドウ表示時に待機するフレーム数
     /// </summary>
     [SerializeField] private int waitFrame = 60;
+
+    /// <summary>
+    /// シーン遷移時のフェード時間
+    /// </summary>
+    [SerializeField] private int fadeTime;
 
 
     /// <summary>
@@ -76,6 +85,7 @@ public class UITransitionSystem : MonoBehaviour
             StartCoroutine(OpenWindow(MainMenuWindow, waitFrame));
             StartCoroutine(CloseWindow(TitleWindow, waitFrame));
         }
+
         // メインメニュー～
         else if (WindowTransitionData.Transition == WindowTransition.MainMenu)
         {
@@ -84,11 +94,15 @@ public class UITransitionSystem : MonoBehaviour
             if (name == "NewGame")
             {
                 // 新しいゲームを始める
-                //SceneManager.LoadScene("TestStage YotoOda 2");
+                WindowTransitionData.Transition = WindowTransition.InGame;
+                StartCoroutine(frontGround.FadeTransition(fadeTime, true, "TestStage YotoOda2"));
+                //SceneManager.LoadScene("TestStage YotoOda2");
             }
             else if (name == "Continue")
             {
                 // 前回のセーブデータ(クリアステージの次)から再開する
+                //WindowTransitionData.Transition = WindowTransition.InGame;
+                //StartCoroutine(frontGround.FadeTransition(60, true, "TestStage YotoOda2"));
             }
             else if (name == "StageSelect")
             {
@@ -110,6 +124,7 @@ public class UITransitionSystem : MonoBehaviour
                 Debug.LogError("存在しない文字列を指定しています。");
             }
         }
+
         // ステージセレクト～
         else if (WindowTransitionData.Transition == WindowTransition.StageSelect)
         {
@@ -117,14 +132,18 @@ public class UITransitionSystem : MonoBehaviour
             if (name == "Stage1")
             {
                 // Stage1をロードする
+                WindowTransitionData.Transition = WindowTransition.InGame;
+                StartCoroutine(frontGround.FadeTransition(fadeTime, true, "TestStage YotoOda2"));
             }
             else if (name == "Stage2")
             {
                 // Stage2をロードする
+                WindowTransitionData.Transition = WindowTransition.InGame;
             }
             else if (name == "Stage3")
             {
                 // Stage3をロードする
+                WindowTransitionData.Transition = WindowTransition.InGame;
             }
             else if (name == "Back")
             {
@@ -138,6 +157,7 @@ public class UITransitionSystem : MonoBehaviour
                 Debug.LogError("存在しない文字列を指定しています。");
             }
         }
+
         // オプション～
         else if (WindowTransitionData.Transition == WindowTransition.Option)
         {
@@ -165,6 +185,7 @@ public class UITransitionSystem : MonoBehaviour
                 Debug.LogError("存在しない文字列を指定しています。");
             }
         }
+
         // ポーズ～
         else if (WindowTransitionData.Transition == WindowTransition.Pause)
         {
@@ -172,7 +193,6 @@ public class UITransitionSystem : MonoBehaviour
             if (name == "Option")
             {
                 // オプション画面を開く
-                print("test");
                 WindowTransitionData.Transition = WindowTransition.Option;
                 WindowTransitionData._DefaultUIWindow = DefaultUIWindow.Pause;
                 StartCoroutine(OpenWindow(OptionWindow, waitFrame));
@@ -181,6 +201,30 @@ public class UITransitionSystem : MonoBehaviour
             else if (name == "Quit")
             {
                 // タイトルをロードする
+                Time.timeScale = 1.0f;
+                WindowTransitionData.Transition = WindowTransition.Title;
+                StartCoroutine(frontGround.FadeTransition(fadeTime, true, "Title"));
+            }
+            else
+            {
+                Debug.LogError("存在しない文字列を指定しています。");
+            }
+        }
+
+        // ゲームオーバー～
+        else if (WindowTransitionData.Transition == WindowTransition.GameOver)
+        {
+            string name = this.gameObject.name;
+            Debug.Log(name);
+            if (name == "Retry")
+            {
+                // ステージをリトライする（同じシーンをリロードする）
+                StartCoroutine(gameOverSystem.LoadScene(60, "Retry"));
+            }
+            else if (name == "Quit")
+            {
+                // タイトルをロードする
+                StartCoroutine(gameOverSystem.LoadScene(60, "Title"));
             }
             else
             {
@@ -188,6 +232,7 @@ public class UITransitionSystem : MonoBehaviour
             }
         }
     }
+
 
     /// <summary>
     /// フェード処理を行う
@@ -314,7 +359,7 @@ public class UITransitionSystem : MonoBehaviour
     {
         if (WindowTransitionData.Transition == WindowTransition.None)
         {
-            WindowTransitionData.Transition = WindowTransition.Title;
+            WindowTransitionData.Transition = WindowTransition.InGame;
         }
     }
 }
