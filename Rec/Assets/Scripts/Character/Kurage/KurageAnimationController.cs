@@ -5,37 +5,39 @@ using UnityEngine;
 //製作者:水谷
 public class KurageAnimationController : MonoBehaviour
 {
-    /// <summary>
-    /// ワイヤーフレームのマテリアル
-    /// </summary>
-    [SerializeField]
-    private Material wire_material;
-    /// <summary>
-    /// 光るワイヤーフレームのHDR
-    /// </summary>
-    [ColorUsage(true, true), SerializeField]
-    private Color _emissionColor;
+    [SerializeField] private GameObject body;
 
-    /// <summary>
-    /// HDRのintensity,光の強さ
-    /// </summary>
-    public float intensity = 3f;
+    [SerializeField] private Material wireMaterial;
+    Material _wireMat;
+    private Shader _wireMatShader;
+    [SerializeField] private Material bodyMatelial;
+    Material _bodyMat;
+    private Shader _bodyMatShader;
 
-    /// <summary>
-    /// クラゲのアニメーター
-    /// </summary>
+    [ColorUsage(true, true), System.NonSerialized] public Color emissionColor;
+
+    public float myIntensity;
+
     private Animator _animator;
-
     private bool _isAttack = false;
 
-    // Start is called before the first frame update
+    [SerializeField] private GameObject deathParticle;
+
     void Start()
     {
-        _emissionColor = wire_material.color;
+        _wireMatShader = wireMaterial.shader;
+        _bodyMatShader = bodyMatelial.shader;
+        _wireMat = new Material(_wireMatShader);
+        _wireMat.color = wireMaterial.color;
+        _bodyMat = new Material(_bodyMatShader);
+        _bodyMat.color = bodyMatelial.color;
+        body.GetComponent<SkinnedMeshRenderer>().materials[0] = _wireMat;
+        body.GetComponent<SkinnedMeshRenderer>().materials[1] = _bodyMat;
+
+        emissionColor = wireMaterial.color;
         _animator = GetComponent<Animator>();
     }
 
-    // Update is called once per frame
     void Update()
     {
         if (Input.GetKeyDown(KeyCode.Space))
@@ -43,13 +45,9 @@ public class KurageAnimationController : MonoBehaviour
             PlayAttackAnimation();
         }
 
-        wire_material.SetColor("_Color", _emissionColor * intensity);
-
+        _wireMat.SetColor("_Color", emissionColor * myIntensity);
     }
 
-    /// <summary>
-    /// 攻撃モーションの再生
-    /// </summary>
     public void PlayAttackAnimation()
     {
         if (!_isAttack)
@@ -59,9 +57,6 @@ public class KurageAnimationController : MonoBehaviour
         }
     }
 
-    /// <summary>
-    /// 攻撃モーションの終了
-    /// </summary>
     public void FinishAttackAnimation()
     {
         if (_isAttack)
@@ -69,5 +64,16 @@ public class KurageAnimationController : MonoBehaviour
             _isAttack = false;
             _animator.SetBool("isAttack", _isAttack);
         }
+    }
+
+    public void OnDie()
+    {
+        Invoke("PlayDeathParticle", 1.0f);
+    }
+
+    void PlayDeathParticle()
+    {
+        Debug.Log("deathParticle");
+        deathParticle.GetComponent<ParticleSystem>().Play();
     }
 }

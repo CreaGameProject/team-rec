@@ -21,16 +21,11 @@ public class Enemy : MonoBehaviour
     /// このキャラクターの勢力
     /// </summary>
     public Force force { get; private set; }
-    
-    public int hp { get; protected set; }
 
     protected Transform playerTf;
 
-    private int gaugePoint = 50;
-
-    
-    [System.NonSerialized] int lifePoint = 60;
-    
+    [SerializeField] protected int hp;
+    [SerializeField] protected int gaugePoint;
 
     /// <summary>
     /// このキャラクターにダメージを与える
@@ -53,16 +48,18 @@ public class Enemy : MonoBehaviour
     /// </summary>
     protected virtual void Kill()
     {
-        gaugePoint = 50;
         playerTf.gameObject.GetComponent<Player>().increaseLaserGauge(gaugePoint);
+        Invoke("ThisDestroy", 5f);//3秒は仮の値
+    }
+
+    void ThisDestroy()
+    {
         Destroy(this.gameObject);
     }
 
     protected virtual void Awake(){
         playerTf = GameObject.FindGameObjectWithTag("Player").transform;
     }
-
-    
 
     protected virtual void Update(){
 
@@ -73,6 +70,8 @@ public class Enemy : MonoBehaviour
     {
 
     }
+
+    
 }
 
 

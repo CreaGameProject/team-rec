@@ -159,6 +159,7 @@ public class Player : MonoBehaviour
             
             Straight straight = new Straight();
             straight.Velocity = 10f; // 仮の値
+            straight.AttackPoint = 1; // 仮の値
             straight.Direction = array;
             GameObject bullet = bulletPool.GetInstance(straight);
             bullet.transform.position = this.transform.position;

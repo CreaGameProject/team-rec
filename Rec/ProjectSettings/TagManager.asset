@@ -6,6 +6,7 @@ TagManager:
   tags:
   - ControlPoints
   - EnemyData
+  - Bullet
   layers:
   - Default
   - TransparentFX

@@ -33,7 +33,10 @@ public abstract class LoopEnemy : Enemy
     Transform _naviTf;
     Vector3 _forceDir;
 
-
+    protected override void Kill()
+    {
+        base.Kill();
+    }
 
     protected override void Awake()
     {
@@ -73,6 +76,7 @@ public abstract class LoopEnemy : Enemy
     protected override void Update()
     {
         base.Update();
+        transform.LookAt(playerTf.position);
     }
 
     protected override void FixedUpdate()
@@ -83,6 +87,20 @@ public abstract class LoopEnemy : Enemy
 
         if(_rb.velocity.magnitude > maxSpeed){
             _rb.velocity = _rb.velocity.normalized * maxSpeed;
+        }
+    }
+
+    protected void OnTriggerEnter(Collider other)
+    {
+        if (other.gameObject.tag == "Bullet")
+        {
+            BulletObject bulletObject =  other.gameObject.GetComponent<BulletObject>();
+            Force colForce = bulletObject.Force;
+            if (colForce == Force.Player)
+            {
+                Debug.Log("攻撃力" + bulletObject.bulletclass.AttackPoint + "のPlayerの弾が当たりました");
+                Damage(bulletObject.bulletclass.AttackPoint);
+            }
         }
     }
 
