@@ -12,8 +12,15 @@ public class Player : MonoBehaviour
     /// </summary>
     public static int MaxLife = 200;
 
+    /// <summary>
+    /// 現在の体力値
+    /// </summary>
     private int life;
-    private float laserGauge =500f;
+
+    /// <summary>
+    /// レーザー弾のゲージ量
+    /// </summary>
+    private float laserGauge = 200f;
 
     private float angle;
 
@@ -22,16 +29,16 @@ public class Player : MonoBehaviour
 
     [SerializeField] Texture2D pointTexture;
 
-
+    // 各最大移動量
     float moveXMax = 3f;
     float moveYMin = 1f;
     float moveYMax = 2.5f;
 
-
     float homingRange = 1f;
     bool homingShot = false;
 
-    [SerializeField] GameObject testObject;
+    [SerializeField] GameObject gameOverObj;
+    [SerializeField] private GameObject pauseWindow;
 
     [Header("調整可")]
     /// <summary>
@@ -64,6 +71,12 @@ public class Player : MonoBehaviour
     private Vector3 Player_pos;
     private new Rigidbody rigidbody;
 
+    /// <summary>
+    /// 操作入力不可かどうか
+    /// </summary>
+    private bool isStopped = false;
+
+
     // Start is called before the first frame update
     void Start()
     {
@@ -79,7 +92,12 @@ public class Player : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        getInput();
+        if (!isStopped)
+        {
+            getControlInput();
+        }
+
+        getOtherInput();
 
         //UnityEngine.PlayerLoop.FixedUpdate();
 
@@ -91,8 +109,13 @@ public class Player : MonoBehaviour
         rigidbody.angularDrag = 20.0f;
     }
 
-    void getInput()
+
+    /// <summary>
+    /// 移動・攻撃入力の管理
+    /// </summary>
+    void getControlInput()
     {
+        // 移動入力
         if (Input.GetKey(KeyCode.A))
         {
             transform.Translate(new Vector3(-0.1f*Mathf.Cos(transform.rotation.y * angle),0, -0.1f * Mathf.Sin(transform.rotation.y * angle)) * speed * Time.deltaTime);
@@ -117,6 +140,7 @@ public class Player : MonoBehaviour
                                     ,Mathf.Clamp(transform.localPosition.y,-moveYMin,moveYMax)
                                     ,Mathf.Clamp(transform.localPosition.z,-moveXMax,moveXMax));
 
+        // 攻撃入力
         if (Input.GetMouseButtonUp(0))
         {
             sendRay();
@@ -141,6 +165,46 @@ public class Player : MonoBehaviour
             openTarget();
         }
     }
+
+
+    /// <summary>
+    /// 移動・攻撃以外の入力を管理
+    /// </summary>
+    void getOtherInput()
+    {
+        // 各機能入力
+        if ((Input.GetKeyDown(KeyCode.P)) || (Input.GetKeyDown(KeyCode.Escape)))
+        {
+            // ポーズ切り替え
+            var tr = WindowTransitionData.Transition;
+            if ((tr != WindowTransition.Pause) && (tr != WindowTransition.Option))
+            {
+                // ポーズ起動
+                WindowTransitionData.Transition = WindowTransition.Pause;
+                isStopped = true;
+                pauseWindow.SetActive(true);
+                Time.timeScale = 0.0f;
+            }
+            else
+            {
+                // ポーズ解除
+                if (tr != WindowTransition.Option)
+                {
+                    WindowTransitionData.Transition = WindowTransition.InGame;
+                    Time.timeScale = 1.0f;
+                    isStopped = false;
+                    pauseWindow.SetActive(false);
+                }                
+            }
+        }
+
+        if (Input.GetKeyDown(KeyCode.L))
+        {
+            // てすと、あとでけす
+            decreaseLife(50);
+        }
+    }
+
 
     void sendRay()
     {
@@ -242,6 +306,12 @@ public class Player : MonoBehaviour
     private void OnDeath()
     {
         Debug.Log("死");
+
+        // ゲームオーバーの画面を表示する
+        WindowTransitionData.Transition = WindowTransition.GameOver;
+        isStopped = true;
+        Time.timeScale = 0.1f;
+        gameOverObj.SetActive(true);
     }
 
     /// <summary>

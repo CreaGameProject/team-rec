@@ -15,9 +15,13 @@ public class ScoreUISystem : MonoBehaviour
 
     [Header("ゲームオブジェクト")]
     [SerializeField] private GameObject scoreboard;
+    [SerializeField] private GameObject splash_obj1;
+    [SerializeField] private GameObject splash_obj2;
+    [SerializeField] private GameObject splash_obj3;
 
     [Header("UI系")]
     [SerializeField] private Text stageTxt;
+    [SerializeField] private CanvasGroup canvasGroup;
 
     [Header("背景素材")]
     [SerializeField] private Image background;
@@ -35,6 +39,7 @@ public class ScoreUISystem : MonoBehaviour
     /// </summary>
     private void OnEnable()
     {
+        canvasGroup.alpha = 1;
         // 背景素材を読み込む
         int stage = Score.Stage;
         switch (stage)
@@ -45,22 +50,28 @@ public class ScoreUISystem : MonoBehaviour
                 moveDown.sprite = Resources.Load<Sprite>("StageBackgrounds/maru_03-2");
                 shadow.sprite = Resources.Load<Sprite>("StageBackgrounds/maru_02");
                 frontImage.sprite = Resources.Load<Sprite>("StageBackgrounds/maru_01");
+                splash_obj1.SetActive(true);
+                splash_obj1.GetComponent<Animation>().Play();
                 break;
 
             case 2:
-                background.sprite = Resources.Load<Sprite>("StageBackgrounds/");
-                moveUp.sprite = Resources.Load<Sprite>("StageBackgrounds/");
-                moveDown.sprite = Resources.Load<Sprite>("StageBackgrounds/");
-                shadow.sprite = Resources.Load<Sprite>("StageBackgrounds/");
-                frontImage.sprite = Resources.Load<Sprite>("StageBackgrounds/");
+                background.sprite = Resources.Load<Sprite>("StageBackgrounds/3kaku_4");
+                moveUp.sprite = Resources.Load<Sprite>("StageBackgrounds/3kaku_2-1");
+                moveDown.sprite = Resources.Load<Sprite>("StageBackgrounds/3kaku_2-2");
+                shadow.sprite = Resources.Load<Sprite>("StageBackgrounds/3kaku_3");
+                frontImage.sprite = Resources.Load<Sprite>("StageBackgrounds/3kaku_1");
+                splash_obj2.SetActive(true);
+                splash_obj2.GetComponent<Animation>().Play();
                 break;
 
             case 3:
-                background.sprite = Resources.Load<Sprite>("StageBackgrounds/");
-                moveUp.sprite = Resources.Load<Sprite>("StageBackgrounds/");
-                moveDown.sprite = Resources.Load<Sprite>("StageBackgrounds/");
-                shadow.sprite = Resources.Load<Sprite>("StageBackgrounds/");
-                frontImage.sprite = Resources.Load<Sprite>("StageBackgrounds/");
+                background.sprite = Resources.Load<Sprite>("StageBackgrounds/4kaku_4");
+                moveUp.sprite = Resources.Load<Sprite>("StageBackgrounds/4kaku_2-1");
+                moveDown.sprite = Resources.Load<Sprite>("StageBackgrounds/4kaku_2-2");
+                shadow.sprite = Resources.Load<Sprite>("StageBackgrounds/4kaku_3");
+                frontImage.sprite = Resources.Load<Sprite>("StageBackgrounds/4kaku_1");
+                splash_obj3.SetActive(true);
+                splash_obj3.GetComponent<Animation>().Play();
                 break;
 
             default:
@@ -84,7 +95,24 @@ public class ScoreUISystem : MonoBehaviour
     {
         if (Input.GetMouseButtonDown(0))
         {
-            scoreboard.SetActive(true);
+            StartCoroutine(Destroy());
+        }
+    }
+
+
+    private IEnumerator Destroy()
+    {
+        while (true)
+        {
+            canvasGroup.alpha -= 0.01f;
+            
+            if (canvasGroup.alpha <= 0)
+            {
+                scoreboard.SetActive(true);
+                break;
+            }
+
+            yield return null;
         }
     }
 

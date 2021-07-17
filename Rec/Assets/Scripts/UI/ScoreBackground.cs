@@ -18,12 +18,44 @@ public class ScoreBackground : MonoBehaviour
     [SerializeField] private float speed;
 
     private const int height = 1080;
-    
-    // Start is called before the first frame update
-    void Start()
+
+
+    /// <summary>
+    /// 有効になったときに実行されるメソッド
+    /// </summary>
+    private void OnEnable()
     {
-        
+        // 背景素材を読み込む
+        int stage = Score.Stage;
+        switch (stage)
+        {
+            case 1:
+                moveUp1.sprite = Resources.Load<Sprite>("StageBackgrounds/maru_03-1");
+                moveDown1.sprite = Resources.Load<Sprite>("StageBackgrounds/maru_03-2");
+                moveUp2.sprite = Resources.Load<Sprite>("StageBackgrounds/maru_03-1");
+                moveDown2.sprite = Resources.Load<Sprite>("StageBackgrounds/maru_03-2");
+                break;
+
+            case 2:
+                moveUp1.sprite = Resources.Load<Sprite>("StageBackgrounds/3kaku_2-1");
+                moveDown1.sprite = Resources.Load<Sprite>("StageBackgrounds/3kaku_2-2");
+                moveUp2.sprite = Resources.Load<Sprite>("StageBackgrounds/3kaku_2-1");
+                moveDown2.sprite = Resources.Load<Sprite>("StageBackgrounds/3kaku_2-2");
+                break;
+
+            case 3:
+                moveUp1.sprite = Resources.Load<Sprite>("StageBackgrounds/4kaku_2-1");
+                moveDown1.sprite = Resources.Load<Sprite>("StageBackgrounds/4kaku_2-2");
+                moveUp2.sprite = Resources.Load<Sprite>("StageBackgrounds/4kaku_2-1");
+                moveDown2.sprite = Resources.Load<Sprite>("StageBackgrounds/4kaku_2-2");
+                break;
+
+            default:
+                Debug.LogError("存在しないステージ番号が指定されています -> " + stage);
+                break;
+        }
     }
+
 
     // Update is called once per frame
     void Update()
