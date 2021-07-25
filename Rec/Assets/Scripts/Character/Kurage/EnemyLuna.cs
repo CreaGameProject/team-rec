@@ -5,17 +5,8 @@ using UnityEngine;
 public class EnemyLuna : LoopEnemy
 {
     [Header("攻撃の頻度に関する設定")]
-    /// <summary>
-    /// 敵の攻撃する速さ(回/s)
-    /// </summary>
     [SerializeField] protected float attackRate = 3f;
-    /// <summary>
-    /// [通常攻撃の敵専用]バースト時に放つ弾の個数
-    /// </summary>
     [SerializeField] private int burstCount;
-    /// <summary>
-    /// [通常攻撃の敵専用]バーストの弾と弾の間隔(発/s)
-    /// </summary>
     [SerializeField] float burstTime = 0.1f;
 
     [SerializeField] float homingStrength = 3.0f;
@@ -81,7 +72,7 @@ public class EnemyLuna : LoopEnemy
             Homing homing = new Homing();
             homing.Velocity = 3f; // 仮の値
             homing.AttackPoint = 20;
-            homing.HomingStrength = homingStrength; // 仮の値
+            homing.HomingStrength = homingStrength;
             homing.Direction = transform.up; // 上方向
             homing.Target = playerTf.gameObject;
             GameObject enemyBullet = BulletPool.Instance.GetInstance(homing);
