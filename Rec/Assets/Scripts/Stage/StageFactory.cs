@@ -1,5 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
+using Assets.Scripts.Stage;
 using UnityEngine;
 
 public class StageFactory : SingletonMonoBehaviour<StageFactory>
@@ -17,7 +19,8 @@ public class StageFactory : SingletonMonoBehaviour<StageFactory>
 
     private void Start()
     {
-        GetControlPoints();
+        GetControlPoints();//StageNavigator
+
         GetEnemyData();
 
         StageDataCreator();
@@ -40,21 +43,22 @@ public class StageFactory : SingletonMonoBehaviour<StageFactory>
     /// </summary>
     private void GetEnemyData()
     {
+        _stageEvents = FindObjectsOfType<StageEventMarker>().Select(x => x.ToStageEvent()).ToList();
         //List<EnemyData> enemyDatas = new List<EnemyData>();
-        foreach(GameObject item in GameObject.FindGameObjectsWithTag("EnemyData"))
-        {
-            if (item.GetComponent<EnemyData>() != null)
-            {
-                EnemyData enemyData = item.GetComponent<EnemyData>();
-                SummonEnemyEvent summonEnemyEvent = new SummonEnemyEvent(enemyData.enemyObj, enemyData.enemyType, enemyData.enemyMove, enemyData.position, enemyData.summonTime);
-                _stageEvents.Add(summonEnemyEvent);
-                //Debug.Log(enemyData.position.ToString() + "に" + enemyData.enemyObj.ToString() + "を生成します");
-            }
-            else
-            {
-                Debug.LogError("EnemyDataが指定されていません。");
-            }
-        }
+        // foreach(GameObject item in GameObject.FindGameObjectsWithTag("EnemyData"))
+        // {
+        //     if (item.GetComponent<EnemyData>() != null)
+        //     {
+        //         EnemyData enemyData = item.GetComponent<EnemyData>();
+        //         SummonLoopEnemyEvent summonEnemyEvent = new SummonLoopEnemyEvent(enemyData.enemyObj, enemyData.enemyType, enemyData.enemyMove, enemyData.position, enemyData.summonTime);
+        //         _stageEvents.Add(summonEnemyEvent);
+        //         //Debug.Log(enemyData.position.ToString() + "に" + enemyData.enemyObj.ToString() + "を生成します");
+        //     }
+        //     else
+        //     {
+        //         Debug.LogError("EnemyDataが指定されていません。");
+        //     }
+        // }
     }
 
 
@@ -63,7 +67,7 @@ public class StageFactory : SingletonMonoBehaviour<StageFactory>
     /// </summary>
     private void StageDataCreator()
     {
-        _stageEvents.Sort((a, b) => (int)(a.Time - b.Time));//
+        _stageEvents.Sort((a, b) => (int)(a.Time - b.Time));//時間でソート
 
         _stageData = new StageData(_stageEvents, _controlPoints);
         StageRunner.Instance.SetStageData(_stageData);
