@@ -16,19 +16,19 @@
             "typeInfo": {
                 "fullName": "UnityEditor.ShaderGraph.Internal.Vector1ShaderProperty"
             },
-            "JSONnodeData": "{\n    \"m_Guid\": {\n        \"m_GuidSerialized\": \"bb0d5fd2-a0f9-42ef-a4f2-167159b3d2cd\"\n    },\n    \"m_Name\": \"Noise Scale\",\n    \"m_DefaultReferenceName\": \"Vector1_2A5D07A8\",\n    \"m_OverrideReferenceName\": \"_NoiseScale\",\n    \"m_GeneratePropertyBlock\": true,\n    \"m_Precision\": 0,\n    \"m_GPUInstanced\": false,\n    \"m_Hidden\": false,\n    \"m_Value\": 30.0,\n    \"m_FloatType\": 0,\n    \"m_RangeValues\": {\n        \"x\": 0.0,\n        \"y\": 1.0\n    }\n}"
+            "JSONnodeData": "{\n    \"m_Guid\": {\n        \"m_GuidSerialized\": \"bb0d5fd2-a0f9-42ef-a4f2-167159b3d2cd\"\n    },\n    \"m_Name\": \"Noise Scale\",\n    \"m_DefaultReferenceName\": \"Vector1_2A5D07A8\",\n    \"m_OverrideReferenceName\": \"_NoiseScale\",\n    \"m_GeneratePropertyBlock\": true,\n    \"m_Precision\": 0,\n    \"m_GPUInstanced\": false,\n    \"m_Hidden\": false,\n    \"m_Value\": 50.0,\n    \"m_FloatType\": 0,\n    \"m_RangeValues\": {\n        \"x\": 0.0,\n        \"y\": 1.0\n    }\n}"
         },
         {
             "typeInfo": {
                 "fullName": "UnityEditor.ShaderGraph.Internal.Vector1ShaderProperty"
             },
-            "JSONnodeData": "{\n    \"m_Guid\": {\n        \"m_GuidSerialized\": \"3aacadb1-02ee-41a6-bf20-0a7a1603f6f3\"\n    },\n    \"m_Name\": \"Edge Width\",\n    \"m_DefaultReferenceName\": \"Vector1_879CB5A3\",\n    \"m_OverrideReferenceName\": \"_EdgeWidth\",\n    \"m_GeneratePropertyBlock\": true,\n    \"m_Precision\": 0,\n    \"m_GPUInstanced\": false,\n    \"m_Hidden\": false,\n    \"m_Value\": 0.009999999776482582,\n    \"m_FloatType\": 0,\n    \"m_RangeValues\": {\n        \"x\": 0.0,\n        \"y\": 1.0\n    }\n}"
+            "JSONnodeData": "{\n    \"m_Guid\": {\n        \"m_GuidSerialized\": \"3aacadb1-02ee-41a6-bf20-0a7a1603f6f3\"\n    },\n    \"m_Name\": \"Edge Width\",\n    \"m_DefaultReferenceName\": \"Vector1_879CB5A3\",\n    \"m_OverrideReferenceName\": \"_EdgeWidth\",\n    \"m_GeneratePropertyBlock\": true,\n    \"m_Precision\": 0,\n    \"m_GPUInstanced\": false,\n    \"m_Hidden\": false,\n    \"m_Value\": 0.019999999552965165,\n    \"m_FloatType\": 0,\n    \"m_RangeValues\": {\n        \"x\": 0.0,\n        \"y\": 1.0\n    }\n}"
         },
         {
             "typeInfo": {
                 "fullName": "UnityEditor.ShaderGraph.Internal.Vector1ShaderProperty"
             },
-            "JSONnodeData": "{\n    \"m_Guid\": {\n        \"m_GuidSerialized\": \"2e1ee3d6-6339-4587-9ff8-4de051c39f1d\"\n    },\n    \"m_Name\": \"DissolveProporiton\",\n    \"m_DefaultReferenceName\": \"Vector1_A11DE659\",\n    \"m_OverrideReferenceName\": \"_DissolveProportion\",\n    \"m_GeneratePropertyBlock\": true,\n    \"m_Precision\": 0,\n    \"m_GPUInstanced\": false,\n    \"m_Hidden\": false,\n    \"m_Value\": 0.5,\n    \"m_FloatType\": 1,\n    \"m_RangeValues\": {\n        \"x\": 0.0,\n        \"y\": 1.0\n    }\n}"
+            "JSONnodeData": "{\n    \"m_Guid\": {\n        \"m_GuidSerialized\": \"2e1ee3d6-6339-4587-9ff8-4de051c39f1d\"\n    },\n    \"m_Name\": \"DissolveProporiton\",\n    \"m_DefaultReferenceName\": \"Vector1_A11DE659\",\n    \"m_OverrideReferenceName\": \"_DissolveProportion\",\n    \"m_GeneratePropertyBlock\": true,\n    \"m_Precision\": 0,\n    \"m_GPUInstanced\": false,\n    \"m_Hidden\": false,\n    \"m_Value\": 0.0,\n    \"m_FloatType\": 1,\n    \"m_RangeValues\": {\n        \"x\": 0.0,\n        \"y\": 1.0\n    }\n}"
         }
     ],
     "m_SerializedKeywords": [],

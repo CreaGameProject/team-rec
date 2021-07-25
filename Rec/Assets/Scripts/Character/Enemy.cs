@@ -49,7 +49,7 @@ public class Enemy : MonoBehaviour
     protected virtual void Kill()
     {
         playerTf.gameObject.GetComponent<Player>().increaseLaserGauge(gaugePoint);
-        Invoke("ThisDestroy", 5f);//3秒は仮の値
+        Invoke("ThisDestroy", 3f);//3秒は仮の値
     }
 
     void ThisDestroy()

@@ -1,27 +1,28 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using DG.Tweening;
 
 //製作者:水谷
 public class KurageAnimationController : MonoBehaviour
 {
     [SerializeField] private GameObject body;
-
+    [SerializeField] private GameObject deathParticle;
+    // Materialに関する設定-------------------------------------------
     [SerializeField] private Material wireMaterial;
     Material _wireMat;
     private Shader _wireMatShader;
     [SerializeField] private Material bodyMatelial;
     Material _bodyMat;
     private Shader _bodyMatShader;
-
     [ColorUsage(true, true), System.NonSerialized] public Color emissionColor;
-
     public float myIntensity;
+    public float disolvePropotion = 0;
+    // ------------------------------------------------------------
 
+    // アニメーションに関する設定---------------------------------------
     private Animator _animator;
     private bool _isAttack = false;
-
-    [SerializeField] private GameObject deathParticle;
 
     void Start()
     {
@@ -32,20 +33,18 @@ public class KurageAnimationController : MonoBehaviour
         _bodyMat = new Material(_bodyMatShader);
         _bodyMat.color = bodyMatelial.color;
         body.GetComponent<SkinnedMeshRenderer>().materials[0] = _wireMat;
+        _wireMat = body.GetComponent<SkinnedMeshRenderer>().materials[0];
         body.GetComponent<SkinnedMeshRenderer>().materials[1] = _bodyMat;
-
+        _bodyMat = body.GetComponent<SkinnedMeshRenderer>().materials[1];
         emissionColor = wireMaterial.color;
         _animator = GetComponent<Animator>();
     }
 
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Space))
-        {
-            PlayAttackAnimation();
-        }
-
         _wireMat.SetColor("_Color", emissionColor * myIntensity);
+        _wireMat.SetFloat("_DissolveProportion", disolvePropotion);
+        _bodyMat.SetFloat("_DissolveProportion", disolvePropotion);
     }
 
     public void PlayAttackAnimation()
@@ -68,12 +67,19 @@ public class KurageAnimationController : MonoBehaviour
 
     public void OnDie()
     {
-        Invoke("PlayDeathParticle", 1.0f);
+        Invoke("PlayDeathParticle", 1f);
+        DOTween.To(
+            () => disolvePropotion,
+            (value) => disolvePropotion = value,
+            1.0f,
+            1.5f
+            );
     }
 
     void PlayDeathParticle()
     {
-        Debug.Log("deathParticle");
+        deathParticle.SetActive(true);
         deathParticle.GetComponent<ParticleSystem>().Play();
+        Debug.Log(_bodyMat.GetFloat("_DissolveProportion"));
     }
 }
