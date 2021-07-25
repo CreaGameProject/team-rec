@@ -8,7 +8,6 @@ using UnityEngine.Serialization;
 /// </summary>
 public class BulletPool : SingletonMonoBehaviour<BulletPool>
 {
-
     /// <summary>
     /// プールの元オブジェクト
     /// </summary>
@@ -17,7 +16,7 @@ public class BulletPool : SingletonMonoBehaviour<BulletPool>
     /// <summary>
     /// プールに使う弾のリスト
     /// </summary>
-    [SerializeField] private List<GameObject> poolObjList;
+    private List<GameObject> _poolObjList;
 
     /// <summary>
     /// プールの中にあるゲームオブジェクトの元
@@ -30,14 +29,14 @@ public class BulletPool : SingletonMonoBehaviour<BulletPool>
     private void CreateBulletPool(GameObject obj, int maxCount)
     {
         _poolObj = obj;
-        poolObjList = new List<GameObject>();
+        _poolObjList = new List<GameObject>();
         // maxCount個のオブジェクトを作る
         for (int i = 0; i < maxCount; i++)
         {
             var newObj = CreateNewObject();
             newObj.transform.SetParent(transform);
             newObj.SetActive(false);
-            poolObjList.Add(newObj);
+            _poolObjList.Add(newObj);
         }
     }
 
@@ -48,8 +47,10 @@ public class BulletPool : SingletonMonoBehaviour<BulletPool>
     /// <returns></returns>
     public GameObject GetInstance(Bullet bullet) 
     {
-        foreach (var obj in poolObjList)
+        Debug.Log(_poolObjList);
+        foreach (var obj in _poolObjList)
         {
+            //Debug.Log("foreach");
             if (obj.activeSelf == false)
             {
                 obj.SetActive(true);
@@ -62,7 +63,7 @@ public class BulletPool : SingletonMonoBehaviour<BulletPool>
         var newObj = CreateNewObject();
         newObj.SetActive(true);
         newObj.GetComponent<BulletObject>().SetBullet(bullet);
-        poolObjList.Add(newObj);
+        _poolObjList.Add(newObj);
 
         return newObj;
     }
@@ -85,7 +86,7 @@ public class BulletPool : SingletonMonoBehaviour<BulletPool>
     private GameObject CreateNewObject() 
     {
         var newObj = Instantiate(defaultObject);
-        newObj.name = defaultObject.name + (poolObjList.Count + 1);
+        newObj.name = defaultObject.name + (_poolObjList.Count + 1);
 
         return newObj;
     }

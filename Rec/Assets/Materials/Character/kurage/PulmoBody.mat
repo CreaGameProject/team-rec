@@ -67,7 +67,7 @@ Material:
     - _BumpScale: 1
     - _Cull: 2
     - _Cutoff: 0.5
-    - _DissolveProportion: 0.397
+    - _DissolveProportion: 0
     - _DstBlend: 0
     - _EdgeWidth: 0.01
     - _EnvironmentReflections: 1
@@ -75,7 +75,7 @@ Material:
     - _Glossiness: 0
     - _GlossyReflections: 0
     - _Metallic: 0
-    - _NoiseScale: 50
+    - _NoiseScale: 40
     - _OcclusionStrength: 1
     - _QueueOffset: 0
     - _ReceiveShadows: 1
@@ -90,6 +90,6 @@ Material:
     - _BaseColor: {r: 0, g: 0, b: 0, a: 1}
     - _Color: {r: 0, g: 0, b: 0, a: 1}
     - _Color_1: {r: 2, g: 2, b: 2, a: 0}
-    - _EdgeColor: {r: 8.947326, g: 1.7848386, b: 25.225723, a: 1}
+    - _EdgeColor: {r: 8.533334, g: 1.7568628, b: 23.968628, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
     - _SpecColor: {r: 0.19999996, g: 0.19999996, b: 0.19999996, a: 1}

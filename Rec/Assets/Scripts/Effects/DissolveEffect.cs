@@ -20,9 +20,6 @@ namespace Effects
             _renderer.material.SetColor(EdgeColor, edgeColor);
             _timer -= waitDissolveTime;
             _dissolveTime = this.GetComponent<ParticleSystem>().main.startLifetimeMultiplier - waitDissolveTime;
-            //Debug.Log(GetComponent<ParticleSystem>().main.startLifetimeMultiplier);
-            //MeshFilter mf = GetComponent<MeshFilter>();
-            //mf.mesh.SetIndices(mf.mesh.GetIndices(0), MeshTopology.LineStrip,0);
         }
 
         private void Update() {
@@ -38,9 +35,5 @@ namespace Effects
 
             return proportion;
         }
-
-
-
-    
     }
 }
