@@ -76,6 +76,11 @@ public class Player : MonoBehaviour
     /// </summary>
     private bool isStopped = false;
 
+    /// <summary>
+    /// ポーズ可能かどうか
+    /// </summary>
+    private bool canPause = true;
+
 
     // Start is called before the first frame update
     void Start()
@@ -173,7 +178,7 @@ public class Player : MonoBehaviour
     void getOtherInput()
     {
         // 各機能入力
-        if ((Input.GetKeyDown(KeyCode.P)) || (Input.GetKeyDown(KeyCode.Escape)))
+        if (((Input.GetKeyDown(KeyCode.P)) || (Input.GetKeyDown(KeyCode.Escape))) && (canPause))
         {
             // ポーズ切り替え
             var tr = WindowTransitionData.Transition;
@@ -310,6 +315,7 @@ public class Player : MonoBehaviour
         // ゲームオーバーの画面を表示する
         WindowTransitionData.Transition = WindowTransition.GameOver;
         isStopped = true;
+        canPause = false;
         Time.timeScale = 0.1f;
         gameOverObj.SetActive(true);
     }
