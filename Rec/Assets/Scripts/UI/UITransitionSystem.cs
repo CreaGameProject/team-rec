@@ -359,7 +359,7 @@ public class UITransitionSystem : MonoBehaviour
     {
         if (WindowTransitionData.Transition == WindowTransition.None)
         {
-            WindowTransitionData.Transition = WindowTransition.InGame;
+            WindowTransitionData.Transition = WindowTransition.Title;
         }
     }
 }
