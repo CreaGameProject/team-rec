@@ -18,6 +18,12 @@ public class UITransitionSystem : MonoBehaviour
     [SerializeField] private GameObject UIStageObj2;
     [SerializeField] private GameObject UIStageObj3;
 
+    [Header("画面変化用画像")]
+    [SerializeField] private Image prev_backImg;
+    [SerializeField] private Image prev_frontImg;
+    [SerializeField] private Image backImg;
+    [SerializeField] private Image frontImg;
+
     [Header("スクリプト類")]
     public GameOverSystem gameOverSystem;
     public FrontGround frontGround;
@@ -46,18 +52,36 @@ public class UITransitionSystem : MonoBehaviour
             UIStageObj1.SetActive(true);
             UIStageObj2.SetActive(false);
             UIStageObj3.SetActive(false);
+            if (WindowTransitionData.Transition == WindowTransition.StageSelect)
+            {
+                backImg.sprite = Resources.Load<Sprite>("StageBackgrounds/maru_04");
+                frontImg.sprite = Resources.Load<Sprite>("StageBackgrounds/maru_02");
+                StartCoroutine(BackGroundFade(1));
+            }
         }
         else if (name == "Stage2")
         {
             UIStageObj1.SetActive(false);
             UIStageObj2.SetActive(true);
             UIStageObj3.SetActive(false);
+            if (WindowTransitionData.Transition == WindowTransition.StageSelect)
+            {
+                backImg.sprite = Resources.Load<Sprite>("StageBackgrounds/3kaku_4");
+                frontImg.sprite = Resources.Load<Sprite>("StageBackgrounds/4kaku_3");
+                StartCoroutine(BackGroundFade(2));
+            }
         }
         else if (name == "Stage3")
         {
             UIStageObj1.SetActive(false);
             UIStageObj2.SetActive(false);
             UIStageObj3.SetActive(true);
+            if (WindowTransitionData.Transition == WindowTransition.StageSelect)
+            {
+                backImg.sprite = Resources.Load<Sprite>("StageBackgrounds/4kaku_4");
+                frontImg.sprite = Resources.Load<Sprite>("StageBackgrounds/4kaku_3");
+                StartCoroutine(BackGroundFade(3));
+            }
         }
 
         StartCoroutine(Fade(true));
@@ -297,6 +321,60 @@ public class UITransitionSystem : MonoBehaviour
             }
         }
     }
+
+
+    /// <summary>
+    /// 背景の色が変化するときのフェード処理
+    /// </summary>
+    /// <param name="stage">ステージ番号</param>
+    /// <returns></returns>
+    private IEnumerator BackGroundFade(int stage)
+    {
+        int waitTime = 20;
+        int nowTime = 0;
+
+        prev_backImg.color = new Color(1, 1, 1, 1);
+        prev_frontImg.color = new Color(1, 1, 1, 1);
+        backImg.color = new Color(1, 1, 1, 0);
+        frontImg.color = new Color(1, 1, 1, 0);
+
+        while (true)
+        {
+            nowTime++;
+            backImg.color = new Color(1, 1, 1, nowTime / (float)waitTime);
+            frontImg.color = new Color(1, 1, 1, nowTime / (float)waitTime);
+
+            if (nowTime >= waitTime)
+            {
+                switch (stage)
+                {
+                    case 1:
+                        prev_backImg.sprite = Resources.Load<Sprite>("StageBackgrounds/maru_04");
+                        prev_frontImg.sprite = Resources.Load<Sprite>("StageBackgrounds/maru_02");
+                        break;
+
+                    case 2:
+                        prev_backImg.sprite = Resources.Load<Sprite>("StageBackgrounds/3kaku_4");
+                        prev_frontImg.sprite = Resources.Load<Sprite>("StageBackgrounds/4kaku_3");
+                        break;
+
+                    case 3:
+                        prev_backImg.sprite = Resources.Load<Sprite>("StageBackgrounds/4kaku_4");
+                        prev_frontImg.sprite = Resources.Load<Sprite>("StageBackgrounds/4kaku_3");
+                        break;
+
+                    default:
+                        print("eee");
+                        break;
+                }
+
+                yield break;
+            }
+
+            yield return null;
+        }
+    }
+
 
     /// <summary>
     /// ウィンドウを表示する
