@@ -87,7 +87,11 @@ public class GoalEvent: IStageEvent
     /// </summary>
     private void StageClear()
     {
-        // 実装未定
         Debug.Log("Stage Clear");
+        Score.HPRemains = Player.Life;
+
+        // ステージクリアUIの表示
+        GameObject.Find("ScoreBackground").SetActive(true);
+        GameObject.Find("StageClearUI").SetActive(true);
     }
 }
