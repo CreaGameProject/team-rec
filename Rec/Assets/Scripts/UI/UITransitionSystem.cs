@@ -257,6 +257,14 @@ public class UITransitionSystem : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// ステージクリア時のUIを表示する
+    /// </summary>
+    public void OpenClearUI()
+    {
+
+    }
+
 
     /// <summary>
     /// フェード処理を行う

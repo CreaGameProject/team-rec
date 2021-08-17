@@ -10,7 +10,6 @@ public class GameOverSystem : MonoBehaviour
     public FrontGround frontGround;
 
     [Space(20)]
-    [SerializeField] private float waitTime = 1.0f;
     [SerializeField] private int fadeTime;
 
 

@@ -132,10 +132,12 @@ public class Scoreboard : MonoBehaviour
 
         // スコアデータを入力する
         yield return new WaitForSeconds(waitTime);
+        /*
         Score.NormalKills = 4; // ここ４行はテストデータ(後で消す)
-        Score.LazerKills = 2;
+        Score.HomingKills = 2;
         Score.HPRemains = 100;
         Score.EnemyCounts = 5;
+        */
         SetScoreValue();
         StartCoroutine(IncreaseGauge(gaugeObjList[gaugeObjListCount], gaugeFillAmount[gaugeObjListCount]));
     }
@@ -253,12 +255,12 @@ public class Scoreboard : MonoBehaviour
     {
         scorePoint = new int[]{ 
             Score.NormalKills,
-            Score.LazerKills,
+            Score.HomingKills,
             (int)((float)Score.HPRemains / Player.MaxLife * 10000)
         };
 
         gaugeFillAmount[0] = (float)Score.NormalKills / Score.EnemyCounts;
-        gaugeFillAmount[1] = (float)Score.LazerKills / Score.EnemyCounts;
+        gaugeFillAmount[1] = (float)Score.HomingKills / Score.EnemyCounts;
         gaugeFillAmount[2] = (float)Score.HPRemains / Player.MaxLife;
 
         foreach (float a in gaugeFillAmount)

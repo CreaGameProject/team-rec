@@ -15,7 +15,7 @@ public class Player : MonoBehaviour
     /// <summary>
     /// 現在の体力値
     /// </summary>
-    private int life;
+    public static int Life;
 
     /// <summary>
     /// レーザー弾のゲージ量
@@ -85,7 +85,7 @@ public class Player : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        life = MaxLife;
+        Life = MaxLife;
         laserGauge = 200;
         angle = 1f / 180f * Mathf.PI;
 
@@ -298,9 +298,9 @@ public class Player : MonoBehaviour
 
     public void decreaseLife(int damagePoint)
     {
-        life -= damagePoint;
+        Life -= damagePoint;
 
-        if (life <= 0)
+        if (Life <= 0)
         {
             OnDeath();
         }

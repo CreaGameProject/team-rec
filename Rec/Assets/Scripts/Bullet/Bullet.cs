@@ -7,6 +7,11 @@ public class Bullet
 
     //Bulletのステータスはすべてこちらで管理する。
 
+    /// <summary>
+    /// 弾の名前
+    /// </summary>
+    public virtual string Name { get; set; }
+
     ///<summary>
     ///弾の速度
     ///</summary>
