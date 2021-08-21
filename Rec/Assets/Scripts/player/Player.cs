@@ -30,9 +30,9 @@ public class Player : MonoBehaviour
     [SerializeField] Texture2D pointTexture;
 
     // 各最大移動量
-    float moveXMax = 3f;
-    float moveYMin = 1f;
-    float moveYMax = 2.5f;
+    float moveXMax = 1.5f;
+    float moveYMin = 0.5f;
+    float moveYMax = 1.6f;
 
     float homingRange = 1f;
     bool homingShot = false;
