@@ -47,7 +47,7 @@ public class BulletPool : SingletonMonoBehaviour<BulletPool>
     /// <returns></returns>
     public GameObject GetInstance(Bullet bullet) 
     {
-        Debug.Log(_poolObjList);
+        //Debug.Log(_poolObjList);
         foreach (var obj in _poolObjList)
         {
             //Debug.Log("foreach");

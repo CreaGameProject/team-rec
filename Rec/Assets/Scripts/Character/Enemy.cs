@@ -7,7 +7,9 @@ using UnityEngine;
 /// </summary>
 public enum Force
 {
-    None, Player, Enemy
+    None,
+    Player,
+    Enemy
 }
 
 public class Enemy : MonoBehaviour
@@ -15,8 +17,8 @@ public class Enemy : MonoBehaviour
     /// <summary>
     /// ぶつかったときプレイヤーにダメージを与えるか
     /// </summary>
-    public bool dealDamage { get; private set; }//ぶつかったらダメージを与えるそうです
-    
+    public bool dealDamage { get; private set; } //ぶつかったらダメージを与えるそうです
+
     /// <summary>
     /// このキャラクターの勢力
     /// </summary>
@@ -31,6 +33,7 @@ public class Enemy : MonoBehaviour
     /// このキャラクターにダメージを与える
     /// </summary>
     /// <param name="damage">与えるダメージ量</param>
+
     protected　virtual void Damage(int damage, BulletObject bulletObject)
     {
         // 「プレイヤーの弾」ー攻撃→「敵」
@@ -50,6 +53,7 @@ public class Enemy : MonoBehaviour
     {
         playerTf.gameObject.GetComponent<Player>().increaseLaserGauge(gaugePoint);
 
+
         // スコア加点
         if (bulletObject.bulletclass.Name == "Straight")
         {
@@ -65,6 +69,7 @@ public class Enemy : MonoBehaviour
         }
 
         Invoke("ThisDestroy", 3f);//3秒は仮の値
+
     }
 
     void ThisDestroy()
@@ -72,23 +77,20 @@ public class Enemy : MonoBehaviour
         Destroy(this.gameObject);
     }
 
-    protected virtual void Awake(){
+    protected virtual void Awake()
+    {
         playerTf = GameObject.FindGameObjectWithTag("Player").transform;
     }
 
-    protected virtual void Update(){
-
+    protected virtual void Update()
+    {
     }
 
     // Update is called once per frame
     protected virtual void FixedUpdate()
     {
-
     }
-
-    
 }
-
 
 
 /// <summary>
