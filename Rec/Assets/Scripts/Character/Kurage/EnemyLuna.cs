@@ -48,16 +48,16 @@ public class EnemyLuna : LoopEnemy
         base.Move();
     }
 
-    protected override void Kill()
+    protected override void Kill(BulletObject bulletObject)
     {
-        base.Kill();
+        base.Kill(bulletObject);
         StopCoroutine(coroutine);
         animationController.OnDie();
     }
 
-    protected override void Damage(int damage)
+    protected override void Damage(int damage, BulletObject bulletObject)
     {
-        base.Damage(damage);
+        base.Damage(damage, bulletObject);
     }
 
     protected override IEnumerator Fire()
@@ -70,6 +70,7 @@ public class EnemyLuna : LoopEnemy
             yield return new WaitForSeconds(0.9f);//変数置いてやる必要があるかも
 
             Homing homing = new Homing();
+            homing.Name = "Homing";
             homing.Velocity = 3f; // 仮の値
             homing.AttackPoint = 20;
             homing.HomingStrength = homingStrength;

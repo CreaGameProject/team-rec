@@ -24,7 +24,10 @@ public class Homing : Bullet
     public override void FixedUpdate()
     {
         base.FixedUpdate();
-        rb.AddForce((Target.transform.position - _bulletObject.gameObject.transform.position) * HomingStrength);
+        if (Target != null)
+        {
+            rb.AddForce((Target.transform.position - _bulletObject.gameObject.transform.position) * HomingStrength);
+        }
     }
 
 }

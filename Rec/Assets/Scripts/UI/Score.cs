@@ -15,7 +15,7 @@ public class Score
     /// <summary>
     /// レーザーを用いたキルのみを加算。
     /// </summary>
-    public static int LazerKills = 0;
+    public static int HomingKills = 0;
 
     /// <summary>
     /// プレイヤーの体力残量の管理。
@@ -25,7 +25,7 @@ public class Score
     /// <summary>
     /// ステージを通して発生する敵の個体数
     /// </summary>
-    public static int EnemyCounts = 0;
+    public static int EnemyCounts = 21;
 
     /// <summary>
     /// ステージ番号

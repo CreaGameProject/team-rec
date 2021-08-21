@@ -43,7 +43,14 @@ public class StageFactory : SingletonMonoBehaviour<StageFactory>
     /// </summary>
     private void GetEnemyData()
     {
-        _stageEvents = FindObjectsOfType<StageEventMarker>().Select(x => x.ToStageEvent()).ToList();
+        var markers = FindObjectsOfType<StageEventMarker>();
+        _stageEvents = markers.Select(x => x.ToStageEvent()).ToList();
+
+        foreach (var marker in markers)
+        {
+            marker.gameObject.SetActive(false);
+        }
+        
         //List<EnemyData> enemyDatas = new List<EnemyData>();
         // foreach(GameObject item in GameObject.FindGameObjectsWithTag("EnemyData"))
         // {
