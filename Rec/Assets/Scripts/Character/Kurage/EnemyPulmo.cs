@@ -92,7 +92,7 @@ public class EnemyPulmo : LoopEnemy
                 //straight.Direction = -transform.forward; // 前方向
                 straight.Direction = dir; // プレイヤーの方向
                 GameObject enemyBullet = BulletPool.Instance.GetInstance(straight);
-                enemyBullet.GetComponent<BulletObject>().Force = Force.Enemy;
+                enemyBullet.GetComponent<BulletObject>().setForce(Force.Enemy);
                 enemyBullet.transform.position = position;
                 GameObject effect = enemyBullet.transform.GetChild(0).gameObject;
                 effect.GetComponent<Renderer>().material.SetColor(EmissionColor, straightColor);

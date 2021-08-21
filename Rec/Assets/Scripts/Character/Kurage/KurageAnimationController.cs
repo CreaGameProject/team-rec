@@ -80,6 +80,6 @@ public class KurageAnimationController : MonoBehaviour
     {
         deathParticle.SetActive(true);
         deathParticle.GetComponent<ParticleSystem>().Play();
-        Debug.Log(_bodyMat.GetFloat("_DissolveProportion"));
+        //Debug.Log(_bodyMat.GetFloat("_DissolveProportion"));
     }
 }
