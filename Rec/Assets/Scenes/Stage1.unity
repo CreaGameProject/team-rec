@@ -74434,7 +74434,7 @@ MonoBehaviour:
   pointTexture: {fileID: 2800000, guid: 6dbf24de4bb145c49bdd627517799973, type: 3}
   gameOverObj: {fileID: 0}
   pauseWindow: {fileID: 0}
-  speed: 0
+  speed: 30
   _straightColor: {r: 0, g: 0, b: 0, a: 0}
   _homingColor: {r: 0, g: 0, b: 0, a: 0}
   body: {fileID: 876781733}
@@ -74443,9 +74443,9 @@ MonoBehaviour:
   pitchTorqueMagnitude: 60
   rollTorqueMagnitude: 30
   restoringTorqueMagnitude: 100
-  roll_decay: 0
-  pitch_decay: 0
-  roll_max: 0
-  pitch_max: 0
-  roll_growth: 0
-  pitch_growth: 0
+  roll_decay: 0.15
+  pitch_decay: 0.15
+  roll_max: 45
+  pitch_max: 45
+  roll_growth: 3
+  pitch_growth: 3
