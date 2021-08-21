@@ -8,7 +8,13 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/Init.unity
     guid: f567d9077a0a2464aa72c8014ca085ed
+  - enabled: 0
+    path: 
+    guid: 00000000000000000000000000000000
   - enabled: 1
-    path: Assets/Scenes/SampleScene.unity
-    guid: d1c3109bdb54ad54c8a2b2838528e640
+    path: Assets/Scenes/TestStage YotoOda2.unity
+    guid: f0f0cad2fd2c75b44a47023b1fb0db3e
+  - enabled: 1
+    path: Assets/Scenes/Title.unity
+    guid: 1bab0aa88b1105b4b85795f43e5c8a20
   m_configObjects: {}

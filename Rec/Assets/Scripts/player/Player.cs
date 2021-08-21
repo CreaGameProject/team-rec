@@ -7,8 +7,20 @@ public class Player : MonoBehaviour
 {
     [SerializeField] BulletPool bulletPool;
 
+    /// <summary>
+    /// 体力の最大値
+    /// </summary>
+    public static int MaxLife = 200;
+
+    /// <summary>
+    /// 現在の体力値
+    /// </summary>
     private int life;
-    private float laserGauge =500f;
+
+    /// <summary>
+    /// レーザー弾のゲージ量
+    /// </summary>
+    private float laserGauge = 200f;
 
     private float angle;
 
@@ -17,16 +29,16 @@ public class Player : MonoBehaviour
 
     [SerializeField] Texture2D pointTexture;
 
-
+    // 各最大移動量
     float moveXMax = 3f;
     float moveYMin = 1f;
     float moveYMax = 2.5f;
 
-
     float homingRange = 1f;
     bool homingShot = false;
 
-    [SerializeField] GameObject testObject;
+    [SerializeField] GameObject gameOverObj;
+    [SerializeField] private GameObject pauseWindow;
 
     [Header("調整可")]
     /// <summary>
@@ -59,14 +71,26 @@ public class Player : MonoBehaviour
     private Vector3 Player_pos;
     private new Rigidbody rigidbody;
 
+    /// <summary>
+    /// 操作入力不可かどうか
+    /// </summary>
+    private bool isStopped = false;
+
+    /// <summary>
+    /// ポーズ可能かどうか
+    /// </summary>
+    private bool canPause = true;
+
+
     // Start is called before the first frame update
     void Start()
     {
-        life = 200;
+        life = MaxLife;
         laserGauge = 200;
         angle = 1f / 180f * Mathf.PI;
 
         mainCamera = Camera.main;
+        pointTexture = ResizeTexture(pointTexture, 64, 64);
         Cursor.SetCursor(pointTexture, new Vector2(pointTexture.width/2 , pointTexture.height/2), CursorMode.ForceSoftware);
         
     }
@@ -74,7 +98,12 @@ public class Player : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        getInput();
+        if (!isStopped)
+        {
+            getControlInput();
+        }
+
+        getOtherInput();
 
         //UnityEngine.PlayerLoop.FixedUpdate();
 
@@ -86,8 +115,13 @@ public class Player : MonoBehaviour
         rigidbody.angularDrag = 20.0f;
     }
 
-    void getInput()
+
+    /// <summary>
+    /// 移動・攻撃入力の管理
+    /// </summary>
+    void getControlInput()
     {
+        // 移動入力
         if (Input.GetKey(KeyCode.A))
         {
             transform.Translate(new Vector3(-0.1f*Mathf.Cos(transform.rotation.y * angle),0, -0.1f * Mathf.Sin(transform.rotation.y * angle)) * speed * Time.deltaTime);
@@ -112,6 +146,7 @@ public class Player : MonoBehaviour
                                     ,Mathf.Clamp(transform.localPosition.y,-moveYMin,moveYMax)
                                     ,Mathf.Clamp(transform.localPosition.z,-moveXMax,moveXMax));
 
+        // 攻撃入力
         if (Input.GetMouseButtonUp(0))
         {
             sendRay();
@@ -119,7 +154,7 @@ public class Player : MonoBehaviour
         else if (Input.GetMouseButtonUp(1))
         {
            
-            Debug.Log("右up");
+            Debug.Log("GetMouseButtonUp(1)");
             homingShot = true;
             openTarget();
         }
@@ -131,11 +166,49 @@ public class Player : MonoBehaviour
             {
                 homingRange = 10;
             }
-
-            Debug.Log("右");
             openTarget();
         }
     }
+
+
+    /// <summary>
+    /// 移動・攻撃以外の入力を管理
+    /// </summary>
+    void getOtherInput()
+    {
+        // 各機能入力
+        if (((Input.GetKeyDown(KeyCode.P)) || (Input.GetKeyDown(KeyCode.Escape))) && (canPause))
+        {
+            // ポーズ切り替え
+            var tr = WindowTransitionData.Transition;
+            if ((tr != WindowTransition.Pause) && (tr != WindowTransition.Option))
+            {
+                // ポーズ起動
+                WindowTransitionData.Transition = WindowTransition.Pause;
+                isStopped = true;
+                pauseWindow.SetActive(true);
+                Time.timeScale = 0.0f;
+            }
+            else
+            {
+                // ポーズ解除
+                if (tr != WindowTransition.Option)
+                {
+                    WindowTransitionData.Transition = WindowTransition.InGame;
+                    Time.timeScale = 1.0f;
+                    isStopped = false;
+                    pauseWindow.SetActive(false);
+                }                
+            }
+        }
+
+        if (Input.GetKeyDown(KeyCode.L))
+        {
+            // てすと、あとでけす
+            decreaseLife(50);
+        }
+    }
+
 
     void sendRay()
     {
@@ -165,7 +238,7 @@ public class Player : MonoBehaviour
             bullet.transform.position = this.transform.position;
             GameObject effect = bullet.transform.GetChild(0).gameObject;
             effect.GetComponent<Renderer>().material.SetColor("_EmissionColor", _straightColor);
-            bullet.GetComponent<BulletObject>().Force = Force.Player;
+            bullet.GetComponent<BulletObject>().setForce(Force.Player);
         }
     }
 
@@ -179,7 +252,7 @@ public class Player : MonoBehaviour
         RaycastHit[] hits = Physics.BoxCastAll(mousePos, Vector3.one*homingRange, (mousePos-Camera.main.transform.position), Quaternion.identity, 100f, LayerMask.GetMask("Default"));
 
 
-        if (homingShot == true)
+        if (homingShot)
         {
             foreach (RaycastHit hit in hits)
             {
@@ -193,13 +266,14 @@ public class Player : MonoBehaviour
                     //hit.collider.gameObjectでぶつかったオブジェクトのことを指す
                     Homing homing = new Homing();
                     homing.Velocity = 10f; // 仮の値
-                    homing.HomingStrength = 10f; // 仮の値
+                    homing.HomingStrength = 10f;
+                    homing.AttackPoint = 1;// 仮の値
                     homing.Direction = transform.forward;
                     homing.Target = hit.collider.gameObject;
                     GameObject bullet = bulletPool.GetInstance(homing);
                     GameObject effect = bullet.transform.GetChild(0).gameObject;
                     effect.GetComponent<Renderer>().material.SetColor("_EmissionColor", _homingColor);
-                    bullet.GetComponent<BulletObject>().Force = Force.Player;
+                    bullet.GetComponent<BulletObject>().setForce(Force.Player);
                     bullet.transform.position = this.transform.position;
                 }
             }
@@ -207,7 +281,7 @@ public class Player : MonoBehaviour
             homingRange = 1f;
             homingShot = false;
 
-            Debug.Log(laserGauge);
+            //Debug.Log(laserGauge);
         }
     }
 
@@ -238,6 +312,13 @@ public class Player : MonoBehaviour
     private void OnDeath()
     {
         Debug.Log("死");
+
+        // ゲームオーバーの画面を表示する
+        WindowTransitionData.Transition = WindowTransition.GameOver;
+        isStopped = true;
+        canPause = false;
+        Time.timeScale = 0.1f;
+        gameOverObj.SetActive(true);
     }
 
     /// <summary>
@@ -284,4 +365,9 @@ public class Player : MonoBehaviour
 
     }
     
+    static Texture2D ResizeTexture(Texture2D srcTexture, int newWidth, int newHeight) {
+        var resizedTexture = new Texture2D(newWidth, newHeight);
+        Graphics.ConvertTexture(srcTexture, resizedTexture);
+        return resizedTexture;
+    }
 }

@@ -22,13 +22,15 @@ public class WindowTransitionData : MonoBehaviour
 public enum WindowTransition
 {
     None,
+    InGame,
     Title,
     MainMenu,
     StageSelect,
     Option,
     Pause,
     ScoreBoard,
-    StageClear
+    StageClear,
+    GameOver
 }
 
 
