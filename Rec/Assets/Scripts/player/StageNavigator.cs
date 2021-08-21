@@ -79,6 +79,8 @@ public class StageNavigator : MonoBehaviour
                 {
                     // チェックポイントの座標とそこに到達するまでの時間が分かればそのポイントまでの移動ができる。
                     // Task内ではtransform.position等へのアクセスは出来ない。
+
+                    if (state == maxState) break;
                                         
                     Vector3 direction = wayList[state + 1] - wayList[state];
                     float progress = 0f; // 100% => 1.00f
@@ -117,6 +119,8 @@ public class StageNavigator : MonoBehaviour
     {
         while (true)
         {
+            if (state == maxState) break;
+
             // 次のウェイポイントを向かせる
             if (wayList[state + 1] != null)
             {

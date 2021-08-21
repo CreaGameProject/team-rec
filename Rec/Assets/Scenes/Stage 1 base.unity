@@ -34580,7 +34580,7 @@ MeshCollider:
   m_GameObject: {fileID: 1074794169}
   m_Material: {fileID: 0}
   m_IsTrigger: 0
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 4
   m_Convex: 0
   m_CookingOptions: 30
@@ -73526,7 +73526,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   taskIsRunning: 0
   wayList: []
-  timeCount: 30
+  timeCount: 5
 --- !u!4 &791449944922620505
 Transform:
   m_ObjectHideFlags: 0
@@ -73795,7 +73795,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   bulletPool: {fileID: 2144441978}
-  pointTexture: {fileID: 2800000, guid: 6dbf24de4bb145c49bdd627517799973, type: 3}
+  pointTexture: {fileID: 2800000, guid: b7ff84e08b64c7c48a050746b49b7fb2, type: 3}
   gameOverObj: {fileID: 0}
   pauseWindow: {fileID: 0}
   speed: 0
