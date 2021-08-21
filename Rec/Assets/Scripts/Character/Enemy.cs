@@ -33,7 +33,8 @@ public class Enemy : MonoBehaviour
     /// このキャラクターにダメージを与える
     /// </summary>
     /// <param name="damage">与えるダメージ量</param>
-    protected virtual void Damage(int damage)
+
+    protected　virtual void Damage(int damage, BulletObject bulletObject)
     {
         // 「プレイヤーの弾」ー攻撃→「敵」
         hp -= damage;
@@ -41,17 +42,34 @@ public class Enemy : MonoBehaviour
         // Hpが0以下
         if (hp <= 0)
         {
-            Kill();
+            Kill(bulletObject);
         }
     }
 
     /// <summary>
     /// このキャラクターを消去する
     /// </summary>
-    protected virtual void Kill()
+    protected virtual void Kill(BulletObject bulletObject)
     {
         playerTf.gameObject.GetComponent<Player>().increaseLaserGauge(gaugePoint);
-        Invoke("ThisDestroy", 3f); //3秒は仮の値
+
+
+        // スコア加点
+        if (bulletObject.bulletclass.Name == "Straight")
+        {
+            Score.NormalKills++;
+        }
+        else if (bulletObject.bulletclass.Name == "Homing")
+        {
+            Score.HomingKills++;
+        }
+        else
+        {
+            Debug.LogError("指定外の名前が選択されています。 -> " + bulletObject.bulletclass.Name);
+        }
+
+        Invoke("ThisDestroy", 3f);//3秒は仮の値
+
     }
 
     void ThisDestroy()

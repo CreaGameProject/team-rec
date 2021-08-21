@@ -15,7 +15,7 @@ public class Player : MonoBehaviour
     /// <summary>
     /// 現在の体力値
     /// </summary>
-    private int life;
+    public static int Life;
 
     /// <summary>
     /// レーザー弾のゲージ量
@@ -85,7 +85,7 @@ public class Player : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        life = MaxLife;
+        Life = MaxLife;
         laserGauge = 200;
         angle = 1f / 180f * Mathf.PI;
 
@@ -231,6 +231,7 @@ public class Player : MonoBehaviour
             Vector3 array = (hit.point - Camera.main.transform.position).normalized;
             
             Straight straight = new Straight();
+            straight.Name = "Straight";
             straight.Velocity = 10f; // 仮の値
             straight.AttackPoint = 1; // 仮の値
             straight.Direction = array;
@@ -265,6 +266,7 @@ public class Player : MonoBehaviour
                     //ここでホーミングを打つ(つまり単発を高速レートで打つ感じ)
                     //hit.collider.gameObjectでぶつかったオブジェクトのことを指す
                     Homing homing = new Homing();
+                    homing.Name = "Homing";
                     homing.Velocity = 10f; // 仮の値
                     homing.HomingStrength = 10f;
                     homing.AttackPoint = 1;// 仮の値
@@ -298,9 +300,9 @@ public class Player : MonoBehaviour
 
     public void decreaseLife(int damagePoint)
     {
-        life -= damagePoint;
+        Life -= damagePoint;
 
-        if (life <= 0)
+        if (Life <= 0)
         {
             OnDeath();
         }

@@ -6,6 +6,11 @@ using UnityEngine.SceneManagement;
 
 public class UITransitionSystem : MonoBehaviour
 {
+    /// <summary>
+    /// 選択されているステージ番号
+    /// </summary>
+    public static int Stage = 1;
+
     [Header("ウィンドウ一覧")]
     [SerializeField] private GameObject TitleWindow;
     [SerializeField] private GameObject MainMenuWindow;
@@ -17,6 +22,12 @@ public class UITransitionSystem : MonoBehaviour
     [SerializeField] private GameObject UIStageObj1;
     [SerializeField] private GameObject UIStageObj2;
     [SerializeField] private GameObject UIStageObj3;
+
+    [Header("画面変化用画像")]
+    [SerializeField] private Image prev_backImg;
+    [SerializeField] private Image prev_frontImg;
+    [SerializeField] private Image backImg;
+    [SerializeField] private Image frontImg;
 
     [Header("スクリプト類")]
     public GameOverSystem gameOverSystem;
@@ -43,22 +54,40 @@ public class UITransitionSystem : MonoBehaviour
         string name = this.gameObject.name;
         if (name == "Stage1")
         {
-            UIStageObj1.SetActive(true);
-            UIStageObj2.SetActive(false);
-            UIStageObj3.SetActive(false);
+            Stage = 1;
+
+            if (WindowTransitionData.Transition == WindowTransition.StageSelect)
+            {
+                backImg.sprite = Resources.Load<Sprite>("StageBackgrounds/maru_04");
+                frontImg.sprite = Resources.Load<Sprite>("StageBackgrounds/maru_02");
+                StartCoroutine(BackGroundFade(1));
+            }
         }
         else if (name == "Stage2")
         {
-            UIStageObj1.SetActive(false);
-            UIStageObj2.SetActive(true);
-            UIStageObj3.SetActive(false);
+            Stage = 2;
+
+            if (WindowTransitionData.Transition == WindowTransition.StageSelect)
+            {
+                backImg.sprite = Resources.Load<Sprite>("StageBackgrounds/3kaku_4");
+                frontImg.sprite = Resources.Load<Sprite>("StageBackgrounds/4kaku_3");
+                StartCoroutine(BackGroundFade(2));
+            }
         }
         else if (name == "Stage3")
         {
-            UIStageObj1.SetActive(false);
-            UIStageObj2.SetActive(false);
-            UIStageObj3.SetActive(true);
+            Stage = 3;
+
+            if (WindowTransitionData.Transition == WindowTransition.StageSelect)
+            {
+                backImg.sprite = Resources.Load<Sprite>("StageBackgrounds/4kaku_4");
+                frontImg.sprite = Resources.Load<Sprite>("StageBackgrounds/4kaku_3");
+                StartCoroutine(BackGroundFade(3));
+            }
         }
+
+        if (WindowTransitionData.Transition == WindowTransition.StageSelect || WindowTransitionData.Transition == WindowTransition.MainMenu)
+            SwitchStageObj(Stage);
 
         StartCoroutine(Fade(true));
     }
@@ -233,6 +262,37 @@ public class UITransitionSystem : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// ステージを表す図形を変化させる
+    /// </summary>
+    private void SwitchStageObj(int stage)
+    {
+        switch (stage)
+        {
+            case 1:
+                UIStageObj1.SetActive(true);
+                UIStageObj2.SetActive(false);
+                UIStageObj3.SetActive(false);
+                break;
+
+            case 2:
+                UIStageObj1.SetActive(false);
+                UIStageObj2.SetActive(true);
+                UIStageObj3.SetActive(false);
+                break;
+
+            case 3:
+                UIStageObj1.SetActive(false);
+                UIStageObj2.SetActive(false);
+                UIStageObj3.SetActive(true);
+                break;
+
+            default:
+                Debug.LogError("範囲外のステージ番号が指定されています -> " + stage);
+                break;
+        }
+    }
+
 
     /// <summary>
     /// フェード処理を行う
@@ -298,6 +358,60 @@ public class UITransitionSystem : MonoBehaviour
         }
     }
 
+
+    /// <summary>
+    /// 背景の色が変化するときのフェード処理
+    /// </summary>
+    /// <param name="stage">ステージ番号</param>
+    /// <returns></returns>
+    private IEnumerator BackGroundFade(int stage)
+    {
+        int waitTime = 20;
+        int nowTime = 0;
+
+        prev_backImg.color = new Color(1, 1, 1, 1);
+        prev_frontImg.color = new Color(1, 1, 1, 1);
+        backImg.color = new Color(1, 1, 1, 0);
+        frontImg.color = new Color(1, 1, 1, 0);
+
+        while (true)
+        {
+            nowTime++;
+            backImg.color = new Color(1, 1, 1, nowTime / (float)waitTime);
+            frontImg.color = new Color(1, 1, 1, nowTime / (float)waitTime);
+
+            if (nowTime >= waitTime)
+            {
+                switch (stage)
+                {
+                    case 1:
+                        prev_backImg.sprite = Resources.Load<Sprite>("StageBackgrounds/maru_04");
+                        prev_frontImg.sprite = Resources.Load<Sprite>("StageBackgrounds/maru_02");
+                        break;
+
+                    case 2:
+                        prev_backImg.sprite = Resources.Load<Sprite>("StageBackgrounds/3kaku_4");
+                        prev_frontImg.sprite = Resources.Load<Sprite>("StageBackgrounds/4kaku_3");
+                        break;
+
+                    case 3:
+                        prev_backImg.sprite = Resources.Load<Sprite>("StageBackgrounds/4kaku_4");
+                        prev_frontImg.sprite = Resources.Load<Sprite>("StageBackgrounds/4kaku_3");
+                        break;
+
+                    default:
+                        print("eee");
+                        break;
+                }
+
+                yield break;
+            }
+
+            yield return null;
+        }
+    }
+
+
     /// <summary>
     /// ウィンドウを表示する
     /// </summary>
@@ -360,6 +474,20 @@ public class UITransitionSystem : MonoBehaviour
         if (WindowTransitionData.Transition == WindowTransition.None)
         {
             WindowTransitionData.Transition = WindowTransition.Title;
+        }
+    }
+
+
+    private void OnEnable()
+    {
+        if (WindowTransitionData.Transition == WindowTransition.Title)
+        {
+            Stage = 1;
+            SwitchStageObj(Stage);
+        }
+        else if (WindowTransitionData.Transition == WindowTransition.MainMenu)
+        {
+            SwitchStageObj(Stage);
         }
     }
 }

@@ -33,9 +33,9 @@ public abstract class LoopEnemy : Enemy
     Transform _naviTf;
     Vector3 _forceDir;
 
-    protected override void Kill()
+    protected override void Kill(BulletObject bulletObject)
     {
-        base.Kill();
+        base.Kill(bulletObject);
     }
 
     protected override void Awake()
@@ -99,7 +99,7 @@ public abstract class LoopEnemy : Enemy
             if (colForce == Force.Player)
             {
                 Debug.Log("攻撃力" + bulletObject.bulletclass.AttackPoint + "のPlayerの弾が当たりました");
-                Damage(bulletObject.bulletclass.AttackPoint);
+                Damage(bulletObject.bulletclass.AttackPoint, bulletObject);
             }
         }
     }

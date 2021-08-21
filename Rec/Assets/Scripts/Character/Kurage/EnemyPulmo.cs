@@ -60,16 +60,16 @@ public class EnemyPulmo : LoopEnemy
         base.Move();
     }
 
-    protected override void Kill()
+    protected override void Kill(BulletObject bulletObject)
     {
-        base.Kill();
+        base.Kill(bulletObject);
         StopCoroutine(coroutine);
         animationController.OnDie();
     }
 
-    protected override void Damage(int damage)
+    protected override void Damage(int damage, BulletObject bulletObject)
     {
-        base.Damage(damage);
+        base.Damage(damage, bulletObject);
     }
 
     protected override IEnumerator Fire()
@@ -84,6 +84,7 @@ public class EnemyPulmo : LoopEnemy
             for (var i = 0; i < burstCount; i++)
             {
                 Straight straight = new Straight();
+                straight.Name = "Straight";
                 straight.Velocity = 5f; // 仮の値
                 straight.AttackPoint = 10; //仮の値
                 Vector3 position = transform.position;
