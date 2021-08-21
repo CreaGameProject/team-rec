@@ -71,4 +71,22 @@ public class BulletObject : MonoBehaviour
             particle.gameObject.SetActive(false);
         }
     }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if (Force == Force.Player)
+        {
+            if (other.gameObject.CompareTag("Enemy"))
+            {
+                BulletPool.Instance.Destroy(this.gameObject);
+            }
+        }
+        else
+        {
+            if (other.gameObject.CompareTag("Player"))
+            {
+                BulletPool.Instance.Destroy(this.gameObject);
+            }
+        }
+    }
 }
