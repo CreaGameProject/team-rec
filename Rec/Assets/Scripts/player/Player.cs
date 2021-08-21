@@ -232,6 +232,7 @@ public class Player : MonoBehaviour
             Vector3 array = (hit.point - Camera.main.transform.position).normalized;
             
             Straight straight = new Straight();
+            straight.Name = "Straight";
             straight.Velocity = 10f; // 仮の値
             straight.AttackPoint = 1; // 仮の値
             straight.Direction = array;
@@ -266,6 +267,7 @@ public class Player : MonoBehaviour
                     //ここでホーミングを打つ(つまり単発を高速レートで打つ感じ)
                     //hit.collider.gameObjectでぶつかったオブジェクトのことを指す
                     Homing homing = new Homing();
+                    homing.Name = "Homing";
                     homing.Velocity = 10f; // 仮の値
                     homing.HomingStrength = 10f; // 仮の値
                     homing.Direction = transform.forward;
