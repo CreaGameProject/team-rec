@@ -90,6 +90,7 @@ public class Player : MonoBehaviour
         angle = 1f / 180f * Mathf.PI;
 
         mainCamera = Camera.main;
+        pointTexture = ResizeTexture(pointTexture, 64, 64);
         Cursor.SetCursor(pointTexture, new Vector2(pointTexture.width/2 , pointTexture.height/2), CursorMode.ForceSoftware);
         
     }
@@ -153,7 +154,7 @@ public class Player : MonoBehaviour
         else if (Input.GetMouseButtonUp(1))
         {
            
-            Debug.Log("右up");
+            Debug.Log("GetMouseButtonUp(1)");
             homingShot = true;
             openTarget();
         }
@@ -165,8 +166,6 @@ public class Player : MonoBehaviour
             {
                 homingRange = 10;
             }
-
-            Debug.Log("右");
             openTarget();
         }
     }
@@ -239,7 +238,7 @@ public class Player : MonoBehaviour
             bullet.transform.position = this.transform.position;
             GameObject effect = bullet.transform.GetChild(0).gameObject;
             effect.GetComponent<Renderer>().material.SetColor("_EmissionColor", _straightColor);
-            bullet.GetComponent<BulletObject>().Force = Force.Player;
+            bullet.GetComponent<BulletObject>().setForce(Force.Player);
         }
     }
 
@@ -253,7 +252,7 @@ public class Player : MonoBehaviour
         RaycastHit[] hits = Physics.BoxCastAll(mousePos, Vector3.one*homingRange, (mousePos-Camera.main.transform.position), Quaternion.identity, 100f, LayerMask.GetMask("Default"));
 
 
-        if (homingShot == true)
+        if (homingShot)
         {
             foreach (RaycastHit hit in hits)
             {
@@ -267,13 +266,14 @@ public class Player : MonoBehaviour
                     //hit.collider.gameObjectでぶつかったオブジェクトのことを指す
                     Homing homing = new Homing();
                     homing.Velocity = 10f; // 仮の値
-                    homing.HomingStrength = 10f; // 仮の値
+                    homing.HomingStrength = 10f;
+                    homing.AttackPoint = 1;// 仮の値
                     homing.Direction = transform.forward;
                     homing.Target = hit.collider.gameObject;
                     GameObject bullet = bulletPool.GetInstance(homing);
                     GameObject effect = bullet.transform.GetChild(0).gameObject;
                     effect.GetComponent<Renderer>().material.SetColor("_EmissionColor", _homingColor);
-                    bullet.GetComponent<BulletObject>().Force = Force.Player;
+                    bullet.GetComponent<BulletObject>().setForce(Force.Player);
                     bullet.transform.position = this.transform.position;
                 }
             }
@@ -281,7 +281,7 @@ public class Player : MonoBehaviour
             homingRange = 1f;
             homingShot = false;
 
-            Debug.Log(laserGauge);
+            //Debug.Log(laserGauge);
         }
     }
 
@@ -365,4 +365,9 @@ public class Player : MonoBehaviour
 
     }
     
+    static Texture2D ResizeTexture(Texture2D srcTexture, int newWidth, int newHeight) {
+        var resizedTexture = new Texture2D(newWidth, newHeight);
+        Graphics.ConvertTexture(srcTexture, resizedTexture);
+        return resizedTexture;
+    }
 }

@@ -76,7 +76,7 @@ public class EnemyLuna : LoopEnemy
             homing.Direction = transform.up; // 上方向
             homing.Target = playerTf.gameObject;
             GameObject enemyBullet = BulletPool.Instance.GetInstance(homing);
-            enemyBullet.GetComponent<BulletObject>().Force = Force.Enemy;
+            enemyBullet.GetComponent<BulletObject>().setForce(Force.Enemy);
             enemyBullet.transform.position = this.transform.position + Vector3.up * 1.8f;
             GameObject effect = enemyBullet.transform.GetChild(0).gameObject;
             effect.GetComponent<Renderer>().material.SetColor(EmissionColor, homingColor);
