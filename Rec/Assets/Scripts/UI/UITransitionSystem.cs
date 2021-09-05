@@ -6,6 +6,11 @@ using UnityEngine.SceneManagement;
 
 public class UITransitionSystem : MonoBehaviour
 {
+    /// <summary>
+    /// 選択されているステージ番号
+    /// </summary>
+    public static int Stage = 1;
+
     [Header("ウィンドウ一覧")]
     [SerializeField] private GameObject TitleWindow;
     [SerializeField] private GameObject MainMenuWindow;
@@ -49,9 +54,8 @@ public class UITransitionSystem : MonoBehaviour
         string name = this.gameObject.name;
         if (name == "Stage1")
         {
-            UIStageObj1.SetActive(true);
-            UIStageObj2.SetActive(false);
-            UIStageObj3.SetActive(false);
+            Stage = 1;
+
             if (WindowTransitionData.Transition == WindowTransition.StageSelect)
             {
                 backImg.sprite = Resources.Load<Sprite>("StageBackgrounds/maru_04");
@@ -61,9 +65,8 @@ public class UITransitionSystem : MonoBehaviour
         }
         else if (name == "Stage2")
         {
-            UIStageObj1.SetActive(false);
-            UIStageObj2.SetActive(true);
-            UIStageObj3.SetActive(false);
+            Stage = 2;
+
             if (WindowTransitionData.Transition == WindowTransition.StageSelect)
             {
                 backImg.sprite = Resources.Load<Sprite>("StageBackgrounds/3kaku_4");
@@ -73,9 +76,8 @@ public class UITransitionSystem : MonoBehaviour
         }
         else if (name == "Stage3")
         {
-            UIStageObj1.SetActive(false);
-            UIStageObj2.SetActive(false);
-            UIStageObj3.SetActive(true);
+            Stage = 3;
+
             if (WindowTransitionData.Transition == WindowTransition.StageSelect)
             {
                 backImg.sprite = Resources.Load<Sprite>("StageBackgrounds/4kaku_4");
@@ -83,6 +85,9 @@ public class UITransitionSystem : MonoBehaviour
                 StartCoroutine(BackGroundFade(3));
             }
         }
+
+        if (WindowTransitionData.Transition == WindowTransition.StageSelect || WindowTransitionData.Transition == WindowTransition.MainMenu)
+            SwitchStageObj(Stage);
 
         StartCoroutine(Fade(true));
     }
@@ -258,11 +263,34 @@ public class UITransitionSystem : MonoBehaviour
     }
 
     /// <summary>
-    /// ステージクリア時のUIを表示する
+    /// ステージを表す図形を変化させる
     /// </summary>
-    public void OpenClearUI()
+    private void SwitchStageObj(int stage)
     {
+        switch (stage)
+        {
+            case 1:
+                UIStageObj1.SetActive(true);
+                UIStageObj2.SetActive(false);
+                UIStageObj3.SetActive(false);
+                break;
 
+            case 2:
+                UIStageObj1.SetActive(false);
+                UIStageObj2.SetActive(true);
+                UIStageObj3.SetActive(false);
+                break;
+
+            case 3:
+                UIStageObj1.SetActive(false);
+                UIStageObj2.SetActive(false);
+                UIStageObj3.SetActive(true);
+                break;
+
+            default:
+                Debug.LogError("範囲外のステージ番号が指定されています -> " + stage);
+                break;
+        }
     }
 
 
@@ -446,6 +474,20 @@ public class UITransitionSystem : MonoBehaviour
         if (WindowTransitionData.Transition == WindowTransition.None)
         {
             WindowTransitionData.Transition = WindowTransition.Title;
+        }
+    }
+
+
+    private void OnEnable()
+    {
+        if (WindowTransitionData.Transition == WindowTransition.Title)
+        {
+            Stage = 1;
+            SwitchStageObj(Stage);
+        }
+        else if (WindowTransitionData.Transition == WindowTransition.MainMenu)
+        {
+            SwitchStageObj(Stage);
         }
     }
 }

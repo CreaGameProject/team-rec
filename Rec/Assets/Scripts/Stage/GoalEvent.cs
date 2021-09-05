@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.AccessControl;
 using UnityEditor.UI;
 using UnityEngine;
 using UnityEngine.Events;
@@ -91,7 +92,10 @@ public class GoalEvent: IStageEvent
         Score.HPRemains = Player.Life;
 
         // ステージクリアUIの表示
-        GameObject.Find("ScoreBackground").SetActive(true);
-        GameObject.Find("StageClearUI").SetActive(true);
+        var canvas = GameObject.Find("Canvas").transform;
+        canvas.Find("ScoreBackground").gameObject.SetActive(true);
+        canvas.Find("StageClearUI").gameObject.SetActive(true);
+        // GameObject.Find("ScoreBackground").SetActive(true);
+        // GameObject.Find("StageClearUI").SetActive(true);
     }
 }

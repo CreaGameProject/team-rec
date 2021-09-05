@@ -12,6 +12,7 @@ namespace Assets.Scripts.Stage
     /// </summary>
     class GoalEventMarker: StageEventMarker
     {
+        [Header("Enemy obj in \"Asset/Prefabs/Characters/\"")]
         [SerializeField] private List<GoalEvent.EnemyParameter> enemies;
         [SerializeField] private float time;
         

@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -7,26 +8,34 @@ using UnityEngine;
 /// </summary>
 public class BulletObject : MonoBehaviour
 {
-
-    /// <summary>
-    /// 弾の勢力（敵・味方など）を表現する
-    /// </summary>
     public Force Force;
-    
-    /// <summary>
-    /// ぶつかったときにダメージがあるか
-    /// </summary>
     public bool DealDamage { get; }
-
-    /// <summary>
-    /// Bulletクラス型の変数
-    /// </summary>
     public Bullet bulletclass;
+    private ParticleSystem[] particles;
+    public ParticleSystem playerLazer;
+    public ParticleSystem enemyStage1;
 
-    /// <summary>
-    /// 弾の特性を表すBulletインスタンスをセットする
-    /// </summary>
-    /// <param name="bullet"></param>
+    private void Awake()
+    {
+        particles = new ParticleSystem[] {playerLazer, enemyStage1};
+    }
+
+    public void setForce(Force force)
+    {
+        Force = force;
+        switch (Force)
+        {
+            case Force.Enemy:
+                enemyStage1.gameObject.SetActive(true);
+                enemyStage1.Play();
+                break;
+            case Force.Player:
+                playerLazer.gameObject.SetActive(true);
+                playerLazer.Play();
+                break;
+        }
+    }
+
     public void SetBullet(Bullet bullet)
     {
         bulletclass = bullet;
@@ -35,32 +44,49 @@ public class BulletObject : MonoBehaviour
 
         // bullet.csのStart(this.gameObject)を呼び出す
         bulletclass.Start(this.gameObject);
+
+        // うーんこの書き方直したい
+        
     }
 
-    // Update is called once per frame
     void FixedUpdate()
     {
         // bullet.csのFixedUpdate()を呼び出す
         bulletclass.FixedUpdate();
     }
 
-    /// <summary>
-    /// 時間経過で消える
-    /// </summary>
-    /// <returns></returns>
     private IEnumerator TimeDestroy()
     {
-        yield return new WaitForSeconds(6);
+        yield return new WaitForSeconds(6); //6秒は仮
         BulletPool.Instance.Destroy(this.gameObject);
     }
 
-    /// <summary>
-    /// 無効化された時の処理
-    /// </summary>
     private void OnDisable()
     {
         Rigidbody rig = this.GetComponent<Rigidbody>();
         rig.velocity = Vector3.zero;
         rig.angularVelocity = Vector3.zero;
+        foreach (var particle in particles)
+        {
+            particle.gameObject.SetActive(false);
+        }
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if (Force == Force.Player)
+        {
+            if (other.gameObject.CompareTag("Enemy"))
+            {
+                BulletPool.Instance.Destroy(this.gameObject);
+            }
+        }
+        else
+        {
+            if (other.gameObject.CompareTag("Player"))
+            {
+                BulletPool.Instance.Destroy(this.gameObject);
+            }
+        }
     }
 }
