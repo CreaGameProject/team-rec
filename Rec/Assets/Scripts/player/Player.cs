@@ -28,6 +28,8 @@ public class Player : MonoBehaviour
     Vector3 mousePos = new Vector3(0, 0, 0);
 
     [SerializeField] Texture2D pointTexture;
+    [SerializeField] private List<GameObject> lockedEnemyList = new List<GameObject>();
+    private List<GameObject> lockedEnemyListBuffer = new List<GameObject>();
 
     // 各最大移動量
     float moveXMax = 1.5f;
@@ -263,41 +265,54 @@ public class Player : MonoBehaviour
             RaycastHit[] hits = Physics.BoxCastAll(mousePos, Vector3.one * homingRange,
                 (mousePos - Camera.main.transform.position), Quaternion.identity, 100f, LayerMask.GetMask("Default"));
 
-
-            if (homingShot)
+            foreach (RaycastHit hit in hits)
             {
-                foreach (RaycastHit hit in hits)
+                if (hit.collider.gameObject.CompareTag("Enemy"))
                 {
-                    if (hit.collider.gameObject.CompareTag("Enemy"))
+                    if (!lockedEnemyList.Contains(hit.collider.gameObject))
                     {
-                        if (laserGauge >= 20)
-                        {
-                            Debug.Log(hit.collider.gameObject.name);
-                            laserGauge -= 20;
-
-                            //ここでホーミングを打つ(つまり単発を高速レートで打つ感じ)
-                            //hit.collider.gameObjectでぶつかったオブジェクトのことを指す
-                            Homing homing = new Homing();
-                            homing.Name = "Homing";
-                            homing.Velocity = 10f; // 仮の値
-                            homing.HomingStrength = 10f;
-                            homing.AttackPoint = 1; // 仮の値
-                            homing.Direction = transform.forward;
-                            homing.Target = hit.collider.gameObject;
-                            GameObject bullet = bulletPool.GetInstance(homing);
-                            GameObject effect = bullet.transform.GetChild(0).gameObject;
-                            effect.GetComponent<Renderer>().material.SetColor(EmissionColor, _homingColor);
-                            bullet.GetComponent<BulletObject>().setForce(Force.Player);
-                            bullet.transform.position = this.transform.position;
-                        }
+                        lockedEnemyList.Add(hit.collider.gameObject);
+                        Debug.Log(hit.collider.gameObject.name);
                     }
                 }
-
-                homingRange = 1f;
-                homingShot = false;
-
-                //Debug.Log(laserGauge);
             }
+
+            lockedEnemyListBuffer = lockedEnemyList;
+
+
+            for (int i = 0; i < lockedEnemyList.Count; i++)
+            {
+                if (homingShot)
+                {
+                    if (laserGauge >= 20)
+                    {
+                        laserGauge -= 20;
+
+                        //ここでホーミングを打つ(つまり単発を高速レートで打つ感じ)
+                        //hit.collider.gameObjectでぶつかったオブジェクトのことを指す
+                        Homing homing = new Homing();
+                        homing.Name = "Homing";
+                        homing.Velocity = 5f; // 仮の値
+                        homing.HomingStrength = 10f;
+                        homing.AttackPoint = 1; // 仮の値
+                        homing.Direction = transform.forward;
+                        homing.Target = lockedEnemyList[i];
+                        GameObject bullet = bulletPool.GetInstance(homing);
+                        GameObject effect = bullet.transform.GetChild(0).gameObject;
+                        effect.GetComponent<Renderer>().material.SetColor(EmissionColor, _homingColor);
+                        bullet.GetComponent<BulletObject>().setForce(Force.Player);
+                        bullet.transform.position = this.transform.position;
+
+                        // 撃ったのでロックされた敵をリストから削除
+                        lockedEnemyList.Remove(lockedEnemyList[i]);
+                    }
+                }
+            }
+            
+            homingRange = 1f;
+            homingShot = false;
+            
+            //Debug.Log(laserGauge);
         }
     }
 
