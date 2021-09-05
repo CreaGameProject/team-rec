@@ -5,10 +5,27 @@
     <e p="C:\Users\reiji\AppData\Local\JetBrains\Rider2020.3\resharper-host\Local\Transient\Rider\v203\SolutionCaches\_Rec.-1634789284.00" t="ExcludeRecursive" />
     <e p="C:\Users\reiji\team-rec\Rec" t="IncludeRecursive">
       <e p="Assembly-CSharp-Editor.csproj" t="IncludeRecursive" />
+      <e p="Assembly-CSharp-firstpass.csproj" t="IncludeRecursive" />
       <e p="Assembly-CSharp.csproj" t="IncludeRecursive" />
       <e p="Assets" t="Include">
         <e p="Editor" t="Include">
           <e p="Launcher.cs" t="Include" />
+        </e>
+        <e p="Plugins" t="Include">
+          <e p="Demigiant" t="Include">
+            <e p="DOTween" t="Include">
+              <e p="Modules" t="Include">
+                <e p="DOTweenModuleAudio.cs" t="Include" />
+                <e p="DOTweenModulePhysics.cs" t="Include" />
+                <e p="DOTweenModulePhysics2D.cs" t="Include" />
+                <e p="DOTweenModuleSprite.cs" t="Include" />
+                <e p="DOTweenModuleUI.cs" t="Include" />
+                <e p="DOTweenModuleUnityVersion.cs" t="Include" />
+                <e p="DOTweenModuleUtils.cs" t="Include" />
+              </e>
+              <e p="readme.txt" t="Include" />
+            </e>
+          </e>
         </e>
         <e p="Scripts" t="Include">
           <e p="Bgm" t="Include">
@@ -50,6 +67,8 @@
           <e p="SimpleCameraController.cs" t="Include" />
           <e p="Stage" t="Include">
             <e p="EnemyData.cs" t="Include" />
+            <e p="GoalEvent.cs" t="Include" />
+            <e p="GoalEventMarker.cs" t="Include" />
             <e p="StageData.cs" t="Include" />
             <e p="StageEventMarker.cs" t="Include" />
             <e p="StageFactory.cs" t="Include" />
@@ -63,12 +82,14 @@
           <e p="UI" t="Include">
             <e p="CompassRader.cs" t="Include" />
             <e p="EnemyMarkerText.cs" t="Include" />
+            <e p="FrontGround.cs" t="Include" />
             <e p="GameOverSystem.cs" t="Include" />
             <e p="Option.cs" t="Include" />
             <e p="Score.cs" t="Include" />
             <e p="ScoreBackground.cs" t="Include" />
             <e p="Scoreboard.cs" t="Include" />
             <e p="ScoreUISystem.cs" t="Include" />
+            <e p="TitleBackground.cs" t="Include" />
             <e p="UITransitionSystem.cs" t="Include" />
             <e p="WindowTransitionData.cs" t="Include" />
           </e>
