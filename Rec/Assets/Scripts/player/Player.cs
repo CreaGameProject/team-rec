@@ -29,7 +29,7 @@ public class Player : MonoBehaviour
 
     [SerializeField] Texture2D pointTexture;
     [SerializeField] private List<GameObject> lockedEnemyList = new List<GameObject>();
-    private List<GameObject> lockedEnemyListBuffer = new List<GameObject>();
+    private List<GameObject> _lockedEnemyListBuffer = new List<GameObject>();
 
     // 各最大移動量
     float moveXMax = 1.5f;
@@ -264,6 +264,7 @@ public class Player : MonoBehaviour
         {
             RaycastHit[] hits = Physics.BoxCastAll(mousePos, Vector3.one * homingRange,
                 (mousePos - Camera.main.transform.position), Quaternion.identity, 100f, LayerMask.GetMask("Default"));
+            
 
             foreach (RaycastHit hit in hits)
             {
@@ -272,12 +273,12 @@ public class Player : MonoBehaviour
                     if (!lockedEnemyList.Contains(hit.collider.gameObject))
                     {
                         lockedEnemyList.Add(hit.collider.gameObject);
-                        Debug.Log(hit.collider.gameObject.name);
+                        LockOnMarker.Instance.LockOnEnemy(hit.collider.gameObject);
                     }
                 }
             }
 
-            lockedEnemyListBuffer = lockedEnemyList;
+            _lockedEnemyListBuffer = lockedEnemyList;
 
 
             for (int i = 0; i < lockedEnemyList.Count; i++)
@@ -302,9 +303,11 @@ public class Player : MonoBehaviour
                         effect.GetComponent<Renderer>().material.SetColor(EmissionColor, _homingColor);
                         bullet.GetComponent<BulletObject>().setForce(Force.Player);
                         bullet.transform.position = this.transform.position;
-
-                        // 撃ったのでロックされた敵をリストから削除
+                        Debug.Log("Enemy Name:" + lockedEnemyList[i]);
+                        
+                        LockOnMarker.Instance.ReleaseCursor(lockedEnemyList[i]);
                         lockedEnemyList.Remove(lockedEnemyList[i]);
+                        
                     }
                 }
             }
@@ -315,6 +318,7 @@ public class Player : MonoBehaviour
             //Debug.Log(laserGauge);
         }
     }
+    
 
     private void OnDrawGizmos()
     {
@@ -395,6 +399,8 @@ public class Player : MonoBehaviour
         pitch = Mathf.Clamp(pitch, -pitch_max, pitch_max);
         body.transform.localEulerAngles = new Vector3(pitch, ang.y, roll);
     }
+    
+    
 
     static Texture2D ResizeTexture(Texture2D srcTexture, int newWidth, int newHeight)
     {
