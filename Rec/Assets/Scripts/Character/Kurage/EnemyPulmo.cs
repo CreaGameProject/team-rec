@@ -71,6 +71,7 @@ public class EnemyPulmo : LoopEnemy
     {
         base.Damage(damage, bulletObject);
     }
+    
 
     protected override IEnumerator Fire()
     {

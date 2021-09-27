@@ -1,9 +1,19 @@
 fileFormatVersion: 2
-guid: a453c97d7aaac1c459b7f1f0370bedd3
+guid: c2f1c31efcd561a4b891e7fb0644cc7c
 ModelImporter:
   serializedVersion: 19301
   internalIDToNameTable: []
-  externalObjects: {}
+  externalObjects:
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Kuro
+    second: {fileID: 2100000, guid: 4b5d9c4d6ff3f0f41af87bf5f57523ee, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Wire
+    second: {fileID: 2100000, guid: 3d8f74cf67dde0148a756554d1864069, type: 2}
   materials:
     materialImportMode: 1
     materialName: 0

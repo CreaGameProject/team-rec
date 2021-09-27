@@ -1,9 +1,25 @@
 fileFormatVersion: 2
-guid: a453c97d7aaac1c459b7f1f0370bedd3
+guid: 72f772830d8702846b5690463e27e668
 ModelImporter:
   serializedVersion: 19301
-  internalIDToNameTable: []
-  externalObjects: {}
+  internalIDToNameTable:
+  - first:
+      74: 3680201527246846624
+    second: Armature|Attack.001
+  - first:
+      74: -5913978943142729594
+    second: Armature|Move
+  externalObjects:
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Men
+    second: {fileID: 2100000, guid: 18e05f314171b9e4496a427683113e4d, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Wire
+    second: {fileID: 2100000, guid: e2d2f7e968e6c0a45a36174b134e2549, type: 2}
   materials:
     materialImportMode: 1
     materialName: 0

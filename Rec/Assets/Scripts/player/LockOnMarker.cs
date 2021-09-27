@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using System.Linq;
+using DG.Tweening;
 
 public class LockOnMarker : SingletonMonoBehaviour<LockOnMarker>
 {
@@ -57,14 +58,26 @@ public class LockOnMarker : SingletonMonoBehaviour<LockOnMarker>
 
     public void LockOnEnemy(GameObject enemyObj)
     {
-        GameObject c = GetUnusedCursor();
-        c.gameObject.SetActive(true);
-        int index = Array.IndexOf(cursors, c);
+        GameObject cursorObj = GetUnusedCursor();
+        cursorObj.gameObject.SetActive(true);
+        
+        cursorObj.gameObject.transform.DOScale(1, 0.3f);
+        Image cImage = cursorObj.GetComponent<Image>();
+        var c = cImage.color;
+        c.a = 0.0f;
+        cImage.color = c;
+        DOTween.ToAlpha(
+            ()=> cImage.color,
+            color => cImage.color = color,
+            1.0f, // 目標値
+            0.3f // 所要時間
+        );
+        
+        int index = Array.IndexOf(cursors, cursorObj);
         enemies[index] = enemyObj;
-        
-        
+
         Vector2 position = RectTransformUtility.WorldToScreenPoint(Camera.main, enemyObj.transform.position);
-        c.transform.position = new Vector3(position.x, position.y, 0f);
+        cursorObj.transform.position = new Vector3(position.x, position.y, 0f);
     }
 
     public void ReleaseCursor(GameObject enemyObj)
@@ -72,5 +85,6 @@ public class LockOnMarker : SingletonMonoBehaviour<LockOnMarker>
         int index = Array.IndexOf(enemies, enemyObj);
         enemies[index] = null;
         cursors[index].gameObject.SetActive(false);
+        cursors[index].gameObject.transform.localScale *= 5;
     }
 }
