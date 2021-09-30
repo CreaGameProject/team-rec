@@ -4,72 +4,65 @@ using System.Linq;
 using UnityEditor.Animations;
 using UnityEngine;
 
-public class TaskBasedEnemy : Enemy
+namespace Core.Enemy.TaskBased
 {
-    protected List<IEnemyTask> tasks;
-
-    public float aliveTime;
-
-    protected Animator animator;
-
-    public IEnumerable<IEnemyTask> Tasks => tasks;
-
-    public Animator Animator
+    public class TaskBasedEnemy : global::Enemy
     {
-        get
+        protected List<IEnemyTask> tasks;
+
+        protected Animator animator;
+
+        public IEnumerable<IEnemyTask> Tasks
         {
-            if (this.animator == null)
-                this.animator = GetComponent<Animator>();
-            return this.animator;
+            get { return tasks; }
         }
-    }
-    
-    protected override void Kill(BulletObject bulletObject)
-    {
-        base.Kill(bulletObject);
-    }
 
-    void ThisDestroy()
-    {
-        Destroy(this.gameObject);
-    }
-
-    public void SetTasks(IEnumerable<IEnemyTask> tasks)
-    {
-        this.tasks = tasks.ToList();
-    }
-
-    IEnumerator RunTasks()
-    {
-        yield return new WaitWhile(()=> this.tasks == null);
-        var tasks = this.tasks.ToList();
-        aliveTime = 0;
-
-        while (tasks.Any())
+        public Animator Animator
         {
-            aliveTime += Time.deltaTime;
-            
-            //tasksはTimeでソートされていることを前提としている。
-            foreach (var x in tasks.TakeWhile(x => x.Time < aliveTime))
+            get
             {
-                // Debug.Log(aliveTime);
-                x.Call(this);
+                if (this.animator == null)
+                    this.animator = GetComponent<Animator>();
+                return this.animator;
             }
-            
-            tasks = tasks.SkipWhile(x => x.Time < aliveTime).ToList();
-            yield return null;
+        }
+
+        public virtual void TriggerAnimation(string name)
+        {
+
+        }
+
+        protected override void Kill(BulletObject bulletObject)
+        {
+            base.Kill(bulletObject);
+        }
+
+        public void SetTasks(IEnumerable<IEnemyTask> tasks)
+        {
+            this.tasks = tasks.ToList();
+        }
+
+        IEnumerator RunTasks()
+        {
+            yield return new WaitWhile(() => this.tasks == null);
+
+            foreach (var task in tasks)
+            {
+                yield return task.Call(this);
+            }
+        }
+
+        // Start is called before the first frame update
+        void Start()
+        {
+            StartCoroutine(RunTasks());
+        }
+
+        // Update is called once per frame
+        void Update()
+        {
+
         }
     }
-    
-    // Start is called before the first frame update
-    void Start()
-    {
-        StartCoroutine(RunTasks());
-    }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
 }
