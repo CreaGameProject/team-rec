@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using UnityEngine;
 
-namespace Assets.Scripts.Stage
+namespace Core.Stage
 {
     public abstract class StageEventMarker: MonoBehaviour
     {
