@@ -91,16 +91,3 @@ public class Enemy : MonoBehaviour
     {
     }
 }
-
-
-/// <summary>
-/// 敵の行動を表現する
-/// </summary>
-public interface IEnemyTask
-{
-    /// <summary>
-    /// 行動の呼び出し
-    /// </summary>
-    /// <param name="enemy">行動する敵キャラクター</param>
-    void Call(Enemy enemy);
-}
