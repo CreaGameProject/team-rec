@@ -51,6 +51,19 @@ public class UITransitionSystem : MonoBehaviour
     /// </summary>
     public void CursorOn()
     {
+        switch (gameObject.name)
+        {
+            case "Stage1":
+                Stage = 1;
+                break;
+            case "Stage2":
+                Stage = 2;
+                break;
+            case "Stage3":
+                Stage = 3;
+                break;
+        }
+
         if (WindowTransitionData.Transition == WindowTransition.StageSelect || WindowTransitionData.Transition == WindowTransition.MainMenu)
             SwitchStageObj(Stage);
 
@@ -240,29 +253,32 @@ public class UITransitionSystem : MonoBehaviour
     /// </summary>
     private void SwitchStageObj(int stage)
     {
-        switch (stage)
+        if (WindowTransitionData.Transition == WindowTransition.StageSelect)
         {
-            case 1:
-                UIStageObj1.SetActive(true);
-                UIStageObj2.SetActive(false);
-                UIStageObj3.SetActive(false);
-                break;
+            switch (stage)
+            {
+                case 1:
+                    UIStageObj1.SetActive(true);
+                    UIStageObj2.SetActive(false);
+                    UIStageObj3.SetActive(false);
+                    break;
 
-            case 2:
-                UIStageObj1.SetActive(false);
-                UIStageObj2.SetActive(true);
-                UIStageObj3.SetActive(false);
-                break;
+                case 2:
+                    UIStageObj1.SetActive(false);
+                    UIStageObj2.SetActive(true);
+                    UIStageObj3.SetActive(false);
+                    break;
 
-            case 3:
-                UIStageObj1.SetActive(false);
-                UIStageObj2.SetActive(false);
-                UIStageObj3.SetActive(true);
-                break;
+                case 3:
+                    UIStageObj1.SetActive(false);
+                    UIStageObj2.SetActive(false);
+                    UIStageObj3.SetActive(true);
+                    break;
 
-            default:
-                Debug.LogError("範囲外のステージ番号が指定されています -> " + stage);
-                break;
+                default:
+                    Debug.LogError("範囲外のステージ番号が指定されています -> " + stage);
+                    break;
+            }
         }
     }
 
@@ -341,7 +357,7 @@ public class UITransitionSystem : MonoBehaviour
     {
         GameObject child = obj.transform.GetChild(0).gameObject;
         Image img = child.GetComponent<Image>();
-        img.DOColor(new Color(1, 1, 1, 1), time).SetEase(Ease.OutCirc);
+        img.DOColor(new Color(1, 1, 1, 1), time).SetEase(Ease.OutCirc).SetUpdate(true);
     }
 
 
@@ -354,7 +370,7 @@ public class UITransitionSystem : MonoBehaviour
     {
         GameObject child = obj.transform.GetChild(0).gameObject;
         Image img = child.GetComponent<Image>();
-        img.DOColor(new Color(1, 1, 1, 0), time);
+        img.DOColor(new Color(1, 1, 1, 0), time).SetUpdate(true);
     }
 
 
@@ -481,6 +497,7 @@ public class UITransitionSystem : MonoBehaviour
     {
         if (WindowTransitionData.Transition == WindowTransition.Title)
         {
+            Cursor.SetCursor(null, Vector2.zero, CursorMode.Auto);
             Stage = 1;
             SwitchStageObj(Stage);
         }

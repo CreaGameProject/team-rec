@@ -855,6 +855,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: GameOver
       objectReference: {fileID: 0}
+    - target: {fileID: 3830437933429026692, guid: 63557b70b6b1df04590555f603b50fc3,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 3830437933429026745, guid: 63557b70b6b1df04590555f603b50fc3,
         type: 3}
       propertyPath: fadeTime
@@ -970,11 +975,23 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 3830437933680716639, guid: 63557b70b6b1df04590555f603b50fc3,
+        type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 21300000, guid: 3edac031944383143b308737fcc2782c,
+        type: 3}
     - target: {fileID: 3830437934106187439, guid: 63557b70b6b1df04590555f603b50fc3,
         type: 3}
       propertyPath: frontGround
       value: 
       objectReference: {fileID: 1678256689}
+    - target: {fileID: 3830437934245976058, guid: 63557b70b6b1df04590555f603b50fc3,
+        type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 21300000, guid: aa351e0c6a718a64ca4fce3ac7807d7c,
+        type: 3}
     - target: {fileID: 3830437934458858923, guid: 63557b70b6b1df04590555f603b50fc3,
         type: 3}
       propertyPath: frontGround
