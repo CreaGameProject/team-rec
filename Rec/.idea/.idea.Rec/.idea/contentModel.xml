@@ -10,6 +10,8 @@
       <e p="Assets" t="Include">
         <e p="Editor" t="Include">
           <e p="Launcher.cs" t="Include" />
+          <e p="TaskEditor.cs" t="Include" />
+          <e p="TemplateTask.txt" t="Include" />
         </e>
         <e p="Plugins" t="Include">
           <e p="Demigiant" t="Include">
@@ -36,6 +38,7 @@
             <e p="BulletObject.cs" t="Include" />
             <e p="BulletPool.cs" t="Include" />
             <e p="Homing.cs" t="Include" />
+            <e p="RazerObject.cs" t="Include" />
             <e p="Straight.cs" t="Include" />
             <e p="TestBulletGenerator.cs" t="Include" />
           </e>
@@ -49,6 +52,22 @@
             </e>
             <e p="LoopEnemy.cs" t="Include" />
             <e p="Marker.cs" t="Include" />
+            <e p="TaskBasedEnemy" t="Include">
+              <e p="TaskBasedEnemy.cs" t="Include" />
+              <e p="Tasks" t="Include">
+                <e p="EnemyTask.cs" t="Include" />
+                <e p="LogTask.cs" t="Include" />
+                <e p="LunaHomingTask.cs" t="Include" />
+                <e p="MoveStraightTask.cs" t="Include" />
+                <e p="RunTaskHolderTask.cs" t="Include" />
+                <e p="TaskHolder.cs" t="Include" />
+                <e p="Test" t="Include">
+                  <e p="MoveByControlPoints.cs" t="Include" />
+                  <e p="TestFireTask.cs" t="Include" />
+                </e>
+                <e p="WaitTask.cs" t="Include" />
+              </e>
+            </e>
           </e>
           <e p="Effects" t="Include">
             <e p="DissolveEffect.cs" t="Include" />
@@ -67,14 +86,13 @@
           <e p="SimpleCameraController.cs" t="Include" />
           <e p="Stage" t="Include">
             <e p="EnemyData.cs" t="Include" />
-            <e p="GoalEvent.cs" t="Include" />
             <e p="GoalEventMarker.cs" t="Include" />
             <e p="StageData.cs" t="Include" />
             <e p="StageEventMarker.cs" t="Include" />
             <e p="StageFactory.cs" t="Include" />
             <e p="StageRunner.cs" t="Include" />
-            <e p="SummonLoopEnemyEvent.cs" t="Include" />
             <e p="SummonLoopEnemyMarker.cs" t="Include" />
+            <e p="SummonTaskBasedEnemyMarker.cs" t="Include" />
           </e>
           <e p="test.cs" t="Include" />
           <e p="test1.cs" t="Include" />
@@ -94,8 +112,10 @@
             <e p="WindowTransitionData.cs" t="Include" />
           </e>
           <e p="Utils" t="Include">
+            <e p="LabelAttribute.cs" t="Include" />
             <e p="SingletonMonoBehaviour.cs" t="Include" />
           </e>
+          <e p="viewporttest.cs" t="Include" />
         </e>
         <e p="TutorialInfo" t="Include">
           <e p="Scripts" t="Include">
