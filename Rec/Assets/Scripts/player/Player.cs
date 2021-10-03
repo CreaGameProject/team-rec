@@ -58,19 +58,7 @@ public class Player : MonoBehaviour
     /// </summary>
     [SerializeField] GameObject body;
 
-    public float moveForceMultiplier;
-
-    // 水平移動時に機首を左右に向けるトルク
-    public float yawTorqueMagnitude = 30.0f;
-
-    // 垂直移動時に機首を上下に向けるトルク
-    public float pitchTorqueMagnitude = 60.0f;
-
-    // 水平移動時に機体を左右に傾けるトルク
-    public float rollTorqueMagnitude = 30.0f;
-
-    // バネのように姿勢を元に戻すトルク
-    public float restoringTorqueMagnitude = 100.0f;
+    
 
     private Vector3 Player_pos;
     private new Rigidbody rigidbody;
