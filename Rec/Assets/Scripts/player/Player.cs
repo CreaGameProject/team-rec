@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using DG.Tweening;
 
 public class Player : MonoBehaviour
 {
@@ -18,14 +19,22 @@ public class Player : MonoBehaviour
     public static int Life;
 
     /// <summary>
+    /// レーザー弾の最大ゲージ量
+    /// </summary>
+    private const float maxLaserGauge = 200f;
+
+    /// <summary>
     /// レーザー弾のゲージ量
     /// </summary>
-    private float laserGauge = 200f;
+    private float laserGauge;
 
     private float angle;
 
     Camera mainCamera;
     Vector3 mousePos = new Vector3(0, 0, 0);
+    private Image HP_img;
+    private Image HP_img_red;
+    private Image Laser_img;
 
     [SerializeField] Texture2D pointTexture;
 
@@ -90,10 +99,13 @@ public class Player : MonoBehaviour
     void Start()
     {
         Life = MaxLife;
-        laserGauge = 200;
+        laserGauge = maxLaserGauge;
         angle = 1f / 180f * Mathf.PI;
 
         mainCamera = Camera.main;
+        HP_img = GameObject.Find("Canvas/Gauge/HP/MaskDefault").GetComponent<Image>();
+        HP_img_red = GameObject.Find("Canvas/Gauge/HP/MaskRed").GetComponent<Image>();
+        Laser_img = GameObject.Find("Canvas/Gauge/Laser/Mask").GetComponent<Image>();
         pointTexture = ResizeTexture(pointTexture, 64, 64);
         Cursor.SetCursor(pointTexture, new Vector2(pointTexture.width / 2, pointTexture.height / 2),
             CursorMode.ForceSoftware);
@@ -213,7 +225,7 @@ public class Player : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.L))
         {
             // てすと、あとでけす
-            decreaseLife(50);
+            decreaseLife(20);
         }
     }
 
@@ -310,11 +322,14 @@ public class Player : MonoBehaviour
     public void increaseLaserGauge(float num)
     {
         laserGauge += num;
+        Laser_img.DOFillAmount(laserGauge / maxLaserGauge, 0.2f).SetEase(Ease.OutCirc).SetUpdate(true);
     }
 
     public void decreaseLife(int damagePoint)
     {
         Life -= damagePoint;
+        HP_img.DOFillAmount((float)Life / MaxLife, 0.2f).SetEase(Ease.OutCirc).SetUpdate(true);
+        HP_img_red.DOFillAmount((float)Life / MaxLife, 0.6f).SetEase(Ease.InSine).SetUpdate(true);
 
         if (Life <= 0)
         {
@@ -328,6 +343,8 @@ public class Player : MonoBehaviour
     private void OnDeath()
     {
         Debug.Log("死");
+        CanvasGroup cg = GameObject.Find("Canvas/Gauge").GetComponent<CanvasGroup>();
+        cg.DOFade(0, 2f).SetUpdate(true);
 
         // ゲームオーバーの画面を表示する
         WindowTransitionData.Transition = WindowTransition.GameOver;

@@ -20,6 +20,7 @@ namespace Core.Enemy.TaskBased
         public override IEnemyTask ToEnemyTask()
         {
             playerTf = GameObject.FindGameObjectWithTag("Player").transform;
+            straightColor = new Color(45f / 255f, 217f / 255f, 146f / 255f, 1) * intensity;
             return new Task(playerTf, straightColor);
         }
 
