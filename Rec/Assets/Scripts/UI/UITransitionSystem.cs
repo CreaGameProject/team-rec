@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using DG.Tweening;
 using UnityEngine.SceneManagement;
 
 public class UITransitionSystem : MonoBehaviour
@@ -50,46 +51,14 @@ public class UITransitionSystem : MonoBehaviour
     /// </summary>
     public void CursorOn()
     {
-        // ステージ選択の時の特殊な場合
-        string name = this.gameObject.name;
-        if (name == "Stage1")
-        {
-            Stage = 1;
-
-            if (WindowTransitionData.Transition == WindowTransition.StageSelect)
-            {
-                backImg.sprite = Resources.Load<Sprite>("StageBackgrounds/maru_04");
-                frontImg.sprite = Resources.Load<Sprite>("StageBackgrounds/maru_02");
-                StartCoroutine(BackGroundFade(1));
-            }
-        }
-        else if (name == "Stage2")
-        {
-            Stage = 2;
-
-            if (WindowTransitionData.Transition == WindowTransition.StageSelect)
-            {
-                backImg.sprite = Resources.Load<Sprite>("StageBackgrounds/3kaku_4");
-                frontImg.sprite = Resources.Load<Sprite>("StageBackgrounds/4kaku_3");
-                StartCoroutine(BackGroundFade(2));
-            }
-        }
-        else if (name == "Stage3")
-        {
-            Stage = 3;
-
-            if (WindowTransitionData.Transition == WindowTransition.StageSelect)
-            {
-                backImg.sprite = Resources.Load<Sprite>("StageBackgrounds/4kaku_4");
-                frontImg.sprite = Resources.Load<Sprite>("StageBackgrounds/4kaku_3");
-                StartCoroutine(BackGroundFade(3));
-            }
-        }
-
         if (WindowTransitionData.Transition == WindowTransition.StageSelect || WindowTransitionData.Transition == WindowTransition.MainMenu)
             SwitchStageObj(Stage);
 
-        StartCoroutine(Fade(true));
+        if (WindowTransitionData.Transition == WindowTransition.StageSelect || WindowTransitionData.Transition == WindowTransition.GameOver)
+        {
+            FadeIn(this.gameObject, 0.5f);
+        }
+        else StartCoroutine(Fade(true));
     }
 
 
@@ -98,7 +67,11 @@ public class UITransitionSystem : MonoBehaviour
     /// </summary>
     public void CursorOut()
     {
-        StartCoroutine(Fade(false));
+        if (WindowTransitionData.Transition == WindowTransition.StageSelect || WindowTransitionData.Transition == WindowTransition.GameOver)
+        {
+            FadeOut(this.gameObject, 0.5f);
+        }
+        else StartCoroutine(Fade(false));
     }
 
 
@@ -356,6 +329,32 @@ public class UITransitionSystem : MonoBehaviour
                 }
             }
         }
+    }
+
+
+    /// <summary>
+    /// フェードイン処理を行う
+    /// </summary>
+    /// <param name="obj">対象となるゲームオブジェクト</param>
+    /// <param name="time">変化にかかる時間</param>
+    private void FadeIn(GameObject obj, float time)
+    {
+        GameObject child = obj.transform.GetChild(0).gameObject;
+        Image img = child.GetComponent<Image>();
+        img.DOColor(new Color(1, 1, 1, 1), time).SetEase(Ease.OutCirc);
+    }
+
+
+    /// <summary>
+    /// フェードアウト処理を行う
+    /// </summary>
+    /// <param name="obj">対象となるゲームオブジェクト</param>
+    /// <param name="time">変化にかかる時間</param>
+    private void FadeOut(GameObject obj, float time)
+    {
+        GameObject child = obj.transform.GetChild(0).gameObject;
+        Image img = child.GetComponent<Image>();
+        img.DOColor(new Color(1, 1, 1, 0), time);
     }
 
 
