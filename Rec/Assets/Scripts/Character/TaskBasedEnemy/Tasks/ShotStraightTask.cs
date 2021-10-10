@@ -5,14 +5,14 @@ using UnityEngine;
 namespace Core.Enemy.TaskBased
 {
     // AddComponentからキャラクターにタスクをアタッチするためのコード   
-    [AddComponentMenu("EnemyTask/PulmoStraightTask")]
+    [AddComponentMenu("EnemyTask/ShotStraightTask")]
     // AIデザインのためにコンポーネントとしてアタッチされるクラス
-    public class PulmoStraightTask : EnemyTaskComponent
+    public class ShotStraightTask : EnemyTaskComponent
     {
+        [SerializeField, Label("発射速度")] float Speed = 10f;
 
-        [Header("色調整")]
-        [SerializeField] float intensity = 2.0f;
-        [ColorUsage(true, true), SerializeField] private Color straightColor;
+        const float intensity = 2.0f;
+        [ColorUsage(true, true)] private Color straightColor;
 
         private Transform playerTf;
 
@@ -21,20 +21,22 @@ namespace Core.Enemy.TaskBased
         {
             playerTf = GameObject.FindGameObjectWithTag("Player").transform;
             straightColor = new Color(45f / 255f, 217f / 255f, 146f / 255f, 1) * intensity;
-            return new Task(playerTf, straightColor);
+            return new Task(playerTf, straightColor, Speed);
         }
 
         // キャラクターに渡され実行されるタスクのクラス
         private class Task : IEnemyTask
         {
+            private float speed;
 
             private Transform playerTf;
             private static readonly int EmissionColor = Shader.PropertyToID("_EmissionColor");
             private Color straightColor;
 
             // コンストラクタ 引数は必要に応じて追加してください
-            public Task(Transform playerTf, Color straightColor)
+            public Task(Transform playerTf, Color straightColor, float speed)
             {
+                this.speed = speed;
                 this.playerTf = playerTf;
                 this.straightColor = straightColor;
             }
@@ -45,9 +47,9 @@ namespace Core.Enemy.TaskBased
             {
                 Straight straight = new Straight();
                 straight.Name = "Straight";
-                straight.Velocity = 5f; // 仮の値
+                straight.Velocity = speed;
                 straight.AttackPoint = 10; //仮の値
-                Vector3 position = enemy.transform.position;
+                Vector3 position = enemy.transform.GetChild(0).position;
                 Vector3 dir = (playerTf.position - position).normalized;
                 straight.Direction = dir; // プレイヤーの方向
                 GameObject enemyBullet = BulletPool.Instance.GetInstance(straight);
@@ -62,7 +64,7 @@ namespace Core.Enemy.TaskBased
             // 意図したものを除いて 複製元と複製先が同じ参照を持たないように注意してください
             public IEnemyTask Copy()
             {
-                return new Task(playerTf, straightColor);
+                return new Task(playerTf, straightColor, speed);
             }
         }
     }

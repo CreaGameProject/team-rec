@@ -997,7 +997,9 @@ PrefabInstance:
       propertyPath: frontGround
       value: 
       objectReference: {fileID: 1678256689}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 3614226554015930381, guid: 63557b70b6b1df04590555f603b50fc3, type: 3}
+    - {fileID: 8081646773576528111, guid: 63557b70b6b1df04590555f603b50fc3, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: 63557b70b6b1df04590555f603b50fc3, type: 3}
 --- !u!1 &383364278
 GameObject:
@@ -5665,11 +5667,6 @@ MonoBehaviour:
   _straightColor: {r: 0.3529412, g: 1.7019608, b: 1.1450981, a: 0}
   _homingColor: {r: 0.6431373, g: 1.6470588, b: 1.9921569, a: 0}
   body: {fileID: 4451193379222184164}
-  moveForceMultiplier: 0
-  yawTorqueMagnitude: 30
-  pitchTorqueMagnitude: 60
-  rollTorqueMagnitude: 30
-  restoringTorqueMagnitude: 100
   roll_decay: 0
   pitch_decay: 0
   roll_max: 0
