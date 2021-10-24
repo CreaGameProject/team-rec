@@ -29,7 +29,6 @@ public class LockOnMarker : SingletonMonoBehaviour<LockOnMarker>
         for (int i = 0; i < cursors.Length; i++)
         {
             cursors[i] = Instantiate(cursor, canvas.transform, false);
-            ;
             cursors[i].gameObject.SetActive(false);
         }
     }
@@ -48,31 +47,30 @@ public class LockOnMarker : SingletonMonoBehaviour<LockOnMarker>
                 }
             }
         }
-            
-        
     }
 
     private GameObject GetUnusedCursor() => cursors.FirstOrDefault(t => t.activeSelf == false);
 
-    private int GetUnusedEnemyArrayIndex() => enemies.Select((p, i) => new {Name = p, Index = i}).First(p => false).Index;
+    private int GetUnusedEnemyArrayIndex() =>
+        enemies.Select((p, i) => new {Name = p, Index = i}).First(p => false).Index;
 
     public void LockOnEnemy(GameObject enemyObj)
     {
         GameObject cursorObj = GetUnusedCursor();
         cursorObj.gameObject.SetActive(true);
-        
+
         cursorObj.gameObject.transform.DOScale(1, 0.3f);
         Image cImage = cursorObj.GetComponent<Image>();
         var c = cImage.color;
         c.a = 0.0f;
         cImage.color = c;
         DOTween.ToAlpha(
-            ()=> cImage.color,
+            () => cImage.color,
             color => cImage.color = color,
             1.0f, // 目標値
             0.3f // 所要時間
         );
-        
+
         int index = Array.IndexOf(cursors, cursorObj);
         enemies[index] = enemyObj;
 

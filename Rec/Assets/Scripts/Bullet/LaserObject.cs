@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
 
-public class RazerObject : MonoBehaviour
+public class LaserObject : MonoBehaviour
 {
     private GameObject razerHead;
     [SerializeField] private Component razerParticles;
@@ -14,5 +14,10 @@ public class RazerObject : MonoBehaviour
         razerHead = new GameObject("RazerHead");
         razerHead.transform.SetParent(this.gameObject.transform);
         razerParticles = GetComponentInChildren(typeof(ParticleSystem));
+    }
+
+    private void OnDisable()
+    {
+        razerHead.transform.position = this.transform.position;
     }
 }
