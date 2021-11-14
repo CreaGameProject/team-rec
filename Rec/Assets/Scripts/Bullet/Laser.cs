@@ -1,4 +1,6 @@
-﻿public class Laser
+﻿using UnityEngine;
+
+public class Laser
 {
     
 }
