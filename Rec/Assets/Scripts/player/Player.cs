@@ -2,81 +2,90 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using DG.Tweening;
+
 
 public class Player : MonoBehaviour
 {
     [SerializeField] BulletPool bulletPool;
 
-    private int life;
-    private float laserGauge =500f;
+    /// <summary>
+    /// 体力の最大値
+    /// </summary>
+    public static int MaxLife = 200;
+
+    /// <summary>
+    /// 現在の体力値
+    /// </summary>
+    public static int Life;
+
+    /// <summary>
+    /// レーザー弾の最大ゲージ量
+    /// </summary>
+    private const float maxLaserGauge = 200f;
+
+    /// <summary>
+    /// レーザー弾のゲージ量
+    /// </summary>
+    private float laserGauge;
+
+    private float laserGaugeBuffer;
 
     private float angle;
 
     Camera mainCamera;
-    Vector3 mousePos = new Vector3 (0, 0, 0);
+    Vector3 mousePos = new Vector3(0, 0, 0);
+    private Image HP_img;
+    private Image HP_img_red;
+    private Image Laser_img;
 
     [SerializeField] Texture2D pointTexture;
+    [SerializeField] private List<Enemy> lockedEnemyList = new List<Enemy>();
 
 
-    float moveXMax = 3f;
-    float moveYMin = 1f;
-    float moveYMax = 2.5f;
-
+    // 各最大移動量
+    float moveXMax = 1.5f;
+    float moveYMin = 0.5f;
+    float moveYMax = 1.6f;
 
     float homingRange = 1f;
     bool homingShot = false;
 
-    [SerializeField] GameObject testObject;
+    [SerializeField] GameObject gameOverObj;
+    [SerializeField] private GameObject pauseWindow;
 
     [Header("調整可")]
     /// <summary>
     /// 移動速度
     /// </summary>
-    [SerializeField] private float speed;
+    [SerializeField]
+    private float speed;
 
-    [ColorUsage(true, true), SerializeField] private Color _straightColor;
-    [ColorUsage(true, true), SerializeField] private Color _homingColor;
+    [ColorUsage(true, true), SerializeField]
+    private Color _straightColor;
+
+    [ColorUsage(true, true), SerializeField]
+    private Color _homingColor;
 
     /// <summary>
     /// 機体
     /// </summary>
     [SerializeField] GameObject body;
 
-    public float moveForceMultiplier;
-
-    // 水平移動時に機首を左右に向けるトルク
-    public float yawTorqueMagnitude = 30.0f;
-
-    // 垂直移動時に機首を上下に向けるトルク
-    public float pitchTorqueMagnitude = 60.0f;
-
-    // 水平移動時に機体を左右に傾けるトルク
-    public float rollTorqueMagnitude = 30.0f;
-
-    // バネのように姿勢を元に戻すトルク
-    public float restoringTorqueMagnitude = 100.0f;
+    
 
     private Vector3 Player_pos;
     private new Rigidbody rigidbody;
 
-    // Start is called before the first frame update
-    void Start()
-    {
-        life = 200;
-        laserGauge = 200;
-        angle = 1f / 180f * Mathf.PI;
+    /// <summary>
+    /// 操作入力不可かどうか
+    /// </summary>
+    private bool isStopped = false;
 
-        mainCamera = Camera.main;
-        Cursor.SetCursor(pointTexture, new Vector2(pointTexture.width/2 , pointTexture.height/2), CursorMode.ForceSoftware);
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        getInput();
-        //UnityEngine.PlayerLoop.FixedUpdate();
-    }
+    /// <summary>
+    /// ポーズ可能かどうか
+    /// </summary>
+    private bool canPause = true;
 
     void Awake()
     {
@@ -84,21 +93,58 @@ public class Player : MonoBehaviour
         rigidbody.angularDrag = 20.0f;
     }
 
-    void getInput()
+    // Start is called before the first frame update
+    void Start()
     {
+        Life = MaxLife;
+        laserGauge = maxLaserGauge;
+        angle = 1f / 180f * Mathf.PI;
+
+        mainCamera = Camera.main;
+        HP_img = GameObject.Find("Canvas/Gauge/HP/MaskDefault").GetComponent<Image>();
+        HP_img_red = GameObject.Find("Canvas/Gauge/HP/MaskRed").GetComponent<Image>();
+        Laser_img = GameObject.Find("Canvas/Gauge/Laser/Mask").GetComponent<Image>();
+        pointTexture = ResizeTexture(pointTexture, 64, 64);
+        Cursor.SetCursor(pointTexture, new Vector2(pointTexture.width / 2, pointTexture.height / 2),
+            CursorMode.ForceSoftware);
+    }
+
+    // Update is called once per frame
+    void Update()
+    {
+        if (!isStopped)
+        {
+            GetControlInput();
+        }
+
+        getOtherInput();
+        TargetRenderedCheck();
+        //UnityEngine.PlayerLoop.FixedUpdate();
+    }
+
+
+    // ReSharper disable Unity.PerformanceAnalysis
+    /// <summary>
+    /// 移動・攻撃入力の管理
+    /// </summary>
+    private void GetControlInput()
+    {
+        // 移動入力
         if (Input.GetKey(KeyCode.A))
         {
-            transform.Translate(new Vector3(-0.1f*Mathf.Cos(transform.rotation.y * angle),0, -0.1f * Mathf.Sin(transform.rotation.y * angle)) * speed * Time.deltaTime);
+            transform.Translate(new Vector3(-0.1f * Mathf.Cos(transform.rotation.y * angle), 0,
+                -0.1f * Mathf.Sin(transform.rotation.y * angle)) * (speed * Time.deltaTime));
         }
 
         if (Input.GetKey(KeyCode.D))
         {
-            transform.Translate(new Vector3(0.1f*Mathf.Cos(transform.rotation.y * angle), 0, 0.1f * Mathf.Sin(transform.rotation.y * angle)) * speed * Time.deltaTime);
+            transform.Translate(new Vector3(0.1f * Mathf.Cos(transform.rotation.y * angle), 0,
+                0.1f * Mathf.Sin(transform.rotation.y * angle)) * (speed * Time.deltaTime));
         }
-        
+
         if (Input.GetKey(KeyCode.W))
         {
-            transform.Translate(0, 0.1f * speed * Time.deltaTime, 0);           
+            transform.Translate(0, 0.1f * speed * Time.deltaTime, 0);
         }
 
         if (Input.GetKey(KeyCode.S))
@@ -106,47 +152,101 @@ public class Player : MonoBehaviour
             transform.Translate(0, -0.1f * speed * Time.deltaTime, 0, 0);
         }
 
-        transform.localPosition = new Vector3(Mathf.Clamp(transform.localPosition.x,-moveXMax,moveXMax)
-                                    ,Mathf.Clamp(transform.localPosition.y,-moveYMin,moveYMax)
-                                    ,Mathf.Clamp(transform.localPosition.z,-moveXMax,moveXMax));
+        var localPosition = transform.localPosition;
+        localPosition = new Vector3(Mathf.Clamp(localPosition.x, -moveXMax, moveXMax)
+            , Mathf.Clamp(localPosition.y, -moveYMin, moveYMax)
+            , Mathf.Clamp(localPosition.z, -moveXMax, moveXMax));
+        transform.localPosition = localPosition;
 
+        // 攻撃入力
         if (Input.GetMouseButtonUp(0))
         {
-            sendRay();
+            SendRay();
         }
-        else if (Input.GetMouseButtonUp(1))
-        {
-           
-            Debug.Log("右up");
-            homingShot = true;
-            openTarget();
-        }
-        else if (Input.GetMouseButton(1))
-        {
-            homingRange += 0.01f;
 
-            if (homingRange >10)
+        if (Input.GetMouseButtonDown(1))
+        {
+            laserGaugeBuffer = laserGauge;
+        }
+
+        if (Input.GetMouseButton(1))
+        {
+            homingRange += (100.0f) / 10.0f * Time.deltaTime;
+
+            if (homingRange > 100)
             {
-                homingRange = 10;
+                homingRange = 100;
             }
 
-            Debug.Log("右");
-            openTarget();
+            LockOnTarget();
+        }
+
+        if (Input.GetMouseButtonUp(1))
+        {
+            //Debug.Log("GetMouseButtonUp(1)");
+            homingShot = true;
+            homingRange = 0.0f;
+
+            HomingShot();
+            ReleaseTarget();
         }
     }
 
-    void sendRay()
+
+    /// <summary>
+    /// 移動・攻撃以外の入力を管理
+    /// </summary>
+    void getOtherInput()
     {
-        Vector3 mousePos = Input.mousePosition;
-        mousePos.z = 20f;
-        Vector3 mousePos3D = Camera.main.ScreenToWorldPoint(mousePos);
+        // 各機能入力
+        if (((Input.GetKeyDown(KeyCode.P)) || (Input.GetKeyDown(KeyCode.Escape))) && (canPause))
+        {
+            // ポーズ切り替え
+            var tr = WindowTransitionData.Transition;
+            if ((tr != WindowTransition.Pause) && (tr != WindowTransition.Option))
+            {
+                // ポーズ起動
+                WindowTransitionData.Transition = WindowTransition.Pause;
+                isStopped = true;
+                pauseWindow.SetActive(true);
+                Time.timeScale = 0.0f;
+            }
+            else
+            {
+                // ポーズ解除
+                if (tr != WindowTransition.Option)
+                {
+                    WindowTransitionData.Transition = WindowTransition.InGame;
+                    Time.timeScale = 1.0f;
+                    isStopped = false;
+                    pauseWindow.SetActive(false);
+                }
+            }
+        }
+
+        if (Input.GetKeyDown(KeyCode.L))
+        {
+            // てすと、あとでけす
+            decreaseLife(20);
+        }
+    }
+
+    /// <summary>
+    /// ストレート
+    /// </summary>
+    void SendRay()
+    {
+        Vector3 mousePosition = Input.mousePosition;
+        mousePosition.z = 20f;
+        Vector3 mousePos3D = Camera.main.ScreenToWorldPoint(mousePosition);
 
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
         RaycastHit hit;
 
-        Debug.DrawRay(ray.origin,ray.direction*100,Color.green,5,false);
+        Debug.DrawRay(ray.origin, ray.direction * 100, Color.green, 5, false);
 
-        if (Physics.Raycast(Camera.main.transform.position, (mousePos3D - Camera.main.transform.position), out hit, 100f))
+        if (Physics.Raycast(Camera.main.transform.position, (mousePos3D - Camera.main.transform.position), out hit,
+            100f))
         {
             //Debug.Log(hit.collider.gameObject.name);
             //Debug.Log("衝突位置 : "+hit.point);
@@ -154,58 +254,102 @@ public class Player : MonoBehaviour
             //ここでストレートを打つ
             //hit.collider.gameObjectでぶつかったオブジェクトのことを指す
             Vector3 array = (hit.point - Camera.main.transform.position).normalized;
-            
+
             Straight straight = new Straight();
+            straight.Name = "Straight";
             straight.Velocity = 10f; // 仮の値
+            straight.AttackPoint = 1; // 仮の値
             straight.Direction = array;
             GameObject bullet = bulletPool.GetInstance(straight);
             bullet.transform.position = this.transform.position;
             GameObject effect = bullet.transform.GetChild(0).gameObject;
-            effect.GetComponent<Renderer>().material.SetColor("_EmissionColor", _straightColor);
-            bullet.GetComponent<BulletObject>().Force = Force.Player;
+            effect.GetComponent<Renderer>().material.SetColor(EmissionColor, _straightColor);
+            bullet.GetComponent<BulletObject>().setForce(Force.Player);
         }
     }
 
-    void openTarget()
+    void LockOnTarget()
     {
-        
         mousePos = Input.mousePosition;
-        mousePos.z = 10f;
         mousePos = mainCamera.ScreenToWorldPoint(mousePos);
 
-        RaycastHit[] hits = Physics.BoxCastAll(mousePos, Vector3.one*homingRange, (mousePos-Camera.main.transform.position), Quaternion.identity, 100f, LayerMask.GetMask("Default"));
-
-
-        if (homingShot == true)
+        if (!(Camera.main is null))
         {
+            RaycastHit[] hits = Physics.BoxCastAll(mousePos, Vector3.one * homingRange,
+                (mousePos - Camera.main.transform.position), Quaternion.identity, 0f, LayerMask.GetMask("Default"));
+
             foreach (RaycastHit hit in hits)
             {
-                
-                if (laserGauge >=20)
+                if (hit.collider.gameObject.CompareTag("Enemy"))
                 {
-                    Debug.Log(hit.collider.gameObject.name);
-                    laserGauge -= 20;
-
-                    //ここでホーミングを打つ(つまり単発を高速レートで打つ感じ)
-                    //hit.collider.gameObjectでぶつかったオブジェクトのことを指す
-                    Homing homing = new Homing();
-                    homing.Velocity = 10f; // 仮の値
-                    homing.HomingStrength = 10f; // 仮の値
-                    homing.Direction = transform.forward;
-                    homing.Target = hit.collider.gameObject;
-                    GameObject bullet = bulletPool.GetInstance(homing);
-                    GameObject effect = bullet.transform.GetChild(0).gameObject;
-                    effect.GetComponent<Renderer>().material.SetColor("_EmissionColor", _homingColor);
-                    bullet.GetComponent<BulletObject>().Force = Force.Player;
-                    bullet.transform.position = this.transform.position;
+                    Enemy enemyClass = hit.collider.gameObject.GetComponent<Enemy>();
+                    if (enemyClass.GetIsRendered() && enemyClass.GetHP() > 0)
+                    {
+                        if (!lockedEnemyList.Contains(enemyClass))
+                        {
+                            if (laserGaugeBuffer >= 20)
+                            {
+                                laserGaugeBuffer -= 20;
+                                lockedEnemyList.Add(enemyClass);
+                                LockOnMarker.Instance.LockOnEnemy(enemyClass.gameObject);
+                            }
+                        }
+                    }
                 }
             }
-
-            homingRange = 1f;
-            homingShot = false;
-
-            Debug.Log(laserGauge);
         }
+    }
+
+    private void HomingShot()
+    {
+        List<Enemy> lockedEnemyListBuffer = lockedEnemyList;
+
+        foreach (var enemyClass in lockedEnemyListBuffer)
+        {
+            Debug.Log("Enemy Name:" + enemyClass.gameObject.name);
+            if (laserGauge >= 20)
+            {
+                laserGauge -= 20;
+                Debug.Log("laserGauge:" + laserGauge);
+                //ここでホーミングを打つ(つまり単発を高速レートで打つ感じ)
+                //hit.collider.gameObjectでぶつかったオブジェクトのことを指す
+                Homing homing = new Homing();
+                homing.Name = "Homing";
+                homing.Velocity = 5f; // 仮の値
+                homing.HomingStrength = 12f;
+                homing.AttackPoint = 1; // 仮の値
+                homing.Direction = transform.forward;
+                homing.Target = enemyClass.gameObject;
+                GameObject bullet = bulletPool.GetInstance(homing);
+                GameObject effect = bullet.transform.GetChild(0).gameObject;
+                effect.GetComponent<Renderer>().material.SetColor(EmissionColor, _homingColor);
+                bullet.GetComponent<BulletObject>().setForce(Force.Player);
+                bullet.transform.position = this.transform.position;
+
+                LockOnMarker.Instance.ReleaseCursor(enemyClass.gameObject);
+                //lockedEnemyList.Remove(enemyClass);
+            }
+        }
+        
+        lockedEnemyList.Clear();
+    }
+
+    private void TargetRenderedCheck()
+    {
+        List<Enemy> lockedEnemyListBuffer = lockedEnemyList;
+        foreach (var enemyClass in lockedEnemyListBuffer)
+        {
+            if (!(enemyClass.GetIsRendered() && enemyClass.GetHP() > 0))
+            {
+                lockedEnemyList.Remove(enemyClass);
+                LockOnMarker.Instance.ReleaseCursor(enemyClass.gameObject);
+            }
+        }
+    }
+
+    private void ReleaseTarget()
+    {
+        lockedEnemyList = new List<Enemy>();
     }
 
     private void OnDrawGizmos()
@@ -216,14 +360,17 @@ public class Player : MonoBehaviour
 
     public void increaseLaserGauge(float num)
     {
-        laserGauge +=num;
+        laserGauge += num;
+        Laser_img.DOFillAmount(laserGauge / maxLaserGauge, 0.2f).SetEase(Ease.OutCirc).SetUpdate(true);
     }
 
     public void decreaseLife(int damagePoint)
     {
-        life -= damagePoint;
+        Life -= damagePoint;
+        HP_img.DOFillAmount((float)Life / MaxLife, 0.2f).SetEase(Ease.OutCirc).SetUpdate(true);
+        HP_img_red.DOFillAmount((float)Life / MaxLife, 0.6f).SetEase(Ease.InSine).SetUpdate(true);
 
-        if (life <= 0)
+        if (Life <= 0)
         {
             OnDeath();
         }
@@ -235,6 +382,15 @@ public class Player : MonoBehaviour
     private void OnDeath()
     {
         Debug.Log("死");
+        CanvasGroup cg = GameObject.Find("Canvas/Gauge").GetComponent<CanvasGroup>();
+        cg.DOFade(0, 2f).SetUpdate(true);
+
+        // ゲームオーバーの画面を表示する
+        WindowTransitionData.Transition = WindowTransition.GameOver;
+        isStopped = true;
+        canPause = false;
+        Time.timeScale = 0.1f;
+        gameOverObj.SetActive(true);
     }
 
     /// <summary>
@@ -255,32 +411,37 @@ public class Player : MonoBehaviour
             }
         }
     }
-    
-    
+
+    public float roll_decay;
+    public float pitch_decay;
+    public float roll_max;
+    public float pitch_max;
+    public float roll_growth;
+    public float pitch_growth;
+    private static readonly int EmissionColor = Shader.PropertyToID("_EmissionColor");
+
+
     void FixedUpdate()
     {
-        float x = Input.GetAxis("Horizontal");
-        float y = Input.GetAxis("Vertical");
-
-        // xとyにspeedを掛ける
-        //rigidbody.AddForce(x * speed, y * speed, 0);
-
-        //Vector3 moveVector = Vector3.zero;
-
-        // rigidbody.AddForce(moveForceMultiplier * (moveVector - rigidbody.velocity));
-
-        Vector3 rotationTorque = new Vector3(-y * pitchTorqueMagnitude, x * yawTorqueMagnitude, -x * rollTorqueMagnitude);
-
-        // 現在の姿勢のずれに比例した大きさで逆方向にひねろうとするトルク
-        Vector3 right = body.transform.right;
-        Vector3 up = body.transform.up;
-        Vector3 forward = body.transform.forward;
-
-        Vector3 restoringTorque = new Vector3(forward.y - up.z, right.z - forward.x, up.x - right.y) * restoringTorqueMagnitude;
-
-        // 機体にトルクを加える
-        rigidbody.AddTorque(rotationTorque + restoringTorque);
-
+        int x = -(Input.GetKey(KeyCode.A) ? 1 : 0) + (Input.GetKey(KeyCode.D) ? 1 : 0);
+        int y = -(Input.GetKey(KeyCode.S) ? 1 : 0) + (Input.GetKey(KeyCode.W) ? 1 : 0);
+        var ang = body.transform.localEulerAngles;
+        var ang_x = ang.x > 180 ? ang.x - 360 : ang.x;
+        var ang_z = ang.z > 180 ? ang.z - 360 : ang.z;
+        var roll = ang_z + roll_growth * -x;
+        var pitch = ang_x + pitch_growth * -y;
+        roll = roll * (1 - roll_decay * (1 - Mathf.Abs(x)));
+        pitch = pitch * (1 - pitch_decay * (1 - Mathf.Abs(y)));
+        roll = Mathf.Clamp(roll, -roll_max, roll_max);
+        pitch = Mathf.Clamp(pitch, -pitch_max, pitch_max);
+        body.transform.localEulerAngles = new Vector3(pitch, ang.y, roll);
     }
-    
+
+
+    static Texture2D ResizeTexture(Texture2D srcTexture, int newWidth, int newHeight)
+    {
+        var resizedTexture = new Texture2D(newWidth, newHeight);
+        Graphics.ConvertTexture(srcTexture, resizedTexture);
+        return resizedTexture;
+    }
 }

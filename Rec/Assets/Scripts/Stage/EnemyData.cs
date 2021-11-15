@@ -5,7 +5,7 @@ using UnityEngine;
 public class EnemyData : MonoBehaviour
 {
     public GameObject enemyObj;
-    public EnemyType enemyType;
+    //public EnemyType enemyType;
     public EnemyMove enemyMove;
     [System.NonSerialized] public Vector3 position;
     public float summonTime;

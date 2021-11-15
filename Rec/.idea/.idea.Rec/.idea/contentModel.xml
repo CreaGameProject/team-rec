@@ -5,10 +5,29 @@
     <e p="C:\Users\reiji\AppData\Local\JetBrains\Rider2020.3\resharper-host\Local\Transient\Rider\v203\SolutionCaches\_Rec.-1634789284.00" t="ExcludeRecursive" />
     <e p="C:\Users\reiji\team-rec\Rec" t="IncludeRecursive">
       <e p="Assembly-CSharp-Editor.csproj" t="IncludeRecursive" />
+      <e p="Assembly-CSharp-firstpass.csproj" t="IncludeRecursive" />
       <e p="Assembly-CSharp.csproj" t="IncludeRecursive" />
       <e p="Assets" t="Include">
         <e p="Editor" t="Include">
           <e p="Launcher.cs" t="Include" />
+          <e p="TaskEditor.cs" t="Include" />
+          <e p="TemplateTask.txt" t="Include" />
+        </e>
+        <e p="Plugins" t="Include">
+          <e p="Demigiant" t="Include">
+            <e p="DOTween" t="Include">
+              <e p="Modules" t="Include">
+                <e p="DOTweenModuleAudio.cs" t="Include" />
+                <e p="DOTweenModulePhysics.cs" t="Include" />
+                <e p="DOTweenModulePhysics2D.cs" t="Include" />
+                <e p="DOTweenModuleSprite.cs" t="Include" />
+                <e p="DOTweenModuleUI.cs" t="Include" />
+                <e p="DOTweenModuleUnityVersion.cs" t="Include" />
+                <e p="DOTweenModuleUtils.cs" t="Include" />
+              </e>
+              <e p="readme.txt" t="Include" />
+            </e>
+          </e>
         </e>
         <e p="Scripts" t="Include">
           <e p="Bgm" t="Include">
@@ -19,12 +38,36 @@
             <e p="BulletObject.cs" t="Include" />
             <e p="BulletPool.cs" t="Include" />
             <e p="Homing.cs" t="Include" />
+            <e p="RazerObject.cs" t="Include" />
             <e p="Straight.cs" t="Include" />
             <e p="TestBulletGenerator.cs" t="Include" />
           </e>
           <e p="Character" t="Include">
             <e p="Enemy.cs" t="Include" />
+            <e p="Kurage" t="Include">
+              <e p="EnemyKurage.cs" t="Include" />
+              <e p="EnemyLuna.cs" t="Include" />
+              <e p="EnemyPulmo.cs" t="Include" />
+              <e p="KurageAnimationController.cs" t="Include" />
+            </e>
+            <e p="LoopEnemy.cs" t="Include" />
             <e p="Marker.cs" t="Include" />
+            <e p="TaskBasedEnemy" t="Include">
+              <e p="TaskBasedEnemy.cs" t="Include" />
+              <e p="Tasks" t="Include">
+                <e p="EnemyTask.cs" t="Include" />
+                <e p="LogTask.cs" t="Include" />
+                <e p="LunaHomingTask.cs" t="Include" />
+                <e p="MoveStraightTask.cs" t="Include" />
+                <e p="RunTaskHolderTask.cs" t="Include" />
+                <e p="TaskHolder.cs" t="Include" />
+                <e p="Test" t="Include">
+                  <e p="MoveByControlPoints.cs" t="Include" />
+                  <e p="TestFireTask.cs" t="Include" />
+                </e>
+                <e p="WaitTask.cs" t="Include" />
+              </e>
+            </e>
           </e>
           <e p="Effects" t="Include">
             <e p="DissolveEffect.cs" t="Include" />
@@ -43,10 +86,13 @@
           <e p="SimpleCameraController.cs" t="Include" />
           <e p="Stage" t="Include">
             <e p="EnemyData.cs" t="Include" />
+            <e p="GoalEventMarker.cs" t="Include" />
             <e p="StageData.cs" t="Include" />
+            <e p="StageEventMarker.cs" t="Include" />
             <e p="StageFactory.cs" t="Include" />
             <e p="StageRunner.cs" t="Include" />
-            <e p="SummonEnemyEvent.cs" t="Include" />
+            <e p="SummonLoopEnemyMarker.cs" t="Include" />
+            <e p="SummonTaskBasedEnemyMarker.cs" t="Include" />
           </e>
           <e p="test.cs" t="Include" />
           <e p="test1.cs" t="Include" />
@@ -54,10 +100,22 @@
           <e p="UI" t="Include">
             <e p="CompassRader.cs" t="Include" />
             <e p="EnemyMarkerText.cs" t="Include" />
+            <e p="FrontGround.cs" t="Include" />
+            <e p="GameOverSystem.cs" t="Include" />
+            <e p="Option.cs" t="Include" />
+            <e p="Score.cs" t="Include" />
+            <e p="ScoreBackground.cs" t="Include" />
+            <e p="Scoreboard.cs" t="Include" />
+            <e p="ScoreUISystem.cs" t="Include" />
+            <e p="TitleBackground.cs" t="Include" />
+            <e p="UITransitionSystem.cs" t="Include" />
+            <e p="WindowTransitionData.cs" t="Include" />
           </e>
           <e p="Utils" t="Include">
+            <e p="LabelAttribute.cs" t="Include" />
             <e p="SingletonMonoBehaviour.cs" t="Include" />
           </e>
+          <e p="viewporttest.cs" t="Include" />
         </e>
         <e p="TutorialInfo" t="Include">
           <e p="Scripts" t="Include">

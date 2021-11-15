@@ -1,13 +1,13 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 /// <summary>
 /// BulletObjectをプーリングする
 /// </summary>
 public class BulletPool : SingletonMonoBehaviour<BulletPool>
 {
-
     /// <summary>
     /// プールの元オブジェクト
     /// </summary>
@@ -34,6 +34,7 @@ public class BulletPool : SingletonMonoBehaviour<BulletPool>
         for (int i = 0; i < maxCount; i++)
         {
             var newObj = CreateNewObject();
+            newObj.transform.SetParent(transform);
             newObj.SetActive(false);
             _poolObjList.Add(newObj);
         }
@@ -46,8 +47,10 @@ public class BulletPool : SingletonMonoBehaviour<BulletPool>
     /// <returns></returns>
     public GameObject GetInstance(Bullet bullet) 
     {
+        //Debug.Log(_poolObjList);
         foreach (var obj in _poolObjList)
         {
+            //Debug.Log("foreach");
             if (obj.activeSelf == false)
             {
                 obj.SetActive(true);
@@ -82,8 +85,8 @@ public class BulletPool : SingletonMonoBehaviour<BulletPool>
     /// </summary>
     private GameObject CreateNewObject() 
     {
-        var newObj = Instantiate(_poolObj);
-        newObj.name = _poolObj.name + (_poolObjList.Count + 1);
+        var newObj = Instantiate(defaultObject);
+        newObj.name = defaultObject.name + (_poolObjList.Count + 1);
 
         return newObj;
     }
