@@ -119,5 +119,7 @@ public abstract class LoopEnemy : Enemy
         return dir;
     }
 
+    
+
     protected abstract IEnumerator Fire();
 }
