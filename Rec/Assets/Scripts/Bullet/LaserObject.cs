@@ -13,9 +13,13 @@ public class LaserObject : MonoBehaviour
     private Vector3 _launchPos;
     private Vector3 _direction;
     private float _length;
+
+    private float _duration;
+    private float _time;
     
     public Force force { get; private set; }
     public float attackPoint { get; private set; }
+    public bool canDealDamage { get; set; }
 
     private void Awake()
     {
@@ -31,7 +35,15 @@ public class LaserObject : MonoBehaviour
 
     private void Update()
     {
-        if(_isLaser)OnRay();
+        if (_time >= _duration) StartCoroutine(StopLaser());
+
+        _time += Time.deltaTime;
+    }
+
+    private void OnEnable()
+    {
+        _time = 0f;
+        canDealDamage = true;
     }
 
     private void OnDisable()
@@ -51,8 +63,11 @@ public class LaserObject : MonoBehaviour
         Vector3 dir = endPos - launchPos;
         _length = Vector3.Magnitude(dir);
         _direction = dir.normalized;
+        _duration = timer;
         attackPoint = attack;
 
+        transform.position = launchPos;
+        transform.up = dir;
         _isLaser = true;
     }
 
@@ -61,20 +76,19 @@ public class LaserObject : MonoBehaviour
         _launchPos = launchPos;
         _length = length;
         _direction = direction.normalized;
+        _duration = timer;
         attackPoint = attack;
 
+        transform.position = launchPos;
+        transform.up = direction;
         _isLaser = true;
     }
 
-    private void OnRay()
+    public IEnumerator StopLaser()
     {
-        RaycastHit hit;
-        Ray ray = new Ray(_launchPos, _direction);
-        if (Physics.Raycast(ray, out hit, _length))
-        {
-            Debug.Log(hit.collider.gameObject.transform.position);
-        }
-        
-        Debug.DrawRay(ray.origin, ray.direction * _length, Color.green, 5);
+        laserParticles.transform.GetChild(0).GetComponent<ParticleSystem>().Stop();
+        laserParticles.transform.GetChild(1).GetChild(0).GetComponent<ParticleSystem>().Stop();
+        yield return new WaitForSeconds(1f);
+        gameObject.SetActive(false);
     }
 }

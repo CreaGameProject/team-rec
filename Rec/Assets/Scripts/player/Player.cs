@@ -410,6 +410,17 @@ public class Player : MonoBehaviour
                 decreaseLife(bulletObject.bulletclass.AttackPoint);
             }
         }
+        else if (other.gameObject.GetComponent<LaserObject>())
+        {
+            Debug.Log("HIT");
+            LaserObject laserObject = other.gameObject.GetComponent<LaserObject>();
+            if (!laserObject.canDealDamage) return;
+
+            //LaserPool.Instance.Destroy(other.gameObject);
+            decreaseLife((int)laserObject.attackPoint);
+            laserObject.canDealDamage = false;
+            Debug.Log(laserObject.attackPoint + "DMG!");
+        }
     }
 
     public float roll_decay;

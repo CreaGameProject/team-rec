@@ -34411,7 +34411,7 @@ GameObject:
   - component: {fileID: 876781734}
   m_Layer: 0
   m_Name: player_model
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -74115,6 +74115,7 @@ GameObject:
   - component: {fileID: 3931079967553337950}
   - component: {fileID: 81588102302578171}
   - component: {fileID: 4451193379222184165}
+  - component: {fileID: 4451193379222184166}
   m_Layer: 0
   m_Name: player_pilot_2
   m_TagString: Player
@@ -74149,3 +74150,17 @@ MonoBehaviour:
   pitch_max: 15
   roll_growth: 1
   pitch_growth: 1
+--- !u!64 &4451193379222184166
+MeshCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4451193379222184164}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 4
+  m_Convex: 1
+  m_CookingOptions: 30
+  m_Mesh: {fileID: 2534964839176971238, guid: a453c97d7aaac1c459b7f1f0370bedd3, type: 3}
