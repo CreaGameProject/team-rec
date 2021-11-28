@@ -419,7 +419,6 @@ public class Player : MonoBehaviour
             //LaserPool.Instance.Destroy(other.gameObject);
             decreaseLife((int)laserObject.attackPoint);
             laserObject.canDealDamage = false;
-            Debug.Log(laserObject.attackPoint + "DMG!");
         }
     }
 

@@ -1117,8 +1117,14 @@ MonoBehaviour:
   UIStageObj1: {fileID: 0}
   UIStageObj2: {fileID: 0}
   UIStageObj3: {fileID: 0}
+  prev_backImg: {fileID: 0}
+  prev_frontImg: {fileID: 0}
+  backImg: {fileID: 0}
+  frontImg: {fileID: 0}
   gameOverSystem: {fileID: 0}
+  frontGround: {fileID: 0}
   waitFrame: 60
+  fadeTime: 0
 --- !u!1 &629734643400284145
 GameObject:
   m_ObjectHideFlags: 0
@@ -1722,7 +1728,7 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 629734643837497626}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 0.99984366, y: 0.99984366, z: 0.99984366}
   m_Children:

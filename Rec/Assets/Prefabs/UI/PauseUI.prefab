@@ -618,8 +618,14 @@ MonoBehaviour:
   UIStageObj1: {fileID: 0}
   UIStageObj2: {fileID: 0}
   UIStageObj3: {fileID: 0}
+  prev_backImg: {fileID: 0}
+  prev_frontImg: {fileID: 0}
+  backImg: {fileID: 0}
+  frontImg: {fileID: 0}
   gameOverSystem: {fileID: 0}
+  frontGround: {fileID: 0}
   waitFrame: 60
+  fadeTime: 0
 --- !u!1 &1849954452083293781
 GameObject:
   m_ObjectHideFlags: 0
@@ -967,13 +973,19 @@ MonoBehaviour:
   TitleWindow: {fileID: 0}
   MainMenuWindow: {fileID: 0}
   StageSelectWindow: {fileID: 0}
-  OptionWindow: {fileID: 0}
-  PauseWindow: {fileID: 0}
+  OptionWindow: {fileID: 1849954452002154193}
+  PauseWindow: {fileID: 1849954452083293781}
   UIStageObj1: {fileID: 0}
   UIStageObj2: {fileID: 0}
   UIStageObj3: {fileID: 0}
+  prev_backImg: {fileID: 0}
+  prev_frontImg: {fileID: 0}
+  backImg: {fileID: 0}
+  frontImg: {fileID: 0}
   gameOverSystem: {fileID: 0}
+  frontGround: {fileID: 0}
   waitFrame: 60
+  fadeTime: 120
 --- !u!1001 &1849954451819214677
 PrefabInstance:
   m_ObjectHideFlags: 0

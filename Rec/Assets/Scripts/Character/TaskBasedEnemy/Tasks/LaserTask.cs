@@ -9,6 +9,7 @@ namespace Core.Enemy.TaskBased
     // AIデザインのためにコンポーネントとしてアタッチされるクラス
     public class LaserTask : EnemyTaskComponent
     {
+        [SerializeField, Label("ダメージ量")] int damage = 45;
         // ロックオン～発射までのディレイ
         [SerializeField, Label("チャージ時間")] float chargeTime = 2f;
 
@@ -19,12 +20,13 @@ namespace Core.Enemy.TaskBased
         {
             GameObject player = GameObject.FindGameObjectWithTag("Player");
             // LineDrawerおよびLineRendererコンポーネントはPlayerではなく、蝶に付けるべき？
-            return new Task(chargeTime, duration, player);
+            return new Task(damage, chargeTime, duration, player);
         }
 
         // キャラクターに渡され実行されるタスクのクラス
         private class Task : IEnemyTask
         {
+            private int damage;
             private float chargeTime;
             private float duration;
             private GameObject target;
@@ -32,8 +34,9 @@ namespace Core.Enemy.TaskBased
             private Vector3 targetPos;
 
             // コンストラクタ 引数は必要に応じて追加してください
-            public Task(float chargeTime, float duration, GameObject target)
+            public Task(int damage, float chargeTime, float duration, GameObject target)
             {
+                this.damage = damage;
                 this.chargeTime = chargeTime;
                 this.duration = duration;
                 this.target = target;
@@ -45,7 +48,6 @@ namespace Core.Enemy.TaskBased
             {
                 startPos = enemy.transform.GetChild(0).position;
                 targetPos = target.transform.position;
-                float damage = 10; // 仮の値
 
                 yield return new WaitForSeconds(chargeTime);
 
@@ -57,7 +59,7 @@ namespace Core.Enemy.TaskBased
             // 意図したものを除いて 複製元と複製先が同じ参照を持たないように注意してください
             public IEnemyTask Copy()
             {
-                return new Task(chargeTime, duration, target);
+                return new Task(damage, chargeTime, duration, target);
             }
         }
     }

@@ -68,38 +68,6 @@ CanvasGroup:
   m_Interactable: 1
   m_BlocksRaycasts: 1
   m_IgnoreParentGroups: 0
---- !u!111 &8194797446199841088
-Animation:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 9041166527168523284}
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Animation: {fileID: 7400000, guid: 2189a8fef23fe8945949a65b163cff2c, type: 2}
-  m_Animations:
-  - {fileID: 7400000, guid: 2189a8fef23fe8945949a65b163cff2c, type: 2}
-  m_WrapMode: 0
-  m_PlayAutomatically: 1
-  m_AnimatePhysics: 0
-  m_CullingType: 0
---- !u!111 &8194797446511931923
-Animation:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 9041166525620865394}
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Animation: {fileID: 7400000, guid: 6372b67371b744b49a1edcd761a1fa54, type: 2}
-  m_Animations:
-  - {fileID: 7400000, guid: 6372b67371b744b49a1edcd761a1fa54, type: 2}
-  m_WrapMode: 0
-  m_PlayAutomatically: 1
-  m_AnimatePhysics: 0
-  m_CullingType: 0
 --- !u!1 &8194797447249717967
 GameObject:
   m_ObjectHideFlags: 0
@@ -369,6 +337,22 @@ MonoBehaviour:
     m_VerticalOverflow: 0
     m_LineSpacing: 1
   m_Text: CLEAR
+--- !u!111 &8194797446511931923
+Animation:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9041166525620865394}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Animation: {fileID: 7400000, guid: 6372b67371b744b49a1edcd761a1fa54, type: 2}
+  m_Animations:
+  - {fileID: 7400000, guid: 6372b67371b744b49a1edcd761a1fa54, type: 2}
+  m_WrapMode: 0
+  m_PlayAutomatically: 1
+  m_AnimatePhysics: 0
+  m_CullingType: 0
 --- !u!111 &8194797448164709336
 Animation:
   m_ObjectHideFlags: 0
@@ -381,6 +365,22 @@ Animation:
   m_Animation: {fileID: 7400000, guid: ee0b587ab669ac648a4e946b0f78bd4e, type: 2}
   m_Animations:
   - {fileID: 7400000, guid: ee0b587ab669ac648a4e946b0f78bd4e, type: 2}
+  m_WrapMode: 0
+  m_PlayAutomatically: 1
+  m_AnimatePhysics: 0
+  m_CullingType: 0
+--- !u!111 &8194797446199841088
+Animation:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9041166527168523284}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Animation: {fileID: 7400000, guid: 2189a8fef23fe8945949a65b163cff2c, type: 2}
+  m_Animations:
+  - {fileID: 7400000, guid: 2189a8fef23fe8945949a65b163cff2c, type: 2}
   m_WrapMode: 0
   m_PlayAutomatically: 1
   m_AnimatePhysics: 0
