@@ -11,7 +11,7 @@ namespace Core.Enemy.TaskBased
     {
         [SerializeField, Label("ダメージ量")] int damage = 45;
         // ロックオン～発射までのディレイ
-        [SerializeField, Label("チャージ時間")] float chargeTime = 2f;
+        [SerializeField, Label("発射ディレイ")] float delay = 0.4f;
 
         [SerializeField, Label("持続時間")] float duration = 1.5f;
 
@@ -20,24 +20,24 @@ namespace Core.Enemy.TaskBased
         {
             GameObject player = GameObject.FindGameObjectWithTag("Player");
             // LineDrawerおよびLineRendererコンポーネントはPlayerではなく、蝶に付けるべき？
-            return new Task(damage, chargeTime, duration, player);
+            return new Task(damage, delay, duration, player);
         }
 
         // キャラクターに渡され実行されるタスクのクラス
         private class Task : IEnemyTask
         {
             private int damage;
-            private float chargeTime;
+            private float delay;
             private float duration;
             private GameObject target;
             private Vector3 startPos;
             private Vector3 targetPos;
 
             // コンストラクタ 引数は必要に応じて追加してください
-            public Task(int damage, float chargeTime, float duration, GameObject target)
+            public Task(int damage, float delay, float duration, GameObject target)
             {
                 this.damage = damage;
-                this.chargeTime = chargeTime;
+                this.delay = delay;
                 this.duration = duration;
                 this.target = target;
             }
@@ -49,7 +49,7 @@ namespace Core.Enemy.TaskBased
                 startPos = enemy.transform.GetChild(0).position;
                 targetPos = target.transform.position;
 
-                yield return new WaitForSeconds(chargeTime);
+                yield return new WaitForSeconds(delay);
 
                 LaserPool.Instance.ShotLaser(startPos, targetPos, duration, damage);
                 yield break;
@@ -59,7 +59,7 @@ namespace Core.Enemy.TaskBased
             // 意図したものを除いて 複製元と複製先が同じ参照を持たないように注意してください
             public IEnemyTask Copy()
             {
-                return new Task(damage, chargeTime, duration, target);
+                return new Task(damage, delay, duration, target);
             }
         }
     }
