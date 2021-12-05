@@ -59,7 +59,6 @@ public class EnemyLuna : LoopEnemy
     {
         base.Damage(damage, bulletObject);
     }
-    
 
     protected override IEnumerator Fire()
     {
