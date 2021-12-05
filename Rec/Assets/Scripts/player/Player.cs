@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using DG.Tweening;
 
+
 public class Player : MonoBehaviour
 {
     [SerializeField] BulletPool bulletPool;
@@ -28,6 +29,8 @@ public class Player : MonoBehaviour
     /// </summary>
     private float laserGauge;
 
+    private float laserGaugeBuffer;
+
     private float angle;
 
     Camera mainCamera;
@@ -37,6 +40,8 @@ public class Player : MonoBehaviour
     private Image Laser_img;
 
     [SerializeField] Texture2D pointTexture;
+    [SerializeField] private List<Enemy> lockedEnemyList = new List<Enemy>();
+
 
     // 各最大移動量
     float moveXMax = 1.5f;
@@ -82,6 +87,11 @@ public class Player : MonoBehaviour
     /// </summary>
     private bool canPause = true;
 
+    void Awake()
+    {
+        rigidbody = body.GetComponent<Rigidbody>();
+        rigidbody.angularDrag = 20.0f;
+    }
 
     // Start is called before the first frame update
     void Start()
@@ -104,18 +114,12 @@ public class Player : MonoBehaviour
     {
         if (!isStopped)
         {
-            getControlInput();
+            GetControlInput();
         }
 
         getOtherInput();
-
+        TargetRenderedCheck();
         //UnityEngine.PlayerLoop.FixedUpdate();
-    }
-
-    void Awake()
-    {
-        rigidbody = body.GetComponent<Rigidbody>();
-        rigidbody.angularDrag = 20.0f;
     }
 
 
@@ -123,7 +127,7 @@ public class Player : MonoBehaviour
     /// <summary>
     /// 移動・攻撃入力の管理
     /// </summary>
-    void getControlInput()
+    private void GetControlInput()
     {
         // 移動入力
         if (Input.GetKey(KeyCode.A))
@@ -157,24 +161,34 @@ public class Player : MonoBehaviour
         // 攻撃入力
         if (Input.GetMouseButtonUp(0))
         {
-            sendRay();
+            SendRay();
         }
-        else if (Input.GetMouseButtonUp(1))
-        {
-            Debug.Log("GetMouseButtonUp(1)");
-            homingShot = true;
-            openTarget();
-        }
-        else if (Input.GetMouseButton(1))
-        {
-            homingRange += 0.01f;
 
-            if (homingRange > 10)
+        if (Input.GetMouseButtonDown(1))
+        {
+            laserGaugeBuffer = laserGauge;
+        }
+
+        if (Input.GetMouseButton(1))
+        {
+            homingRange += (100.0f) / 10.0f * Time.deltaTime;
+
+            if (homingRange > 100)
             {
-                homingRange = 10;
+                homingRange = 100;
             }
 
-            openTarget();
+            LockOnTarget();
+        }
+
+        if (Input.GetMouseButtonUp(1))
+        {
+            //Debug.Log("GetMouseButtonUp(1)");
+            homingShot = true;
+            homingRange = 0.0f;
+
+            HomingShot();
+            ReleaseTarget();
         }
     }
 
@@ -217,8 +231,10 @@ public class Player : MonoBehaviour
         }
     }
 
-
-    void sendRay()
+    /// <summary>
+    /// ストレート
+    /// </summary>
+    void SendRay()
     {
         Vector3 mousePosition = Input.mousePosition;
         mousePosition.z = 20f;
@@ -252,53 +268,88 @@ public class Player : MonoBehaviour
         }
     }
 
-    void openTarget()
+    void LockOnTarget()
     {
         mousePos = Input.mousePosition;
-        mousePos.z = 10f;
         mousePos = mainCamera.ScreenToWorldPoint(mousePos);
 
         if (!(Camera.main is null))
         {
             RaycastHit[] hits = Physics.BoxCastAll(mousePos, Vector3.one * homingRange,
-                (mousePos - Camera.main.transform.position), Quaternion.identity, 100f, LayerMask.GetMask("Default"));
+                (mousePos - Camera.main.transform.position), Quaternion.identity, 0f, LayerMask.GetMask("Default"));
 
-
-            if (homingShot)
+            foreach (RaycastHit hit in hits)
             {
-                foreach (RaycastHit hit in hits)
+                if (hit.collider.gameObject.CompareTag("Enemy"))
                 {
-                    if (hit.collider.gameObject.CompareTag("Enemy"))
+                    Enemy enemyClass = hit.collider.gameObject.GetComponent<Enemy>();
+                    if (enemyClass.GetIsRendered() && enemyClass.GetHP() > 0)
                     {
-                        if (laserGauge >= 20)
+                        if (!lockedEnemyList.Contains(enemyClass))
                         {
-                            Debug.Log(hit.collider.gameObject.name);
-                            laserGauge -= 20;
-
-                            //ここでホーミングを打つ(つまり単発を高速レートで打つ感じ)
-                            //hit.collider.gameObjectでぶつかったオブジェクトのことを指す
-                            Homing homing = new Homing();
-                            homing.Name = "Homing";
-                            homing.Velocity = 10f; // 仮の値
-                            homing.HomingStrength = 10f;
-                            homing.AttackPoint = 1; // 仮の値
-                            homing.Direction = transform.forward;
-                            homing.Target = hit.collider.gameObject;
-                            GameObject bullet = bulletPool.GetInstance(homing);
-                            GameObject effect = bullet.transform.GetChild(0).gameObject;
-                            effect.GetComponent<Renderer>().material.SetColor(EmissionColor, _homingColor);
-                            bullet.GetComponent<BulletObject>().setForce(Force.Player);
-                            bullet.transform.position = this.transform.position;
+                            if (laserGaugeBuffer >= 20)
+                            {
+                                laserGaugeBuffer -= 20;
+                                lockedEnemyList.Add(enemyClass);
+                                LockOnMarker.Instance.LockOnEnemy(enemyClass.gameObject);
+                            }
                         }
                     }
                 }
-
-                homingRange = 1f;
-                homingShot = false;
-
-                //Debug.Log(laserGauge);
             }
         }
+    }
+
+    private void HomingShot()
+    {
+        List<Enemy> lockedEnemyListBuffer = lockedEnemyList;
+
+        foreach (var enemyClass in lockedEnemyListBuffer)
+        {
+            Debug.Log("Enemy Name:" + enemyClass.gameObject.name);
+            if (laserGauge >= 20)
+            {
+                laserGauge -= 20;
+                Debug.Log("laserGauge:" + laserGauge);
+                //ここでホーミングを打つ(つまり単発を高速レートで打つ感じ)
+                //hit.collider.gameObjectでぶつかったオブジェクトのことを指す
+                Homing homing = new Homing();
+                homing.Name = "Homing";
+                homing.Velocity = 5f; // 仮の値
+                homing.HomingStrength = 12f;
+                homing.AttackPoint = 1; // 仮の値
+                homing.Direction = transform.forward;
+                homing.Target = enemyClass.gameObject;
+                GameObject bullet = bulletPool.GetInstance(homing);
+                GameObject effect = bullet.transform.GetChild(0).gameObject;
+                effect.GetComponent<Renderer>().material.SetColor(EmissionColor, _homingColor);
+                bullet.GetComponent<BulletObject>().setForce(Force.Player);
+                bullet.transform.position = this.transform.position;
+
+                LockOnMarker.Instance.ReleaseCursor(enemyClass.gameObject);
+                //lockedEnemyList.Remove(enemyClass);
+            }
+        }
+        
+        lockedEnemyList.Clear();
+    }
+
+    private void TargetRenderedCheck()
+    {
+        List<Enemy> lockedEnemyListBuffer = lockedEnemyList;
+        foreach (var enemyClass in lockedEnemyListBuffer)
+        {
+            if (!(enemyClass.GetIsRendered() && enemyClass.GetHP() > 0))
+            {
+                lockedEnemyList.Remove(enemyClass);
+                LockOnMarker.Instance.ReleaseCursor(enemyClass.gameObject);
+            }
+        }
+    }
+
+    private void ReleaseTarget()
+    {
+        lockedEnemyList = new List<Enemy>();
     }
 
     private void OnDrawGizmos()
@@ -385,6 +436,7 @@ public class Player : MonoBehaviour
         pitch = Mathf.Clamp(pitch, -pitch_max, pitch_max);
         body.transform.localEulerAngles = new Vector3(pitch, ang.y, roll);
     }
+
 
     static Texture2D ResizeTexture(Texture2D srcTexture, int newWidth, int newHeight)
     {
