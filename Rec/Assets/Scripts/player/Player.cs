@@ -410,14 +410,19 @@ public class Player : MonoBehaviour
                 decreaseLife(bulletObject.bulletclass.AttackPoint);
             }
         }
-        else if (other.gameObject.GetComponent<LaserObject>())
+    }
+
+    private void OnTriggerStay(Collider other)
+    {
+        if (other.gameObject.GetComponent<LaserObject>())
         {
-            Debug.Log("HIT");
             LaserObject laserObject = other.gameObject.GetComponent<LaserObject>();
             if (!laserObject.canDealDamage) return;
+            Debug.Log("HIT");
 
             //LaserPool.Instance.Destroy(other.gameObject);
             decreaseLife((int)laserObject.attackPoint);
+            laserObject.isHit = true;
             laserObject.canDealDamage = false;
         }
     }

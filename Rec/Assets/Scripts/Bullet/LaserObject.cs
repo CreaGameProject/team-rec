@@ -7,6 +7,8 @@ using UnityEngine;
 
 public class LaserObject : MonoBehaviour
 {
+    private const float DamageDelay = 0.4f;
+
     private GameObject laserHead;
     [SerializeField] private Component laserParticles;
     private bool _isLaser = false;
@@ -20,6 +22,7 @@ public class LaserObject : MonoBehaviour
     public Force force { get; private set; }
     public float attackPoint { get; private set; }
     public bool canDealDamage { get; set; }
+    public bool isHit { get; set; }
 
     private void Awake()
     {
@@ -35,15 +38,22 @@ public class LaserObject : MonoBehaviour
 
     private void Update()
     {
+        _time += Time.deltaTime;
+
         if (_time >= _duration) StartCoroutine(StopLaser());
 
-        _time += Time.deltaTime;
+        if (_time >= DamageDelay)
+        {
+            if (isHit) return;
+            canDealDamage = true;
+        }
     }
 
     private void OnEnable()
     {
         _time = 0f;
-        canDealDamage = true;
+        isHit = false;
+        canDealDamage = false;
     }
 
     private void OnDisable()
