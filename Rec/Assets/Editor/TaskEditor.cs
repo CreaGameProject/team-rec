@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using Core.Enemy.Navigator;
 using Core.Stage;
 using UnityEngine;
 using UnityEditor;
@@ -14,9 +15,14 @@ namespace Core.Enemy.TaskBased
         {
             var marker = new GameObject("NewTaskBasedEnemyMarker");
             var holder = new GameObject("TaskHolder");
+            var pathGenerator = new GameObject("PathGenerator");
+
             var markerComp = marker.AddComponent<SummonTaskBasedEnemyMarker>();
             var holderComp = holder.AddComponent<TaskHolder>();
+            var pathGeneratorComp = pathGenerator.AddComponent<PathGenerator>();
+            
             holder.transform.SetParent(marker.transform);
+            pathGenerator.transform.SetParent(marker.transform);
         }
 
         [MenuItem("GameObject/TaskBasedEnemy/TaskHolder", priority = 21)]

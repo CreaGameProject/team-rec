@@ -5,6 +5,10 @@ using UnityEngine;
 
 namespace Core.Enemy.Navigator
 {
+    /// <summary>
+    /// 制御点マーカオブジェクトの親にアタッチする。
+    /// このコンポーネントを通じて制御点リスト(パス)を取得する。
+    /// </summary>
     public class PathGenerator : MonoBehaviour
     {
         public List<WayPoint> CollectWayPoints(Vector3 startPoint)

@@ -6,6 +6,9 @@ using UnityEngine;
 
 namespace Core.Enemy.Navigator
 {
+    /// <summary>
+    /// 敵キャラクターのナビゲータオブジェクト（通常は敵キャラクターの親オブジェクト）にアタッチし、当該オブジェクトを制御点にしたがって移動させる
+    /// </summary>
     public class EnemyNavigator : MonoBehaviour
     {
         private List<WayPoint> wayPoints;

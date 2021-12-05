@@ -5,6 +5,7 @@ using UnityEngine;
 
 namespace Core.Enemy.Navigator
 {
+    // 各制御点の基底クラス
     public abstract class WayPointComponent : MonoBehaviour
     {
         [SerializeField] protected float delay;

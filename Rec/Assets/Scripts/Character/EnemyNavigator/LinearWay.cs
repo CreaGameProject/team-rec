@@ -5,7 +5,8 @@ using UnityEngine;
 
 namespace Core.Enemy.Navigator
 {
-    class LinearWay: WayPointComponent
+    // 直線移動
+    public class LinearWay: WayPointComponent
     {
         public override WayPoint ToWayPoint(Vector3 startPoint)
         {

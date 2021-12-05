@@ -48,13 +48,26 @@ namespace Core.Stage
 
             public void Call()
             {
+                // 敵キャラクターのクローンを生成
                 var clone = GameObject.Instantiate(this.original, this.position, this.quaternion);
                 
+                // タスクベースエネミーのコンポーネントを取得 タスクをセット
                 var enemy = clone.GetComponent<TaskBasedEnemy>();
                 enemy.SetTasks(tasks);
 
-                var navigator = clone.GetComponent<EnemyNavigator>();
-                navigator.SetPath(wayPoints);
+                // ナビゲータオブジェクトを生成 座標情報をコピー
+                var navObject = new GameObject(clone.name + "-navigator");
+                navObject.transform.position = this.position;
+                navObject.transform.rotation = this.quaternion;
+
+                // ナビゲータコンポーネントを取得
+                var navigatorComp =  navObject.AddComponent<EnemyNavigator>();
+
+                // パスを渡す
+                navigatorComp.SetPath(wayPoints);
+
+                // ナビゲータオブジェクトをクローンの親に
+                clone.transform.SetParent(navObject.transform);
             }
 
             public float Time
