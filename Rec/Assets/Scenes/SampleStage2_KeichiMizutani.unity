@@ -9397,6 +9397,35 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 430656819}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &213285548 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: ec2a735a5c3807d46af7c8d836987cbf,
+    type: 3}
+  m_PrefabInstance: {fileID: 1622346822}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &213285549
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 213285548}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 04a56e84246a34f42a6d8a4c0297083e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  body: {fileID: 1372767672}
+  scalesParticles:
+  - {fileID: 1625318708}
+  - {fileID: 1302500247}
+  - {fileID: 329643674}
+  - {fileID: 1269419516}
+  deathParticle: {fileID: 0}
+  wireMaterial: {fileID: 0}
+  bodyMatelial: {fileID: 0}
+  myIntensity: 0
+  disolvePropotion: 0
 --- !u!1001 &213848279
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -34670,7 +34699,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c35263ed131aed2419e5551377e88844, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  laserPool: {fileID: 705554229}
+  laserPool: {fileID: 0}
 --- !u!1001 &705979860
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -71242,6 +71271,12 @@ Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: c2f1c31efcd561a4b891e7fb0644cc7c,
     type: 3}
   m_PrefabInstance: {fileID: 888493812}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &1372767672 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 7673534923654364071, guid: ec2a735a5c3807d46af7c8d836987cbf,
+    type: 3}
+  m_PrefabInstance: {fileID: 1622346822}
   m_PrefabAsset: {fileID: 0}
 --- !u!4 &1374533301 stripped
 Transform:
