@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
+using DG.Tweening;
 
 public class ButterflyAnimationController : MonoBehaviour
 {
@@ -18,11 +20,18 @@ public class ButterflyAnimationController : MonoBehaviour
     Material _bodyMat;
     private Shader _bodyMatShader;
     [SerializeField] private Material[] scalesMatelials = new Material[4];
-    Material[] _scalesMats = new Material[4];
-    private Shader[] _scalesMatShaders = new Shader[4];
+    Material[] _scalesMats;
+    private Shader[] _scalesMatShaders;
+    private static readonly int EmissionColor = Shader.PropertyToID("_EmissionColor");
 
     [ColorUsage(true, true), System.NonSerialized]
     public Color emissionColor;
+
+    // 鱗粉の色
+    [ColorUsage(true, true), SerializeField]
+    private Color scalesNormalColor;
+    [ColorUsage(true, true), SerializeField]
+    private Color scalesAttackColor;
 
     public float myIntensity;
 
@@ -33,11 +42,13 @@ public class ButterflyAnimationController : MonoBehaviour
     private Animator _animator;
     private bool _isAttack1 = false;
     private bool _isAttack2 = false;
+    private readonly float scalesDoTime = 3.0f;
+
 
     // Start is called before the first frame update
     void Start()
     {
-
+        /*
         _wireMatShader = wireMaterial.shader;
         _bodyMatShader = bodyMatelial.shader;
         _wireMat = new Material(_wireMatShader);
@@ -49,15 +60,29 @@ public class ButterflyAnimationController : MonoBehaviour
         body.GetComponent<SkinnedMeshRenderer>().materials[1] = _bodyMat;
         _bodyMat = body.GetComponent<SkinnedMeshRenderer>().materials[1];
         emissionColor = wireMaterial.color;
-        
-        
+        */
 
         _animator = GetComponent<Animator>();
 
+        /*
         foreach (var particle in scalesParticles)
         {
             particle.Stop();
             Debug.Log(particle + "Stopped.");
+        }
+        */
+
+        int sPLength = scalesParticles.Length;
+
+        _scalesMats = new Material[sPLength];
+        _scalesMatShaders = new Shader[sPLength];
+
+
+        for (int i = 0; i < sPLength; i++)
+        {
+            scalesMatelials[i] = scalesParticles[i].GetComponent<ParticleSystemRenderer>().material;
+            //_scalesMatShaders[i] = scalesMatelials[i].shader;
+            //_scalesMats[i] = new Material(_scalesMatShaders[i]);
         }
     }
 
@@ -72,8 +97,13 @@ public class ButterflyAnimationController : MonoBehaviour
         */
 
         //test
-        if (Input.GetKeyDown(KeyCode.Space)) PlayAttackAnimation1();
+        if (Input.GetKeyDown(KeyCode.Space)) PlayAttackAnimation2();
 
+        
+        if (_isAttack1)
+        {
+            
+        }
     }
 
     public void PlayAttackAnimation1()
@@ -107,25 +137,25 @@ public class ButterflyAnimationController : MonoBehaviour
 
     public void PlayAttackAnimation2()
     {
-        if (!_isAttack1)
+        if (!_isAttack2)
         {
-            _isAttack1 = true;
-            _animator.SetBool("isAttack2", _isAttack1);
+            _isAttack2 = true;
+            _animator.SetBool("isAttack2", _isAttack2);
 
-            foreach (var particle in scalesParticles)
+            for (int i = 0; i < scalesParticles.Length; i++)
             {
-                particle.Play();
-                Debug.Log(particle + "Played.");
+                scalesParticles[i].Play();
+                ChangeScalesParticles(scalesParticles[i].gameObject, scalesMatelials[i], 50, scalesAttackColor);
             }
         }
     }
 
     public void FinishAttackAnimation2()
     {
-        if (_isAttack1)
+        if (_isAttack2)
         {
-            _isAttack1 = false;
-            _animator.SetBool("isAttack2", _isAttack1);
+            _isAttack2 = false;
+            _animator.SetBool("isAttack2", _isAttack2);
 
             foreach (var particle in scalesParticles)
             {
@@ -135,9 +165,17 @@ public class ButterflyAnimationController : MonoBehaviour
     }
 
 
-    private void ChangeScalesParticles(GameObject particle, float emission, Color color)
+    private void ChangeScalesParticles(GameObject particle, Material material, float emission, Color color)
     {
+        var seq = DOTween.Sequence();
+
         var emissionModule = particle.GetComponent<ParticleSystem>().emission;
         emissionModule.rateOverDistance = emission;
+        //material.SetColor(EmissionColor, color);
+
+        seq.Append(material.DOColor(color,EmissionColor,scalesDoTime).SetEase(Ease.Linear));
+
+        seq.Play();
+        Debug.Log(seq);
     }
 }
