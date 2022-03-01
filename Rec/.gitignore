@@ -32,7 +32,3 @@ sysinfo.txt
 .vs
 Release/
 Debug/
-
-# Assets
-*DOTween/
-*UniRx/

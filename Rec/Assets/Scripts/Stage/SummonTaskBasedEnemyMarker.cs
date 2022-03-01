@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using Core.Enemy.Navigator;
 using Core.Enemy.TaskBased;
 using UnityEngine;
 
@@ -14,31 +15,32 @@ namespace Core.Stage
         [SerializeField] private float time;
         [SerializeField] private GameObject original;
         [Header("if task holder is none, it refer to children.")] [SerializeField] private TaskHolder taskHolder;
+        [Header("if path generator is none, it refer to children.")] [SerializeField] private PathGenerator pathGenerator;
     
         public override IStageEvent ToStageEvent()
         {
-            var holder = taskHolder;
-            if (holder == null)
-            {
-                holder = GetComponentInChildren<TaskHolder>();
-            }
-
-            var e = new SummonTaskBasedEnemyEvent(original, holder.CollectTasks(), transform.position, transform.rotation, time);
+            var tasks = (taskHolder != null ? taskHolder : GetComponentInChildren<TaskHolder>()).CollectTasks();
+            var position = transform.position;
+            var rotation = transform.rotation;
+            var wayPoints = (pathGenerator != null ?  pathGenerator: GetComponentInChildren<PathGenerator>()).CollectWayPoints(transform.position);
         
-            return e;
+            return new SummonTaskBasedEnemyEvent(original, tasks, wayPoints, position, rotation, time);
         }
+
         class SummonTaskBasedEnemyEvent : IStageEvent
         {
             private GameObject original;
             private List<IEnemyTask> tasks;
+            private List<WayPoint> wayPoints;
             private Vector3 position;
             private Quaternion quaternion;
             private float time;
 
-            public SummonTaskBasedEnemyEvent(GameObject enemyObject, IEnumerable<IEnemyTask> tasks, Vector3 position, Quaternion quaternion, float time)
+            public SummonTaskBasedEnemyEvent(GameObject enemyObject, IEnumerable<IEnemyTask> tasks, IEnumerable<WayPoint> wayPoints, Vector3 position, Quaternion quaternion, float time)
             {
                 this.original = enemyObject;
                 this.tasks = tasks.ToList();
+                this.wayPoints = wayPoints.ToList();
                 this.position = position;
                 this.quaternion = quaternion;
                 this.time = time;
@@ -46,9 +48,26 @@ namespace Core.Stage
 
             public void Call()
             {
+                // 敵キャラクターのクローンを生成
                 var clone = GameObject.Instantiate(this.original, this.position, this.quaternion);
-                var component = clone.GetComponent<TaskBasedEnemy>();
-                component.SetTasks(tasks);
+                
+                // タスクベースエネミーのコンポーネントを取得 タスクをセット
+                var enemy = clone.GetComponent<TaskBasedEnemy>();
+                enemy.SetTasks(tasks);
+
+                // ナビゲータオブジェクトを生成 座標情報をコピー
+                var navObject = new GameObject(clone.name + "-navigator");
+                navObject.transform.position = this.position;
+                navObject.transform.rotation = this.quaternion;
+
+                // ナビゲータコンポーネントを取得
+                var navigatorComp =  navObject.AddComponent<EnemyNavigator>();
+
+                // パスを渡す
+                navigatorComp.SetPath(wayPoints);
+
+                // ナビゲータオブジェクトをクローンの親に
+                clone.transform.SetParent(navObject.transform);
             }
 
             public float Time

@@ -1,7 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Serialization;
 
 /// <summary>
 /// キャラクターの勢力を表す列挙子
@@ -26,20 +25,15 @@ public class Enemy : MonoBehaviour
     public Force force { get; private set; }
 
     protected Transform playerTf;
-    [SerializeField] protected Renderer bodyRenderer;
 
     [SerializeField] protected int hp;
     [SerializeField] protected int gaugePoint;
 
-    //メインカメラに付いているタグ名
-    private const string MainCameraTagName = "MainCamera";
-    //カメラに表示されているか
-    private bool _isRendered = false;
-    
     /// <summary>
     /// このキャラクターにダメージを与える
     /// </summary>
     /// <param name="damage">与えるダメージ量</param>
+
     protected　virtual void Damage(int damage, BulletObject bulletObject)
     {
         // 「プレイヤーの弾」ー攻撃→「敵」
@@ -90,26 +84,10 @@ public class Enemy : MonoBehaviour
 
     protected virtual void Update()
     {
-        if(bodyRenderer.isVisible)
-        {
-            _isRendered = true;
-        }
-        else
-        {
-            _isRendered = false;
-        }
-    }
-    
-    protected virtual void FixedUpdate()
-    {
-    }
-    
-    public bool GetIsRendered(){
-        return _isRendered;
     }
 
-    public int GetHP()
+    // Update is called once per frame
+    protected virtual void FixedUpdate()
     {
-        return hp;
     }
 }
