@@ -29644,7 +29644,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   damage: 45
-  chargeTime: 0.5
+  delay: 0.25
   duration: 1
 --- !u!114 &793827494
 MonoBehaviour:

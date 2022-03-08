@@ -410,6 +410,12 @@ public class Player : MonoBehaviour
                 decreaseLife(bulletObject.bulletclass.AttackPoint);
             }
         }
+        else if (other.gameObject.GetComponent<LadybugsBullet>())
+        {
+            var ladybugsBullet = other.GetComponent<LadybugsBullet>();
+            ladybugsBullet.Explosion();
+            decreaseLife(LadybugsBullet.AttackPoint);
+        }
     }
 
     private void OnTriggerStay(Collider other)
