@@ -16,7 +16,7 @@ namespace Core.Enemy.TaskBased
         [Space(20)]
         [SerializeField, Label("移動時間")] private float moveTime = 0.5f;
         [SerializeField, Label("移動距離")] private float moveDistance = 2.0f;
-        [SerializeField, Label("移動に所要する時間")] private float moveFrequency = 1.0f;
+        [SerializeField, Label("次の移動に掛かる時間")] private float moveFrequency = 0.2f;
         [SerializeField, Label("移動回数")] private int moveCount = 4;
         
         // Taskクラスを生成して返す
@@ -75,6 +75,7 @@ namespace Core.Enemy.TaskBased
                     yield return enemy.transform.DOMove(controlPoints[currentPoint], _moveTime)
                         .SetEase(Ease.OutQuad)
                         .WaitForCompletion();
+                    yield return new WaitForSeconds(_moveFrequency);
                     currentMoveCount++;
                 }
             }
@@ -116,7 +117,7 @@ namespace Core.Enemy.TaskBased
                 // 配列のプレイヤー方向への変換
                 return originPoints
                     .Select(point => point + origin)
-                    .Select(point => Vector3.ProjectOnPlane(point, direction))
+                    .Select(point => Vector3.ProjectOnPlane(point, direction) + direction * moveDistance * 5)
                     .ToArray();
             }
         }
