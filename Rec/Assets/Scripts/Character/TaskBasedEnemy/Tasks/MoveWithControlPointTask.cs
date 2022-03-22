@@ -1,7 +1,8 @@
-﻿using System.Linq;
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
+using DG.Tweening;
 
 namespace Core.Enemy.TaskBased
 {
@@ -13,7 +14,7 @@ namespace Core.Enemy.TaskBased
         [SerializeField, Label("制御点の数")] private int controlPointCount = 5;
         [SerializeField, Label("中心点を制御点に含める")] private bool hasCenter = false;
         [Space(20)]
-        [SerializeField, Label("移動速度")] private float moveSpeed = 10.0f;
+        [SerializeField, Label("移動時間")] private float moveTime = 0.5f;
         [SerializeField, Label("移動距離")] private float moveDistance = 2.0f;
         [SerializeField, Label("移動に所要する時間")] private float moveFrequency = 1.0f;
         [SerializeField, Label("移動回数")] private int moveCount = 4;
@@ -22,7 +23,7 @@ namespace Core.Enemy.TaskBased
         public override IEnemyTask ToEnemyTask()
         {
             var playerTr = GameObject.FindGameObjectWithTag("Player").transform;
-            return new Task(controlPointCount, hasCenter, moveSpeed, moveDistance, moveFrequency, moveCount, playerTr);
+            return new Task(controlPointCount, hasCenter, moveTime, moveDistance, moveFrequency, moveCount, playerTr);
         }
 
         // キャラクターに渡され実行されるタスクのクラス
@@ -30,18 +31,18 @@ namespace Core.Enemy.TaskBased
         {
             private readonly int _controlPointCount;
             private readonly bool _hasCenter;
-            private readonly float _moveSpeed;
+            private readonly float _moveTime;
             private readonly float _moveDistance;
             private readonly float _moveFrequency;
             private readonly int _moveCount;
             private readonly Transform _playerTransform;
             
             // コンストラクタ 引数は必要に応じて追加してください
-            public Task(int controlPointCount, bool hasCenter, float moveSpeed, float moveDistance, float moveFrequency, int moveCount, Transform playerTr)
+            public Task(int controlPointCount, bool hasCenter, float moveTime, float moveDistance, float moveFrequency, int moveCount, Transform playerTr)
             {
                 this._controlPointCount = controlPointCount;
                 this._hasCenter = hasCenter;
-                this._moveSpeed = moveSpeed;
+                this._moveTime = moveTime;
                 this._moveDistance = moveDistance;
                 this._moveFrequency = moveFrequency;
                 this._moveCount = moveCount;
@@ -52,18 +53,37 @@ namespace Core.Enemy.TaskBased
             // 引数enemyは行動主体
             public IEnumerator Call(TaskBasedEnemy enemy)
             {
+                // 制御点の生成
                 var enemyPos = enemy.transform.position;
                 var direction = (_playerTransform.position - enemyPos).normalized;
                 var controlPoints = GetControlPoint(enemyPos, direction, _controlPointCount, _hasCenter, _moveDistance);
                 
-                throw new System.NotImplementedException();
+                var currentMoveCount = 0;
+                var currentPoint = _controlPointCount - 1;
+                while (currentMoveCount != _moveCount)
+                {
+                    // 制御点の決定
+                    while (true)
+                    {
+                        var selectPoint = Random.Range(0, _controlPointCount);
+                        if (selectPoint == currentPoint) continue;
+                        
+                        currentPoint = selectPoint;
+                        break;
+                    }
+                    // 移動処理
+                    yield return enemy.transform.DOMove(controlPoints[currentPoint], _moveTime)
+                        .SetEase(Ease.OutQuad)
+                        .WaitForCompletion();
+                    currentMoveCount++;
+                }
             }
 
             // タスクの複製を行うメソッド
             // 意図したものを除いて 複製元と複製先が同じ参照を持たないように注意してください
             public IEnemyTask Copy()
             {
-                return new Task(_controlPointCount, _hasCenter, _moveSpeed, _moveDistance, _moveFrequency, _moveCount, _playerTransform);
+                return new Task(_controlPointCount, _hasCenter, _moveTime, _moveDistance, _moveFrequency, _moveCount, _playerTransform);
             }
 
             /// <summary>
