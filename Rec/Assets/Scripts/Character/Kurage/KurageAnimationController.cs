@@ -7,6 +7,7 @@ using DG.Tweening;
 public class KurageAnimationController : MonoBehaviour
 {
     [SerializeField] private GameObject body;
+    
     [SerializeField] private GameObject deathParticle;
     // Materialに関する設定-------------------------------------------
     [SerializeField] private Material wireMaterial;
@@ -53,6 +54,8 @@ public class KurageAnimationController : MonoBehaviour
         {
             _isAttack = true;
             _animator.SetBool("isAttack", _isAttack);
+            
+            
         }
     }
 
