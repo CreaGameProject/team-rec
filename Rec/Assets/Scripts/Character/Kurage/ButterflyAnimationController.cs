@@ -48,6 +48,7 @@ public class ButterflyAnimationController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        // 4種のマテリアルがある為、このコードでは動かない
         /*
         _wireMatShader = wireMaterial.shader;
         _bodyMatShader = bodyMatelial.shader;
@@ -71,6 +72,7 @@ public class ButterflyAnimationController : MonoBehaviour
             Debug.Log(particle + "Stopped.");
         }
         */
+        
 
         int sPLength = scalesParticles.Length;
 
@@ -81,8 +83,9 @@ public class ButterflyAnimationController : MonoBehaviour
         for (int i = 0; i < sPLength; i++)
         {
             scalesMatelials[i] = scalesParticles[i].GetComponent<ParticleSystemRenderer>().material;
-            //_scalesMatShaders[i] = scalesMatelials[i].shader;
-            //_scalesMats[i] = new Material(_scalesMatShaders[i]);
+            Debug.Log(scalesMatelials[i]);
+            _scalesMatShaders[i] = scalesMatelials[i].shader;
+            _scalesMats[i] = new Material(_scalesMatShaders[i]);
         }
     }
 
