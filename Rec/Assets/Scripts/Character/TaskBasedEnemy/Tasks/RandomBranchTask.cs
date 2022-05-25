@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -10,15 +11,20 @@ namespace Core.Enemy.TaskBased
     // AIデザインのためにコンポーネントとしてアタッチされるクラス
     public class RandomBranchTask : EnemyTaskComponent
     {
-
-        [SerializeField, Label("分岐先のタスクリスト")] private List<WeightTaskHolder> weightTaskHolders;
+        [Header("分岐先のタスクリスト")]
+        [SerializeField] private List<WeightTaskHolder> weightTaskHolders;
         
         // Taskクラスを生成して返す
         public override IEnemyTask ToEnemyTask()
         {
             // Listをweightに応じて分岐し、どれを使用するか決める。それをTask()に渡す。
             float allWeight = weightTaskHolders.Select(x => x.weight).Sum();
-            float randomValue = Random.Range(0, allWeight);
+            if (allWeight <= 0f)
+            {
+                throw new Exception("[RandomBranchTask] Weight value cannot be less than 0.");
+            }
+            
+            float randomValue = UnityEngine.Random.Range(0, allWeight);
             var task = GetTask(randomValue);
             
             return new Task(task.taskHolder.CollectTasks(), task.asynchronous, task.numLoops);
@@ -43,7 +49,7 @@ namespace Core.Enemy.TaskBased
         private class WeightTaskHolder
         {
             public TaskHolder taskHolder;
-            [Label("分岐倍率")] public float weight = 1;
+            public float weight = 1;
             [Label("分岐先のTaskを並列実行")] public bool asynchronous;
             [Label("ループ回数")] public int numLoops = 1;
         }
