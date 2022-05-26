@@ -13,30 +13,34 @@ namespace Core.Enemy.TaskBased
     {
         [Header("分岐先のタスクリスト")]
         [SerializeField] private List<WeightTaskHolder> weightTaskHolders;
+
+        private static List<WeightTaskHolder> _weightTaskHolders;
+        private static float _allWeight;
         
         // Taskクラスを生成して返す
         public override IEnemyTask ToEnemyTask()
         {
+            _weightTaskHolders = weightTaskHolders;
+            _allWeight = _weightTaskHolders.Select(x => x.weight).Sum();
             // Listをweightに応じて分岐し、どれを使用するか決める。それをTask()に渡す。
-            float allWeight = weightTaskHolders.Select(x => x.weight).Sum();
-            if (allWeight <= 0f)
+            if (_allWeight <= 0f)
             {
                 throw new Exception("[RandomBranchTask] Weight value cannot be less than 0.");
             }
             
-            float randomValue = UnityEngine.Random.Range(0, allWeight);
+            float randomValue = UnityEngine.Random.Range(0, _allWeight);
             var task = GetTask(randomValue);
             
             return new Task(task.taskHolder.CollectTasks(), task.asynchronous, task.numLoops);
         }
 
         // randomValueに応じてどのタスクを使うか決める
-        private WeightTaskHolder GetTask(float randomValue, float currentValue = 0.0f, int index = 0)
+        private static WeightTaskHolder GetTask(float randomValue, float currentValue = 0.0f, int index = 0)
         {
-            var maxValue = currentValue + weightTaskHolders[index].weight;
+            var maxValue = currentValue + _weightTaskHolders[index].weight;
             if (randomValue <= maxValue)
             {
-                return weightTaskHolders[index];
+                return _weightTaskHolders[index];
             }
             else
             {
@@ -57,9 +61,9 @@ namespace Core.Enemy.TaskBased
         // キャラクターに渡され実行されるタスクのクラス
         private class Task : IEnemyTask
         {
-            private readonly List<IEnemyTask> _tasks;
-            private readonly bool _asynchronous;
-            private readonly int _numLoops;
+            private List<IEnemyTask> _tasks;
+            private bool _asynchronous;
+            private int _numLoops;
             
             // コンストラクタ 引数は必要に応じて追加してください
             public Task(IEnumerable<IEnemyTask> tasks, bool asynchronous, int numLoops)
@@ -101,6 +105,12 @@ namespace Core.Enemy.TaskBased
             // 意図したものを除いて 複製元と複製先が同じ参照を持たないように注意してください
             public IEnemyTask Copy()
             {
+                float randomValue = UnityEngine.Random.Range(0, _allWeight);
+                var task = GetTask(randomValue);
+                _tasks = task.taskHolder.CollectTasks();
+                _asynchronous = task.asynchronous;
+                _numLoops = task.numLoops;
+                
                 return new Task(_tasks, _asynchronous, _numLoops);
             }
         }
