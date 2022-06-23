@@ -8,6 +8,7 @@ TagManager:
   - EnemyData
   - Bullet
   - Enemy
+  - MeshData
   layers:
   - Default
   - TransparentFX
