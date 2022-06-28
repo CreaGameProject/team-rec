@@ -49,6 +49,8 @@ namespace Core.Stage
             state = 0;
             time = 0f;
 
+            Debug.Log($"StageNav Start {StageRunner.Instance.StageData}");
+            
             // 位置を取得
             foreach (Vector3 pos in StageRunner.Instance.StageData.ControlPoints)
             {

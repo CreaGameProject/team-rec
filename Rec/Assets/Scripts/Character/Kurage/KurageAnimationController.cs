@@ -4,7 +4,7 @@ using UnityEngine;
 using DG.Tweening;
 
 //製作者:水谷
-public class KurageAnimationController : MonoBehaviour
+public class KurageAnimationController : MonoBehaviour, IAnimatable
 {
     [SerializeField] private GameObject body;
     
@@ -84,5 +84,10 @@ public class KurageAnimationController : MonoBehaviour
         deathParticle.SetActive(true);
         deathParticle.GetComponent<ParticleSystem>().Play();
         //Debug.Log(_bodyMat.GetFloat("_DissolveProportion"));
+    }
+
+    public void OnAttack(int index)
+    {
+        throw new System.NotImplementedException();
     }
 }

@@ -5,7 +5,9 @@ using System.Linq;
 using UnityEngine;
 using DG.Tweening;
 
-public class ButterflyAnimationController : MonoBehaviour
+
+
+public class ButterflyAnimationController : MonoBehaviour, IAnimatable
 {
     [SerializeField] private GameObject body;
     [SerializeField] private ParticleSystem[] scalesParticles = new ParticleSystem[4];
@@ -98,7 +100,6 @@ public class ButterflyAnimationController : MonoBehaviour
         for (int i = 0; i < sPLength; i++)
         {
             scalesMatelials[i] = scalesParticles[i].GetComponent<ParticleSystemRenderer>().material;
-            Debug.Log(scalesMatelials[i]);
             _scalesMatShaders[i] = scalesMatelials[i].shader;
             _scalesMats[i] = new Material(_scalesMatShaders[i]);
         }
@@ -172,7 +173,6 @@ public class ButterflyAnimationController : MonoBehaviour
             foreach (var particle in scalesParticles)
             {
                 particle.Play();
-                Debug.Log(particle + "Played.");
             }
         }
     }
@@ -255,6 +255,23 @@ public class ButterflyAnimationController : MonoBehaviour
         {
             scalesParticle.transform.SetParent(null);
             scalesParticle.transform.localScale = new Vector3(1, 1, 1);
+        }
+    }
+
+
+    public void OnAttack(int index)
+    {
+        switch (index)
+        {
+            case 0:
+                PlayAttackAnimation1();
+                break;
+            case 1:
+                PlayAttackAnimation2();
+                break;
+            default:
+                Debug.LogError("範囲より大きい数字が指定されています。0または1を指定してください。");
+                break;
         }
     }
 }
