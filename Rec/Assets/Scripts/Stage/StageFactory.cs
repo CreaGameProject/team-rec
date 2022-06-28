@@ -16,15 +16,21 @@ namespace Core.Stage
         protected override void Awake()
         {
             base.Awake();
-        }
-
-        private void Start()
-        {
+            
             GetControlPoints();//StageNavigator
 
             GetEnemyData();
 
             StageDataCreator();
+        }
+
+        private void Start()
+        {
+            //GetControlPoints();//StageNavigator
+
+            //GetEnemyData();
+
+            //StageDataCreator();
         }
 
         /// <summary>
@@ -33,6 +39,7 @@ namespace Core.Stage
         private void GetControlPoints()
         {
             Transform controlPointsParent = GameObject.Find("ControlPoints").transform;
+
             foreach (Transform child in controlPointsParent)
             {
                 _controlPoints.Add(child.position);
@@ -78,6 +85,7 @@ namespace Core.Stage
             _stageEvents.Sort((a, b) => (int)(a.Time - b.Time));//時間でソート
 
             _stageData = new StageData(_stageEvents, _controlPoints);
+
             StageRunner.Instance.SetStageData(_stageData);
         }
     }

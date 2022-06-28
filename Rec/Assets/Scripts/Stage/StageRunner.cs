@@ -22,11 +22,7 @@ namespace Core.Stage
         /// <summary>
         /// ステージが実行中であるか
         /// </summary>
-        public bool IsRunning
-        {
-            get;
-            private set;
-        }
+        public bool IsRunning { get; private set; }
 
         /// <summary>
         /// 実行するステージデータをセットする
@@ -36,6 +32,9 @@ namespace Core.Stage
         public void SetStageData(StageData stageData)
         {
             StageData = stageData;
+
+            Debug.Log($"SetStageData{StageData.ControlPoints.Count()}");
+
             StartCoroutine("Timer");
         }
 
@@ -53,8 +52,6 @@ namespace Core.Stage
         /// </summary>
         public void StopStage()
         {
-        
-        
         }
 
 
@@ -63,15 +60,16 @@ namespace Core.Stage
             base.Awake();
         }
 
-        private void Start() {
+        private void Start()
+        {
             //StartCoroutine("Timer");
         }
 
-    
-        private void Update() {
-       
+
+        private void Update()
+        {
         }
-    
+
         /// <summary>
         /// 
         /// </summary>
@@ -79,8 +77,6 @@ namespace Core.Stage
         IEnumerator Timer()
         {
             stageEvents = StageData.Events.ToList();
-
-
 
             while (true)
             {
@@ -90,6 +86,7 @@ namespace Core.Stage
                 {
                     x.Call();
                 }
+
                 stageEvents = stageEvents.SkipWhile(x => x.Time < time).ToList();
 
                 yield return null;
