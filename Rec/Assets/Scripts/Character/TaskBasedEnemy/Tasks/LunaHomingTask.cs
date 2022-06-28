@@ -20,6 +20,7 @@ namespace Core.Enemy.TaskBased
         [SerializeField, Label("発射場所：x")] private float positionX;
         [SerializeField, Label("発射場所：y")] private float positionY;
         [SerializeField, Label("発射場所：z")] private float positionZ;
+        [SerializeField] private int animationIndex = 0;
         
         private static readonly int EmissionColor = Shader.PropertyToID("_EmissionColor");
 
@@ -29,7 +30,7 @@ namespace Core.Enemy.TaskBased
         {
             playerTf = GameObject.FindGameObjectWithTag("Player").transform;
             return new LunaHoming(velocity, homingStrength, homingColor, playerTf,EmissionColor, 
-                rotationX, rotationY, rotationZ, positionX, positionY, positionZ);
+                rotationX, rotationY, rotationZ, positionX, positionY, positionZ, animationIndex);
         }
 
         // キャラクターに渡され実行されるタスクのクラス
@@ -46,13 +47,14 @@ namespace Core.Enemy.TaskBased
             private float positionX;
             private float positionY;
             private float positionZ;
+            private int animationIndex;
 
 
             // コンストラクタ 引数は必要に応じて追加してください
             public LunaHoming(float velocity, float homingStrength, 
                 Color homingColor, Transform playerTf, int EmiccionColor,
                 float rotationX, float rotationY, float rotationZ,
-                float positionX, float positionY, float positionZ)
+                float positionX, float positionY, float positionZ, int animationIndex)
             {
                 this.velocity = velocity;
                 this.homingStrength = homingStrength;
@@ -65,12 +67,18 @@ namespace Core.Enemy.TaskBased
                 this.positionX = positionX;
                 this.positionY = positionY;
                 this.positionZ = positionZ;
+                this.animationIndex = animationIndex;
             }
 
             // ゲーム中に呼び出されるタスク実行のメソッド
             // 引数enemyは行動主体
             public IEnumerator Call(TaskBasedEnemy enemy)
             {
+                // アニメーション処理
+                IAnimatable animatable = enemy.transform.GetChild(0).GetComponent<IAnimatable>();
+                animatable.OnAttack(animationIndex);
+                
+                // タスク処理
                 enemy.TriggerAnimation("attack");
                 Homing homing = new Homing();
                 homing.Name = "Homing";
@@ -92,7 +100,7 @@ namespace Core.Enemy.TaskBased
             public IEnemyTask Copy()
             {
                 return new LunaHoming(velocity, homingStrength, homingColor, playerTf ,EmissionColor,
-                    rotationX,rotationY,rotationZ, positionX,positionY, positionZ);
+                    rotationX,rotationY,rotationZ, positionX,positionY, positionZ, animationIndex);
             }
         }
     }

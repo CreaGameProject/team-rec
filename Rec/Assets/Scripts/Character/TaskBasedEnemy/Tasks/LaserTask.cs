@@ -15,12 +15,14 @@ namespace Core.Enemy.TaskBased
 
         [SerializeField, Label("持続時間")] float duration = 1.5f;
 
+        [SerializeField] private int animationIndex = 0;
+
         // Taskクラスを生成して返す
         public override IEnemyTask ToEnemyTask()
         {
             GameObject player = GameObject.FindGameObjectWithTag("Player");
             // LineDrawerおよびLineRendererコンポーネントはPlayerではなく、蝶に付けるべき？
-            return new Task(damage, delay, duration, player);
+            return new Task(damage, delay, duration, player, animationIndex);
         }
 
         // キャラクターに渡され実行されるタスクのクラス
@@ -32,20 +34,27 @@ namespace Core.Enemy.TaskBased
             private GameObject target;
             private Vector3 startPos;
             private Vector3 targetPos;
+            private int animationIndex;
 
             // コンストラクタ 引数は必要に応じて追加してください
-            public Task(int damage, float delay, float duration, GameObject target)
+            public Task(int damage, float delay, float duration, GameObject target, int animationIndex)
             {
                 this.damage = damage;
                 this.delay = delay;
                 this.duration = duration;
                 this.target = target;
+                this.animationIndex = animationIndex;
             }
 
             // ゲーム中に呼び出されるタスク実行のメソッド
             // 引数enemyは行動主体
             public IEnumerator Call(TaskBasedEnemy enemy)
             {
+                // アニメーション処理
+                IAnimatable animatable = enemy.transform.GetChild(0).GetComponent<IAnimatable>();
+                animatable.OnAttack(animationIndex);
+                
+                // タスク処理
                 startPos = enemy.transform.GetChild(0).position;
                 targetPos = target.transform.position;
 
@@ -59,7 +68,7 @@ namespace Core.Enemy.TaskBased
             // 意図したものを除いて 複製元と複製先が同じ参照を持たないように注意してください
             public IEnemyTask Copy()
             {
-                return new Task(damage, delay, duration, target);
+                return new Task(damage, delay, duration, target, animationIndex);
             }
         }
     }
