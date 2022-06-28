@@ -40,7 +40,7 @@ public class ButterflyAnimationController : MonoBehaviour, IAnimatable
     private Color scalesAttackColor;
 
     private int scalesNormalEmission = 10;
-    private int scalesAttackEmission = 50;
+    private int scalesAttackEmission = 75;
 
     public float myIntensity;
 
@@ -51,7 +51,7 @@ public class ButterflyAnimationController : MonoBehaviour, IAnimatable
     private Animator _animator;
     private bool _isAttack1 = false;
     private bool _isAttack2 = false;
-    private readonly float scalesDoTime = 3.0f;
+    private readonly float scalesDoTime = 2.0f;
     private static readonly int IsAttack1 = Animator.StringToHash("isAttack1");
     private static readonly int IsAttack2 = Animator.StringToHash("isAttack2");
 
@@ -107,6 +107,14 @@ public class ButterflyAnimationController : MonoBehaviour, IAnimatable
             _scalesMatShaders[i] = scalesMatelials[i].shader;
             _scalesMats[i] = new Material(_scalesMatShaders[i]);
         }
+        
+        for (int i = 0; i < _wireMatShaderList.Count; i++)
+        {
+            _skinnedMeshRendererList[i].materials[0].SetColor("_Color", emissionColor * myIntensity);
+            _skinnedMeshRendererList[i].materials[0].SetFloat("_DissolveProportion", disolvePropotion);
+            _skinnedMeshRendererList[i].materials[1].SetFloat("_DissolveProportion", disolvePropotion);
+            // Debug.Log(_skinnedMeshRendererList[i].gameObject.name + "は、_skinnedMeshRendererListの" + i + "番目です.");
+        }
     }
 
     // Update is called once per frame
@@ -120,9 +128,10 @@ public class ButterflyAnimationController : MonoBehaviour, IAnimatable
 
         for (int i = 0; i < _wireMatShaderList.Count; i++)
         {
-            _skinnedMeshRendererList[i].materials[0].SetColor("_Color", emissionColor * myIntensity);
+            //_skinnedMeshRendererList[i].materials[0].SetColor("_Color", emissionColor * myIntensity);
             _skinnedMeshRendererList[i].materials[0].SetFloat("_DissolveProportion", disolvePropotion);
             _skinnedMeshRendererList[i].materials[1].SetFloat("_DissolveProportion", disolvePropotion);
+            // Debug.Log(_skinnedMeshRendererList[i].gameObject.name + "は、_skinnedMeshRendererListの" + i + "番目です.");
         }
 
     }
@@ -206,6 +215,19 @@ public class ButterflyAnimationController : MonoBehaviour, IAnimatable
                 ChangeScalesParticles(scalesParticles[i].gameObject, scalesMatelials[i], scalesAttackEmission,
                     scalesAttackColor);
             }
+            
+            // 触覚を光らせる
+            for (int i = 0; i < 5; i++)
+            {
+                var seq = DOTween.Sequence();
+                seq.Append(_skinnedMeshRendererList[25 + i].materials[0]
+                    .DOColor(scalesAttackColor * 10, "_Color", 2.0f).SetEase(Ease.Linear));
+                seq.Play();
+                //_skinnedMeshRendererList[25 + i].materials[0].SetColor("_Color", scalesAttackColor * 10);
+                //_skinnedMeshRendererList[25 + i].materials[1].SetColor("_Color", scalesAttackColor * 10);
+            }
+            
+            
         }
     }
 
@@ -221,7 +243,17 @@ public class ButterflyAnimationController : MonoBehaviour, IAnimatable
             ChangeScalesParticles(scalesParticles[i].gameObject, scalesMatelials[i], scalesNormalEmission,
                 scalesNormalColor);
         }
-
+        
+        
+        // 触覚を元に戻す
+        for (int i = 0; i < 5; i++)
+        {
+            var seq = DOTween.Sequence();
+            seq.Append(_skinnedMeshRendererList[25 + i].materials[0]
+                .DOColor(emissionColor * myIntensity, "_Color", 1.0f).SetEase(Ease.Linear));
+            seq.Play();
+            //_skinnedMeshRendererList[25 + i].materials[1].SetColor("_Color", Color.black);
+        }
     }
 
 
@@ -236,7 +268,7 @@ public class ButterflyAnimationController : MonoBehaviour, IAnimatable
         seq.Append(material.DOColor(color, EmissionColor, scalesDoTime).SetEase(Ease.Linear));
 
         seq.Play();
-        Debug.Log(seq);
+        //Debug.Log(seq);
     }
 
     public void OnDie()

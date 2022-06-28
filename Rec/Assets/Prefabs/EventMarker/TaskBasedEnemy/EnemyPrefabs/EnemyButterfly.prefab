@@ -92,7 +92,7 @@ MonoBehaviour:
   - {fileID: 0}
   emissionColor: {r: 0, g: 2, b: 2, a: 1}
   scalesNormalColor: {r: 8.000002, g: 0, b: 5.4301386, a: 1}
-  scalesAttackColor: {r: 31.999996, g: 0, b: 0, a: 1}
+  scalesAttackColor: {r: 15.999998, g: 12.732984, b: 0, a: 1}
   myIntensity: 4
   disolvePropotion: 0
 --- !u!65 &9077154955485557945
