@@ -15,6 +15,8 @@ namespace Core.Enemy.TaskBased
 
         [SerializeField, Label("持続時間")] float duration = 1.5f;
 
+        [SerializeField, Label("発射位置オフセット")] private Vector3 offset;
+
         [SerializeField] private int animationIndex = 0;
 
         // Taskクラスを生成して返す
@@ -22,7 +24,7 @@ namespace Core.Enemy.TaskBased
         {
             GameObject player = GameObject.FindGameObjectWithTag("Player");
             // LineDrawerおよびLineRendererコンポーネントはPlayerではなく、蝶に付けるべき？
-            return new Task(damage, delay, duration, player, animationIndex);
+            return new Task(damage, delay, duration, player, animationIndex, offset);
         }
 
         // キャラクターに渡され実行されるタスクのクラス
@@ -34,16 +36,18 @@ namespace Core.Enemy.TaskBased
             private GameObject target;
             private Vector3 startPos;
             private Vector3 targetPos;
+            private Vector3 offset;
             private int animationIndex;
 
             // コンストラクタ 引数は必要に応じて追加してください
-            public Task(int damage, float delay, float duration, GameObject target, int animationIndex)
+            public Task(int damage, float delay, float duration, GameObject target, int animationIndex, Vector3 offset)
             {
                 this.damage = damage;
                 this.delay = delay;
                 this.duration = duration;
                 this.target = target;
                 this.animationIndex = animationIndex;
+                this.offset = offset;
             }
 
             // ゲーム中に呼び出されるタスク実行のメソッド
@@ -55,7 +59,7 @@ namespace Core.Enemy.TaskBased
                 animatable.OnAttack(animationIndex);
                 
                 // タスク処理
-                startPos = enemy.transform.GetChild(0).position;
+                startPos = enemy.transform.GetChild(0).position + offset;
                 targetPos = target.transform.position;
 
                 yield return new WaitForSeconds(delay);
@@ -69,7 +73,7 @@ namespace Core.Enemy.TaskBased
             // 意図したものを除いて 複製元と複製先が同じ参照を持たないように注意してください
             public IEnemyTask Copy()
             {
-                return new Task(damage, delay, duration, target, animationIndex);
+                return new Task(damage, delay, duration, target, animationIndex, offset);
             }
         }
     }

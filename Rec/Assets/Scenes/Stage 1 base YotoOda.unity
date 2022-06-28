@@ -5384,6 +5384,7 @@ GameObject:
   m_Component:
   - component: {fileID: 339170686}
   - component: {fileID: 339170684}
+  - component: {fileID: 339170687}
   - component: {fileID: 339170685}
   m_Layer: 0
   m_Name: TaskHolder
@@ -5432,6 +5433,18 @@ Transform:
   m_Father: {fileID: 8593068701944707277}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &339170687
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 339170683}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 54eba16178743954084f9e9f96632bb7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &383364278
 GameObject:
   m_ObjectHideFlags: 0
@@ -24889,6 +24902,7 @@ GameObject:
   m_Component:
   - component: {fileID: 742847613}
   - component: {fileID: 742847611}
+  - component: {fileID: 742847614}
   - component: {fileID: 742847612}
   m_Layer: 0
   m_Name: TaskHolder
@@ -24924,6 +24938,7 @@ MonoBehaviour:
   damage: 45
   delay: 0.4
   duration: 1.5
+  offset: {x: 0.5, y: 1, z: -0.5}
   animationIndex: 0
 --- !u!4 &742847613
 Transform:
@@ -24939,6 +24954,18 @@ Transform:
   m_Father: {fileID: 8593068701944707277}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &742847614
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 742847610}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 54eba16178743954084f9e9f96632bb7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &788458187
 GameObject:
   m_ObjectHideFlags: 0
@@ -74627,6 +74654,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8593068701944707277}
   - component: {fileID: 6251625132092029133}
+  - component: {fileID: 1954205941266112959}
   - component: {fileID: 204400829}
   - component: {fileID: 1954205941266112958}
   m_Layer: 0
@@ -74657,6 +74685,18 @@ MonoBehaviour:
     weight: 1
     asynchronous: 0
     numLoops: 1
+--- !u!114 &1954205941266112959
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1954205941266112957}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 54eba16178743954084f9e9f96632bb7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!4 &3931079967553337950
 Transform:
   m_ObjectHideFlags: 0
