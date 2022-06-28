@@ -88,6 +88,14 @@ public class KurageAnimationController : MonoBehaviour, IAnimatable
 
     public void OnAttack(int index)
     {
-        throw new System.NotImplementedException();
+        switch (index)
+        {
+            case 0:
+                PlayAttackAnimation();
+                break;
+            default:
+                Debug.LogError("範囲より大きい数字が指定されています。0を指定してください。");
+                break;
+        }
     }
 }
