@@ -61,6 +61,7 @@ namespace Core.Enemy.TaskBased
                 yield return new WaitForSeconds(delay);
 
                 LaserPool.Instance.ShotLaser(startPos, targetPos, duration, damage);
+                yield return new WaitForSeconds(duration);
                 yield break;
             }
 

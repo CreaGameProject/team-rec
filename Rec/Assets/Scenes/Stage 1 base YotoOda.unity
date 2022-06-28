@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 2138677392}
-  m_IndirectSpecularColor: {r: 0.2328501, g: 0.2791309, b: 0.33519912, a: 1}
+  m_IndirectSpecularColor: {r: 0, g: 0, b: 0, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -5417,6 +5417,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Speed: 10
+  animationIndex: 0
 --- !u!4 &339170686
 Transform:
   m_ObjectHideFlags: 0
@@ -24923,6 +24924,7 @@ MonoBehaviour:
   damage: 45
   delay: 0.4
   duration: 1.5
+  animationIndex: 0
 --- !u!4 &742847613
 Transform:
   m_ObjectHideFlags: 0
@@ -74814,7 +74816,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   time: 1.75
-  original: {fileID: 5077428862879384404, guid: aaf54d4889c194444a5e60d311820366,
+  original: {fileID: 9077154954871733752, guid: 810d10fbdd3312d4dbd3ada61cbe0def,
     type: 3}
   taskHolder: {fileID: 5305526666102640367}
 --- !u!1 &9152834306906293570
