@@ -10,6 +10,7 @@ namespace Core.Enemy.TaskBased
     public class ShotStraightTask : EnemyTaskComponent
     {
         [SerializeField, Label("発射速度")] float Speed = 10f;
+        [SerializeField] private int animationIndex = 0;
 
         const float intensity = 2.0f;
         [ColorUsage(true, true)] private Color straightColor;
@@ -21,7 +22,7 @@ namespace Core.Enemy.TaskBased
         {
             playerTf = GameObject.FindGameObjectWithTag("Player").transform;
             straightColor = new Color(45f / 255f, 217f / 255f, 146f / 255f, 1) * intensity;
-            return new Task(playerTf, straightColor, Speed);
+            return new Task(playerTf, straightColor, Speed, animationIndex);
         }
 
         // キャラクターに渡され実行されるタスクのクラス
@@ -32,19 +33,26 @@ namespace Core.Enemy.TaskBased
             private Transform playerTf;
             private static readonly int EmissionColor = Shader.PropertyToID("_EmissionColor");
             private Color straightColor;
+            private int animationIndex;
 
             // コンストラクタ 引数は必要に応じて追加してください
-            public Task(Transform playerTf, Color straightColor, float speed)
+            public Task(Transform playerTf, Color straightColor, float speed, int animationIndex)
             {
                 this.speed = speed;
                 this.playerTf = playerTf;
                 this.straightColor = straightColor;
+                this.animationIndex = animationIndex;
             }
 
             // ゲーム中に呼び出されるタスク実行のメソッド
             // 引数enemyは行動主体
             public IEnumerator Call(TaskBasedEnemy enemy)
             {
+                // アニメーション処理
+                IAnimatable animatable = enemy.transform.GetChild(0).GetComponent<IAnimatable>();
+                animatable.OnAttack(animationIndex);
+                
+                // タスク処理
                 Straight straight = new Straight();
                 straight.Name = "Straight";
                 straight.Velocity = speed;
@@ -64,7 +72,7 @@ namespace Core.Enemy.TaskBased
             // 意図したものを除いて 複製元と複製先が同じ参照を持たないように注意してください
             public IEnemyTask Copy()
             {
-                return new Task(playerTf, straightColor, speed);
+                return new Task(playerTf, straightColor, speed, animationIndex);
             }
         }
     }
