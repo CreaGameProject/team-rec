@@ -31,10 +31,25 @@ namespace Core.Enemy.TaskBased
         {
 
         }
+        
+        protected void OnTriggerEnter(Collider other)
+        {
+            if (other.gameObject.CompareTag("Bullet"))
+            {
+                BulletObject bulletObject =  other.gameObject.GetComponent<BulletObject>();
+                Force colForce = bulletObject.Force;
+                if (colForce == Force.Player)
+                {
+                    Debug.Log("攻撃力" + bulletObject.bulletclass.AttackPoint + "のPlayerの弾が当たりました");
+                    Damage(bulletObject.bulletclass.AttackPoint, bulletObject);
+                }
+            }
+        }
 
         protected override void Kill(BulletObject bulletObject)
         {
             base.Kill(bulletObject);
+            // TODO: ゴールイベントの実装する
         }
 
         public void SetTasks(IEnumerable<IEnemyTask> tasks)
