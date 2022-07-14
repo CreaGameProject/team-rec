@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 2138677392}
-  m_IndirectSpecularColor: {r: 0.2328501, g: 0.2791309, b: 0.33519912, a: 1}
+  m_IndirectSpecularColor: {r: 0, g: 0, b: 0, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -82723,6 +82723,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3233893847219712575, guid: c54526a2046b05443980298dac872570,
         type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3233893847219712575, guid: c54526a2046b05443980298dac872570,
+        type: 3}
       propertyPath: m_StaticEditorFlags
       value: 4294967295
       objectReference: {fileID: 0}
@@ -107090,7 +107095,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9377c32a1c68cf843a27dbbc35514dbd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  razerParticles: {fileID: 0}
+  laserParticles: {fileID: 0}
 --- !u!1 &2095150395
 GameObject:
   m_ObjectHideFlags: 0
@@ -107189,7 +107194,7 @@ Light:
   m_Type: 1
   m_Shape: 0
   m_Color: {r: 1, g: 0.95686275, b: 0.8392157, a: 1}
-  m_Intensity: 2
+  m_Intensity: 2.16
   m_Range: 10
   m_SpotAngle: 30
   m_InnerSpotAngle: 21.802082
@@ -107750,11 +107755,6 @@ MonoBehaviour:
   _straightColor: {r: 0, g: 0, b: 0, a: 0}
   _homingColor: {r: 0, g: 0, b: 0, a: 0}
   body: {fileID: 876781733}
-  moveForceMultiplier: 0
-  yawTorqueMagnitude: 30
-  pitchTorqueMagnitude: 60
-  rollTorqueMagnitude: 30
-  restoringTorqueMagnitude: 100
   roll_decay: 0
   pitch_decay: 0
   roll_max: 0
