@@ -2,6 +2,7 @@
 using System.Linq;
 using Core.Enemy.TaskBased;
 using UnityEngine;
+using UnityEngine.Events;
 
 namespace Core.Stage
 {
@@ -49,9 +50,25 @@ namespace Core.Stage
                 var clone = Instantiate(_original, _position, _quaternion);
                 var component = clone.GetComponent<TaskBasedEnemy>();
                 component.SetTasks(_tasks);
+                BossEnemyCounter.AddEnemyCount(1);
+                clone.AddComponent<DestroyObserver>().onDestroyed
+                    .AddListener(BossEnemyCounter.DecreaseEnemy);
             }
 
             public float Time { get; set; }
+
+            /// <summary>
+            /// 敵オブジェクトがDestroyされることを検知
+            /// </summary>
+            private class DestroyObserver : MonoBehaviour
+            {
+                public UnityEvent onDestroyed = new UnityEvent();
+
+                private void OnDestroy()
+                {
+                    onDestroyed.Invoke();
+                }
+            }
         }
     }
 }

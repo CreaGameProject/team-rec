@@ -19,6 +19,16 @@ namespace Core.Enemy.TaskBased
             holder.transform.SetParent(marker.transform);
         }
 
+        [MenuItem("GameObject/TaskBasedEnemy/BossMarker", priority = 21)]
+        public static void BossMarker()
+        {
+            var marker = new GameObject("NewTaskBasedBossMarker");
+            var holder = new GameObject("TaskHolder");
+            var markerComp = marker.AddComponent<SummonTaskBasedBossMarker>();
+            var holderComp = holder.AddComponent<TaskHolder>();
+            holder.transform.SetParent(marker.transform);
+        }
+
         [MenuItem("GameObject/TaskBasedEnemy/TaskHolder", priority = 21)]
         public static void TaskHolder()
         {
