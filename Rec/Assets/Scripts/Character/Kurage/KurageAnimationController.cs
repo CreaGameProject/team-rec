@@ -54,8 +54,6 @@ public class KurageAnimationController : MonoBehaviour, IAnimatable
         {
             _isAttack = true;
             _animator.SetBool("isAttack", _isAttack);
-            
-            
         }
     }
 
