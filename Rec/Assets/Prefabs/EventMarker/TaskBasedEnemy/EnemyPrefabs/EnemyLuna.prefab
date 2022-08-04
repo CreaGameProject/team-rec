@@ -441,7 +441,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5077428862156506510}
   - component: {fileID: 5077428862156506511}
-  - component: {fileID: 5077428862156506497}
+  - component: {fileID: 2573593104117222018}
   m_Layer: 0
   m_Name: EnemyLuinaBody
   m_TagString: Untagged
@@ -456,7 +456,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5077428862156506496}
-  m_LocalRotation: {x: 0, y: -0.7071068, z: 0, w: 0.7071068}
+  m_LocalRotation: {x: 0, y: 0.7071068, z: 0, w: 0.7071068}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
@@ -464,7 +464,7 @@ Transform:
   - {fileID: 5077428862465741529}
   m_Father: {fileID: 5077428862879384401}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: -90, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 90, z: 0}
 --- !u!95 &5077428862156506511
 Animator:
   serializedVersion: 3
@@ -484,7 +484,7 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
---- !u!114 &5077428862156506497
+--- !u!114 &2573593104117222018
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -493,14 +493,14 @@ MonoBehaviour:
   m_GameObject: {fileID: 5077428862156506496}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a67fbee386dae28429e398057b704ad0, type: 3}
+  m_Script: {fileID: 11500000, guid: e2803f24fd47aba4a852aa81aa8cf960, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   body: {fileID: 5077428862465741531}
   deathParticle: {fileID: 5077428862482467483}
-  wireMaterial: {fileID: 2100000, guid: 30cea58b8f574df4fbf928d02780c218, type: 2}
-  bodyMatelial: {fileID: 2100000, guid: 9b72271d2a92b4c41868e56ef839f1f3, type: 2}
-  myIntensity: 1
+  meshDataObjectList: []
+  emissionColor: {r: 0, g: 7.817057, b: 67.86627, a: 1}
+  myIntensity: 3
   disolvePropotion: 0
 --- !u!1 &5077428862159193151
 GameObject:
@@ -888,7 +888,7 @@ GameObject:
   - component: {fileID: 5077428862465741528}
   m_Layer: 0
   m_Name: Body
-  m_TagString: Untagged
+  m_TagString: MeshData
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -6348,6 +6348,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3f46ad878ed0be748ac1f9ab46be162e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  bodyRenderer: {fileID: 0}
   hp: 3
   gaugePoint: 3
 --- !u!1 &5077428862908883771
