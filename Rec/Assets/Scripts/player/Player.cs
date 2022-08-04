@@ -287,6 +287,7 @@ public class Player : MonoBehaviour
                     {
                         if (!lockedEnemyList.Contains(enemyClass))
                         {
+                            Debug.Log("Lockon: !lockedEnemyList.Contains(enemyClass)"); //TODO:ここに到達していない
                             if (laserGaugeBuffer >= 20)
                             {
                                 laserGaugeBuffer -= 20;
