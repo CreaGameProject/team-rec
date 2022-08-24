@@ -106,7 +106,8 @@ public class ScoreUISystem : MonoBehaviour
 
     private void Destroy()
     {
-        stageClearCg.DOFade(0f, 1f);
+        stageClearCg.DOFade(0f, 1f)
+            .OnComplete(() => stageClearCg.gameObject.SetActive(false));
         scoreboard.SetActive(true);
         canvasGroup.alpha = 0;
         canvasGroup.DOFade(1f, 1f);
