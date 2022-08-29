@@ -169,16 +169,24 @@ namespace Core.Enemy.TaskBased
                 var cps = new List<Vector3> { transform.position };
                 cps.AddRange(ControlPoints);
 
+                foreach (var cp in cps)
+                {
+                    Debug.Log(cp);
+                }
+                
                 float t = 0;
+                // float dt = 0.1f;
                 float dt = UnityEngine.Time.deltaTime;
                 Vector3 prevPos = Trajectory(cps, t);
                 while (t < DurationTime)
                 {
                     t += dt;
-                    var df = Trajectory(cps, VelocityFunc(t)) - prevPos;
+                    var df = Trajectory(cps, VelocityFunc(t / DurationTime)) - prevPos;
                     transform.position += df;
+                    // dt = 0.1f;
                     dt = UnityEngine.Time.deltaTime;
                     prevPos += df;
+                    // yield return new WaitForSeconds(0.1f);
                     yield return null;
                 }
                 
