@@ -46,6 +46,7 @@ namespace Core.Enemy.TaskBased
      * 結論:これは抽象クラスにする
      * 制御点を用いた曲線・直線移動を後に実装する
      * エディタ拡張は後で考える
+     *   Component操作時の制御点自動生成・消去
      * 移動方法は内分点移動ではなく、差分による相対移動へ
      * 相対移動による累積誤差は、修正するパラメータを追加するか検討中
      */
@@ -53,11 +54,12 @@ namespace Core.Enemy.TaskBased
     // [AddComponentMenu("EnemyTask/MoveByControlPoints")]
     public abstract class MoveByControlPoints : EnemyTaskComponent
     {
-        [SerializeField] protected float durationTime;
+        [SerializeField] protected float durationTime = 2;
         [SerializeField] protected List<Transform> controlPoints;
         // [SerializeField] protected TrajectoryCurve trajectoryCurve;
         [SerializeField] protected VelocityCurve velocityCurve;
-
+        [SerializeField] protected float errorCorrectCoefficient = 0;
+        
         // protected enum TrajectoryCurve
         // {
         //     // 線形, エルミート, 2次ベジエ, 3次ベジエ, スプライン, Bスプライン
@@ -142,32 +144,40 @@ namespace Core.Enemy.TaskBased
             var velocityFunc = GenerateVelocityCurve(velocityCurve);
             var trajectory =  GenerateTrajectory();
             
-            return new Task(this.durationTime, controlPointsPos, velocityFunc, trajectory);
+            return new Task(this.durationTime, controlPointsPos, velocityFunc, trajectory, errorCorrectCoefficient);
         }
 
         private class Task : IEnemyTask
         {
-            private List<Vector3> ControlPoints;
-            private float DurationTime;
-            private Func<float, float> VelocityFunc;
-            private Func<IEnumerable<Vector3>, float, Vector3> Trajectory;
+            private List<Vector3> controlPoints;
+            private float durationTime = 2;
+            private Func<float, float> velocityFunc;
+            private Func<IEnumerable<Vector3>, float, Vector3> trajectory;
+            private float errorCorrectCoefficient;
             
             public Task(float durationTime,
                 IEnumerable<Vector3> controlPoints,
                 Func<float, float> velocityFunc,
-                Func<IEnumerable<Vector3>, float, Vector3> trajectory)
+                Func<IEnumerable<Vector3>, float, Vector3> trajectory,
+                float errorCorrectCoefficient)
             {
-                this.ControlPoints = controlPoints.ToList();
-                this.DurationTime = durationTime;
-                this.VelocityFunc = velocityFunc;
-                this.Trajectory = trajectory;
+                this.controlPoints = controlPoints.ToList();
+                this.durationTime = durationTime;
+                this.velocityFunc = velocityFunc;
+                this.trajectory = trajectory;
+                this.errorCorrectCoefficient = errorCorrectCoefficient;
             }
 
+            private Vector3 CorrectError(Vector3 x, Vector3 y)
+            {
+                return (1 - this.errorCorrectCoefficient) * x + this.errorCorrectCoefficient * y;
+            }
+            
             public IEnumerator Call(TaskBasedEnemy enemy)
             {
                 var transform = enemy.transform;
                 var cps = new List<Vector3> { transform.position };
-                cps.AddRange(ControlPoints);
+                cps.AddRange(controlPoints);
 
                 foreach (var cp in cps)
                 {
@@ -175,18 +185,26 @@ namespace Core.Enemy.TaskBased
                 }
                 
                 float t = 0;
-                // float dt = 0.1f;
                 float dt = UnityEngine.Time.deltaTime;
-                Vector3 prevPos = Trajectory(cps, t);
-                while (t < DurationTime)
+                Vector3 prevPos = trajectory(cps, t);
+                while (t < durationTime)
                 {
+                    // 敵座標取り出し
+                    var pos = transform.position;
+                    
+                    // t+dtの座標計算 -> tの座標との差分に変換してから加算
                     t += dt;
-                    var df = Trajectory(cps, VelocityFunc(t / DurationTime)) - prevPos;
-                    transform.position += df;
-                    // dt = 0.1f;
+                    var nextPos = trajectory(cps, velocityFunc(t / durationTime));
+                    var df = nextPos - prevPos;
+                    pos += df;
                     dt = UnityEngine.Time.deltaTime;
+                    
                     prevPos += df;
-                    // yield return new WaitForSeconds(0.1f);
+
+                    // 丸め誤差補正
+                    pos = CorrectError(pos, nextPos);
+                    
+                    transform.position = pos;
                     yield return null;
                 }
                 
@@ -195,7 +213,11 @@ namespace Core.Enemy.TaskBased
 
             public IEnemyTask Copy()
             {
-                return new Task(this.DurationTime, this.ControlPoints, this.VelocityFunc, this.Trajectory);
+                return new Task(this.durationTime,
+                    this.controlPoints,
+                    this.velocityFunc,
+                    this.trajectory,
+                    this.errorCorrectCoefficient);
             }
         }
     }
