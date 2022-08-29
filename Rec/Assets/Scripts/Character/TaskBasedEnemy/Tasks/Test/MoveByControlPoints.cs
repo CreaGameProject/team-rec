@@ -1,76 +1,195 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using System.Security.Cryptography.X509Certificates;
 using UnityEngine;
+using System;
+using NUnit.Framework;
 
-/*
+
 namespace Core.Enemy.TaskBased
 {
-    [AddComponentMenu("EnemyTask/MoveByControlPoints")]
-    public class MoveByControlPoints : EnemyTaskComponent
+    /*
+     * 考慮すべきポイント
+     * - キャラクターの移動開始点cp0は制御点に含まれない -> 経路関数の事前生成が困難
+     * - 上記を踏まえたうえで、ComponentからTaskに何を渡せばよいか
+     *   - 制御点座標 C(={cp1, cp2, ..., cpN})
+     *   - 経路生成関数 f_trajectory: {cp0} + C -> ([0, 1] -> (x, y, z))
+     *     - 曲線の種類・パラメータのみに依る
+     *     - 関数自体はstaticで定義(本質的にはインスタンス変数の情報を使わないはず)
+     *   - 速度変換関数 f_velocity: [0, 1] -> [0, 1]
+     *
+     * このクラスの必要性
+     * - 制御点移動と連続移動、曲線移動の需要をごっちゃにして考えていないか
+     * - 本当に作るべきものは何か　そもそもそれぞれが必要な場面は何なのか
+     * - 必要なケース
+     *   - 制御点移動
+     *     - 移動先を視覚的に明確にしたい（数値指定移動だと、直感的にどこまで移動するかわからない）
+     *   - 連続移動
+     *     - 長時間にわたって画面にいるキャラクタの移動の管理を楽に
+     *     - 一つの速度曲線を複数の移動に対して割り当てられる（複数の移動がある場合もシームレスに）
+     *   - 曲線移動
+     *     - 移動方法にバラエティを持たす
+     *
+     * - 改築案
+     *   - 制御点を用いる移動アーキテクチャを基底クラスにして、連続移動・曲線移動を派生クラスとして実装する
+     *
+     * - 基本方針
+     *   - これまで作ってきたもの、これから作るものと必ず併用できるように
+     *   - 具体的なユースケースを用意しておく
+     *
+     * - 現在の需要
+     *   - プレイヤーと一緒にステージを移動するボス
+     *     - 制御点移動 + 連続移動 + 曲線移動
+     *     - 全部必要やんけ
+     *     - これまでは、全てを一つのタスクでやる設定だった。
+     *     - これを別のユースケースも考慮したうえで上手く分割することはできないか
+     *
+     * 結論:これは抽象クラスにする
+     * 制御点を用いた曲線・直線移動を後に実装する
+     * エディタ拡張は後で考える
+     * 移動方法は内分点移動ではなく、差分による相対移動へ
+     * 相対移動による累積誤差は、修正するパラメータを追加するか検討中
+     */
+    
+    // [AddComponentMenu("EnemyTask/MoveByControlPoints")]
+    public abstract class MoveByControlPoints : EnemyTaskComponent
     {
-        [SerializeField] private float durationTime;
-        [SerializeField] private List<Transform> controlPoints;
-        [SerializeField] private Camera camera;
+        [SerializeField] protected float durationTime;
+        [SerializeField] protected List<Transform> controlPoints;
+        // [SerializeField] protected TrajectoryCurve trajectoryCurve;
+        [SerializeField] protected VelocityCurve velocityCurve;
 
-        public override IEnemyTask ToEnemyTask()
+        // protected enum TrajectoryCurve
+        // {
+        //     // 線形, エルミート, 2次ベジエ, 3次ベジエ, スプライン, Bスプライン
+        //     Linear, Hermite, QuadraticBezier, CubicBezier, Spline, BSpline
+        // }
+
+        protected enum VelocityCurve
         {
-
-            return new Task();
+            Linear, InCubic, OutCubic, InOutCubic
         }
 
-        // /// <summary>
-        // /// 制御点をシリアライズするためのクラス
-        // /// </summary>
-        // [System.Serializable] private class ControlPoint
+        // protected Func<float, Vector3> LinearTrajectory(IEnumerable<Vector3> controlPointPositions)
         // {
-        //     public Transform position;
-        //     public float coef;
+        //     var cps =  controlPointPositions.ToList();
+        //     
+        //     // 制御転換の距離を計算
+        //     var accumDists = new List<float>();
+        //     accumDists.Add(0.0f);
+        //     for (int i = 1; i < cps.Count; i++)
+        //     {
+        //         accumDists.Add(accumDists[i-1] + (cps[i] - cps[i-1]).magnitude);
+        //     }
+        //
+        //     // 制御転換の距離を合計が1になるようにスケーリング
+        //     var sumDists = accumDists.Last();
+        //     var scaledAccumDists = accumDists.Select(x => x / sumDists).ToList();
+        //     
+        //     // 返す関数
+        //     Vector3 Fn(float t)
+        //     {
+        //         int idx;
+        //         for (idx = 1; idx < scaledAccumDists.Count(); idx++)
+        //         {
+        //             if (t < scaledAccumDists[idx])
+        //             {
+        //                 break;
+        //             }
+        //         }
+        //
+        //         var m = t - scaledAccumDists[idx - 1];
+        //         var n = scaledAccumDists[idx] - t;
+        //
+        //         return (cps[idx - 1] * m + cps[idx] * n) / (m + n);
+        //     }
+        //
+        //     return Fn;
         // }
+
+        protected abstract Func<IEnumerable<Vector3>, float, Vector3> GenerateTrajectory();
+
+        // 定義域[0, 1]に対して値域[0, 1]のベロシティカーブf_velocityを作る
+        private Func<float, float> GenerateVelocityCurve(VelocityCurve c)
+        {
+            Func<float, float> fn;
+
+            switch (c)
+            {
+                case VelocityCurve.Linear:
+                    fn = (float x) => x;
+                    break;
+                case VelocityCurve.InCubic:
+                    fn = (float x) => Mathf.Pow(x, 3);
+                    break;
+                case VelocityCurve.OutCubic:
+                    fn = (float x) => 1 - Mathf.Pow(1 - x, 3);
+                    break;
+                case VelocityCurve.InOutCubic:
+                    fn = (float x) => x < 0.5 
+                        ? 4 * Mathf.Pow(x, 3) 
+                        : 1 - Mathf.Pow(-2 * x + 2, 3) / 2;
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
+
+            return fn;
+        }
+        
+        public override IEnemyTask ToEnemyTask()
+        {
+            var controlPointsPos = this.controlPoints.Select(x => x.position);
+            var velocityFunc = GenerateVelocityCurve(velocityCurve);
+            var trajectory =  GenerateTrajectory();
+            
+            return new Task(this.durationTime, controlPointsPos, velocityFunc, trajectory);
+        }
 
         private class Task : IEnemyTask
         {
-            // コントロールポイントリスト
-            private float durationTime;
-            private List<Vector3> controlPoints;
-
-            private List<float> sectionTimes;
-
-            public Task(float durationTime, IEnumerable<Vector3> controlPoints)
+            private List<Vector3> ControlPoints;
+            private float DurationTime;
+            private Func<float, float> VelocityFunc;
+            private Func<IEnumerable<Vector3>, float, Vector3> Trajectory;
+            
+            public Task(float durationTime,
+                IEnumerable<Vector3> controlPoints,
+                Func<float, float> velocityFunc,
+                Func<IEnumerable<Vector3>, float, Vector3> trajectory)
             {
-                this.controlPoints = controlPoints.ToList();
-                this.durationTime = durationTime;
+                this.ControlPoints = controlPoints.ToList();
+                this.DurationTime = durationTime;
+                this.VelocityFunc = velocityFunc;
+                this.Trajectory = trajectory;
             }
 
             public IEnumerator Call(TaskBasedEnemy enemy)
             {
-                var camera = GameObject.FindGameObjectWithTag("MainCamera");
-                enemy.transform.SetParent(camera.transform);
-                controlPoints.Insert(0, enemy.transform.localPosition);
-                var sqrDistances = controlPoints.Skip(1).Zip(controlPoints.Take(controlPoints.Count() - 1), (x, y) => (x - y).sqrMagnitude);
-                var scale = durationTime / sqrDistances.Sum();
+                var transform = enemy.transform;
+                var cps = new List<Vector3> { transform.position };
+                cps.AddRange(ControlPoints);
+
+                float t = 0;
+                float dt = UnityEngine.Time.deltaTime;
+                Vector3 prevPos = Trajectory(cps, t);
+                while (t < DurationTime)
+                {
+                    t += dt;
+                    var df = Trajectory(cps, VelocityFunc(t)) - prevPos;
+                    transform.position += df;
+                    dt = UnityEngine.Time.deltaTime;
+                    prevPos += df;
+                    yield return null;
+                }
                 
-                sectionTimes = sqrDistances.Select(x => x * scale).ToList();
-
-
-
-                var pos = this.controlPoints[0];
-                enemy.transform.localPosition = pos;
-
                 yield break;
-            }
-
-            private Vector3 MoveScheduler(float t)
-            {
-                var sectionIndex = sectionTimes.Aggregate((n, elem) => )
             }
 
             public IEnemyTask Copy()
             {
-                return new Task();
+                return new Task(this.DurationTime, this.ControlPoints, this.VelocityFunc, this.Trajectory);
             }
         }
     }
 }
-*/
