@@ -11,6 +11,8 @@ namespace Core.Enemy.TaskBased
     // AIデザインのためにコンポーネントとしてアタッチされるクラス
     public class MoveLinearByCP: MoveByControlPoints
     {
+        private List<GameObject> handledCp;
+        
         protected override Func<IEnumerable<Vector3>, float, Vector3> GenerateTrajectory()
         {
             Vector3 Fn(IEnumerable<Vector3> cps, float t)
@@ -54,5 +56,51 @@ namespace Core.Enemy.TaskBased
 
             return Fn;
         }
+
+        /*
+         * やりたいこと
+         * - 制御点を自動生成
+         *   - Resetメソッドで生成
+         * - (できたら)コンポーネント削除時にコントロールポイント削除
+         *   - OnDestroyでできるかと思ったけどダメだった
+         * - 制御点をGizmoで可視化
+         *   - OnDrawGizmosでできた
+         * - 移動経路をGizmoで可視化
+         *   - 曲線の表示方法は派生クラスに依存
+         *   - 各派生クラスで表示を行う処理を記述する必要がある。
+         * 
+         * 改変策
+         * - 基底クラスのパラメータ：制御点群→ターゲット座標
+         *   - 中間点・制御点は派生クラスで定義
+         * - 始点指定のパラメータ追加
+         *   - 設定された時に軌跡の表示を行う。
+         */
+        public void Reset()
+        {
+            if (handledCp != null) return;
+
+            var o = gameObject;
+            var defaultCp = new GameObject("cp (Linear: target)")
+            {
+                transform =
+                {
+                    position = o.transform.position,
+                    parent = o.transform
+                }
+            };
+            defaultCp.AddComponent<ControlPointForMoveTasks>();
+            
+            if (this.controlPoints == null)
+            {
+                this.controlPoints = new List<Transform>();
+            }
+            this.controlPoints.Add(defaultCp.transform);
+            
+            handledCp = new List<GameObject>()
+            {
+                defaultCp
+            };
+        }
+
     }
 }
