@@ -54,8 +54,11 @@ namespace Core.Enemy.TaskBased
     // [AddComponentMenu("EnemyTask/MoveByControlPoints")]
     public abstract class MoveByControlPoints : EnemyTaskComponent
     {
+        // 基底クラスでは制御点はシリアライズしない
         [SerializeField] protected float durationTime = 2;
-        [SerializeField] protected List<Transform> controlPoints;
+        // [SerializeField] protected List<Transform> controlPoints;
+        // [SerializeField] public Transform target;
+        [SerializeField, Label("start (optional)")] public Transform start;
         // [SerializeField] protected TrajectoryCurve trajectoryCurve;
         [SerializeField] protected VelocityCurve velocityCurve;
         [SerializeField] protected float errorCorrectCoefficient = 0;
@@ -70,45 +73,14 @@ namespace Core.Enemy.TaskBased
         {
             Linear, InCubic, OutCubic, InOutCubic
         }
-
-        // protected Func<float, Vector3> LinearTrajectory(IEnumerable<Vector3> controlPointPositions)
-        // {
-        //     var cps =  controlPointPositions.ToList();
-        //     
-        //     // 制御転換の距離を計算
-        //     var accumDists = new List<float>();
-        //     accumDists.Add(0.0f);
-        //     for (int i = 1; i < cps.Count; i++)
-        //     {
-        //         accumDists.Add(accumDists[i-1] + (cps[i] - cps[i-1]).magnitude);
-        //     }
-        //
-        //     // 制御転換の距離を合計が1になるようにスケーリング
-        //     var sumDists = accumDists.Last();
-        //     var scaledAccumDists = accumDists.Select(x => x / sumDists).ToList();
-        //     
-        //     // 返す関数
-        //     Vector3 Fn(float t)
-        //     {
-        //         int idx;
-        //         for (idx = 1; idx < scaledAccumDists.Count(); idx++)
-        //         {
-        //             if (t < scaledAccumDists[idx])
-        //             {
-        //                 break;
-        //             }
-        //         }
-        //
-        //         var m = t - scaledAccumDists[idx - 1];
-        //         var n = scaledAccumDists[idx] - t;
-        //
-        //         return (cps[idx - 1] * m + cps[idx] * n) / (m + n);
-        //     }
-        //
-        //     return Fn;
-        // }
-
+        
+        // 曲線の種類により、始点終点を含めた制御点（座標列）の与え方が変わる？
         protected abstract Func<IEnumerable<Vector3>, float, Vector3> GenerateTrajectory();
+
+        // // ↑わざわざ関数を返される必要ある? f(instance, t) → (x, y, z) というメソッドでいいような
+        // // いや、よくない。TaskクラスにMonoBehaviour持たせるわけにはいかん。
+        // // cpを基底クラスを通さずにやるならTaskComponentの派生クラス内でTaskクラスも継承しないといけないけど、めんどいし今よりも汚い構造になりそう。
+        // protected abstract Vector3 Trajectory(float t);
 
         // 定義域[0, 1]に対して値域[0, 1]のベロシティカーブf_velocityを作る
         private Func<float, float> GenerateVelocityCurve(VelocityCurve c)
@@ -138,9 +110,15 @@ namespace Core.Enemy.TaskBased
             return fn;
         }
         
+        // 制御点列を得る
+        protected abstract IEnumerable<Vector3> ControlPoints { get; }
+
+        // 目的地点を得る
+        public abstract Transform TargetPoint { get; }
+
         public override IEnemyTask ToEnemyTask()
         {
-            var controlPointsPos = this.controlPoints.Select(x => x.position);
+            var controlPointsPos = this.ControlPoints;
             var velocityFunc = GenerateVelocityCurve(velocityCurve);
             var trajectory =  GenerateTrajectory();
             
@@ -168,6 +146,7 @@ namespace Core.Enemy.TaskBased
                 this.errorCorrectCoefficient = errorCorrectCoefficient;
             }
 
+            // 正確な計算上の位置と、実際の差分計算で得られた位置とを補間する
             private Vector3 CorrectError(Vector3 x, Vector3 y)
             {
                 return (1 - this.errorCorrectCoefficient) * x + this.errorCorrectCoefficient * y;
@@ -213,7 +192,8 @@ namespace Core.Enemy.TaskBased
 
             public IEnemyTask Copy()
             {
-                return new Task(this.durationTime,
+                return new Task(
+                    this.durationTime,
                     this.controlPoints,
                     this.velocityFunc,
                     this.trajectory,

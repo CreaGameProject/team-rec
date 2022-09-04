@@ -11,6 +11,7 @@ namespace Core.Enemy.TaskBased
     // AIデザインのためにコンポーネントとしてアタッチされるクラス
     public class MoveLinearByCP: MoveByControlPoints
     {
+        [SerializeField] private List<Transform> controlPoints;
         private List<GameObject> handledCp;
         
         protected override Func<IEnumerable<Vector3>, float, Vector3> GenerateTrajectory()
@@ -57,6 +58,16 @@ namespace Core.Enemy.TaskBased
             return Fn;
         }
 
+        protected override IEnumerable<Vector3> ControlPoints
+        {
+            get { return this.controlPoints.Select(x => x.position); }
+        }
+
+        public override Transform TargetPoint
+        {
+            get { return this.controlPoints.Last(); }
+        }
+
         /*
          * やりたいこと
          * - 制御点を自動生成
@@ -75,10 +86,11 @@ namespace Core.Enemy.TaskBased
          * - 始点指定のパラメータ追加
          *   - 設定された時に軌跡の表示を行う。
          */
+        
         public void Reset()
         {
             if (handledCp != null) return;
-
+        
             var o = gameObject;
             var defaultCp = new GameObject("cp (Linear: target)")
             {
@@ -88,7 +100,7 @@ namespace Core.Enemy.TaskBased
                     parent = o.transform
                 }
             };
-            defaultCp.AddComponent<ControlPointForMoveTasks>();
+            // defaultCp.AddComponent<ControlPointForMoveTasks>();
             
             if (this.controlPoints == null)
             {
@@ -102,5 +114,22 @@ namespace Core.Enemy.TaskBased
             };
         }
 
+        public void OnDrawGizmos()
+        {
+            var prevPoint = this.controlPoints.First().position;
+            if (start != null)
+            {
+                prevPoint = start.position;
+            }
+            
+            Gizmos.color = Color.magenta;
+            foreach (var controlPoint in controlPoints)
+            {
+                var position = controlPoint.position;
+                Gizmos.DrawSphere(position, 0.1f);
+                Gizmos.DrawLine(prevPoint, position);
+                prevPoint = position;
+            }
+        }
     }
 }
