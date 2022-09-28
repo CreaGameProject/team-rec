@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using DG.Tweening;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -13,7 +14,8 @@ public class ScoreUISystem : MonoBehaviour
     /// </summary>
     private bool canInput = false;
 
-    [Header("ゲームオブジェクト")]
+    [Header("ゲームオブジェクト")] 
+    [SerializeField] private CanvasGroup stageClearCg;
     [SerializeField] private GameObject scoreboard;
     [SerializeField] private GameObject splash_obj1;
     [SerializeField] private GameObject splash_obj2;
@@ -40,6 +42,7 @@ public class ScoreUISystem : MonoBehaviour
     private void OnEnable()
     {
         canvasGroup.alpha = 1;
+        Cursor.visible = true;
         // 背景素材を読み込む
         int stage = Score.Stage;
         switch (stage)
@@ -95,25 +98,19 @@ public class ScoreUISystem : MonoBehaviour
     {
         if (Input.GetMouseButtonDown(0))
         {
-            StartCoroutine(Destroy());
+            canInput = false;
+            Destroy();
         }
     }
 
 
-    private IEnumerator Destroy()
+    private void Destroy()
     {
-        while (true)
-        {
-            canvasGroup.alpha -= 0.01f;
-            
-            if (canvasGroup.alpha <= 0)
-            {
-                scoreboard.SetActive(true);
-                break;
-            }
-
-            yield return null;
-        }
+        stageClearCg.DOFade(0f, 1f)
+            .OnComplete(() => stageClearCg.gameObject.SetActive(false));
+        scoreboard.SetActive(true);
+        canvasGroup.alpha = 0;
+        canvasGroup.DOFade(1f, 1f);
     }
 
 
