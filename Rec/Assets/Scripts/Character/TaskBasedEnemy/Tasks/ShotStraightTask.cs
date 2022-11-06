@@ -52,6 +52,9 @@ namespace Core.Enemy.TaskBased
                 IAnimatable animatable = enemy.transform.GetChild(0).GetComponent<IAnimatable>();
                 animatable.OnAttack(animationIndex);
                 
+                // 音再生処理
+                SystemSoundManager.Instance.PlaySE("Alpha_EnemyShot");
+                
                 // タスク処理
                 Straight straight = new Straight();
                 straight.Name = "Straight";
