@@ -26,8 +26,6 @@ public class TitleBackground : MonoBehaviour
         MoveDown1.position = Vector3.zero;
         MoveUp1.position = new Vector3(0, -height, 0);
         MoveDown1.position = new Vector3(0, height, 0);
-        
-        MusicManager.Instance.PlayBGM("BGM_Title");
     }
 
     // Update is called once per frame
