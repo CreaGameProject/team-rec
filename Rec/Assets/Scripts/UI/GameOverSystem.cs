@@ -20,6 +20,7 @@ public class GameOverSystem : MonoBehaviour
     {
         SystemSoundManager.Instance.PlaySE("SE_GameOver");
         StartCoroutine(GameOver(60));
+        StartCoroutine(PlayGameOverBGMAsync(4f));
     }
 
     /// <summary>
@@ -50,6 +51,15 @@ public class GameOverSystem : MonoBehaviour
 
             yield return null;
         }
+    }
+
+
+    private IEnumerator PlayGameOverBGMAsync(float delay)
+    {
+        MusicManager.Instance.StopBGM();
+        yield return new WaitForSeconds(delay);
+        
+        MusicManager.Instance.PlayBGM("BGM_GameOver");
     }
 
 
