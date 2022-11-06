@@ -18,6 +18,7 @@ public class GameOverSystem : MonoBehaviour
     /// </summary>
     private void OnEnable()
     {
+        SystemSoundManager.Instance.PlaySE("SE_GameOver");
         StartCoroutine(GameOver(60));
     }
 
