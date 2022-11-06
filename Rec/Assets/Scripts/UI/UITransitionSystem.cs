@@ -51,6 +51,7 @@ public class UITransitionSystem : MonoBehaviour
     /// </summary>
     public void CursorOn()
     {
+        SystemSoundManager.Instance.PlaySE("UI_Select");
         switch (gameObject.name)
         {
             case "Stage1":
@@ -96,6 +97,7 @@ public class UITransitionSystem : MonoBehaviour
         // タイトル～
         if (WindowTransitionData.Transition == WindowTransition.Title)
         {
+            SystemSoundManager.Instance.PlaySE("UI_Button");
             WindowTransitionData.Transition = WindowTransition.MainMenu;
             StartCoroutine(OpenWindow(MainMenuWindow, waitFrame));
             StartCoroutine(CloseWindow(TitleWindow, waitFrame));
@@ -104,6 +106,7 @@ public class UITransitionSystem : MonoBehaviour
         // メインメニュー～
         else if (WindowTransitionData.Transition == WindowTransition.MainMenu)
         {
+            SystemSoundManager.Instance.PlaySE("UI_Button");
             string name = this.gameObject.name;
             Debug.Log(name);
             if (name == "NewGame")
@@ -146,22 +149,26 @@ public class UITransitionSystem : MonoBehaviour
             string name = this.gameObject.name;
             if (name == "Stage1")
             {
+                SystemSoundManager.Instance.PlaySE("UI_Button");
                 // Stage1をロードする
                 WindowTransitionData.Transition = WindowTransition.InGame;
                 StartCoroutine(frontGround.FadeTransition(fadeTime, true, "TestStage YotoOda2"));
             }
             else if (name == "Stage2")
             {
+                SystemSoundManager.Instance.PlaySE("UI_Button");
                 // Stage2をロードする
                 WindowTransitionData.Transition = WindowTransition.InGame;
             }
             else if (name == "Stage3")
             {
+                SystemSoundManager.Instance.PlaySE("UI_Button");
                 // Stage3をロードする
                 WindowTransitionData.Transition = WindowTransition.InGame;
             }
             else if (name == "Back")
             {
+                SystemSoundManager.Instance.PlaySE("UI_Cancel");
                 // 1つ前の画面に戻る
                 WindowTransitionData.Transition = WindowTransition.MainMenu;
                 StartCoroutine(OpenWindow(MainMenuWindow, waitFrame));
@@ -179,6 +186,7 @@ public class UITransitionSystem : MonoBehaviour
             string name = this.gameObject.name;
             if (name == "Back")
             {
+                SystemSoundManager.Instance.PlaySE("UI_Cancel");
                 if (WindowTransitionData._DefaultUIWindow == DefaultUIWindow.Main)
                 {
                     WindowTransitionData.Transition = WindowTransition.MainMenu;
@@ -207,6 +215,7 @@ public class UITransitionSystem : MonoBehaviour
             string name = this.gameObject.name;
             if (name == "Option")
             {
+                SystemSoundManager.Instance.PlaySE("UI_Button");
                 // オプション画面を開く
                 WindowTransitionData.Transition = WindowTransition.Option;
                 WindowTransitionData._DefaultUIWindow = DefaultUIWindow.Pause;
@@ -215,6 +224,7 @@ public class UITransitionSystem : MonoBehaviour
             }
             else if (name == "Quit")
             {
+                SystemSoundManager.Instance.PlaySE("UI_Cancel");
                 // タイトルをロードする
                 Time.timeScale = 1.0f;
                 WindowTransitionData.Transition = WindowTransition.Title;
@@ -233,11 +243,13 @@ public class UITransitionSystem : MonoBehaviour
             Debug.Log(name);
             if (name == "Retry")
             {
+                SystemSoundManager.Instance.PlaySE("UI_Button");
                 // ステージをリトライする（同じシーンをリロードする）
                 StartCoroutine(gameOverSystem.LoadScene(60, "Retry"));
             }
             else if (name == "Quit")
             {
+                SystemSoundManager.Instance.PlaySE("UI_Cancel");
                 // タイトルをロードする
                 StartCoroutine(gameOverSystem.LoadScene(60, "Title"));
             }
