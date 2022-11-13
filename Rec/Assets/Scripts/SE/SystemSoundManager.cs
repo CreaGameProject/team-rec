@@ -5,7 +5,7 @@ using UnityEngine;
 public class SystemSoundManager : SingletonMonoBehaviour<SystemSoundManager>
 {
     private const string SE_VOLUME_KEY = "SE_VOLUME_KEY";
-    private const float SE_VOLUME_DEFULT = 1.0f;
+    private const float SE_VOLUME_DEFULT = 0.5f;
 
     private Dictionary<string, AudioClip> seDictionary;
 

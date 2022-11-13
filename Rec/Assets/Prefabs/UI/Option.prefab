@@ -1278,6 +1278,7 @@ GameObject:
   m_Component:
   - component: {fileID: 887419763707093112}
   - component: {fileID: 887419763707093113}
+  - component: {fileID: 9025509805456570348}
   m_Layer: 9
   m_Name: SE
   m_TagString: Untagged
@@ -1351,12 +1352,25 @@ MonoBehaviour:
   m_HandleRect: {fileID: 887419763945137935}
   m_Direction: 0
   m_MinValue: 0
-  m_MaxValue: 100
+  m_MaxValue: 1
   m_WholeNumbers: 0
-  m_Value: 40
+  m_Value: 0.5
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls: []
+--- !u!114 &9025509805456570348
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 887419763707093115}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6d5dbd4ea4e64b95947fdad8a4d23931, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  slider: {fileID: 887419763707093113}
 --- !u!1 &887419763802386317
 GameObject:
   m_ObjectHideFlags: 0
@@ -1367,6 +1381,7 @@ GameObject:
   m_Component:
   - component: {fileID: 887419763802386306}
   - component: {fileID: 887419763802386307}
+  - component: {fileID: 7541811818980666286}
   m_Layer: 9
   m_Name: BGM
   m_TagString: Untagged
@@ -1440,12 +1455,25 @@ MonoBehaviour:
   m_HandleRect: {fileID: 887419762961580919}
   m_Direction: 0
   m_MinValue: 0
-  m_MaxValue: 100
+  m_MaxValue: 1
   m_WholeNumbers: 0
-  m_Value: 40
+  m_Value: 0.5
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls: []
+--- !u!114 &7541811818980666286
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 887419763802386317}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f532f6523614442ea5749c5cda021d31, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  slider: {fileID: 887419763802386307}
 --- !u!1 &887419763825301665
 GameObject:
   m_ObjectHideFlags: 0
@@ -2042,6 +2070,10 @@ MonoBehaviour:
   UIStageObj1: {fileID: 0}
   UIStageObj2: {fileID: 0}
   UIStageObj3: {fileID: 0}
+  prev_backImg: {fileID: 0}
+  prev_frontImg: {fileID: 0}
+  backImg: {fileID: 0}
+  frontImg: {fileID: 0}
   gameOverSystem: {fileID: 0}
   frontGround: {fileID: 0}
   waitFrame: 60

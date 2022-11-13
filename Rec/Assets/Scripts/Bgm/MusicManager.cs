@@ -6,7 +6,7 @@ using UnityEngine;
 public class MusicManager : SingletonMonoBehaviour<MusicManager>
 {
     private const string BGM_VOLUME_KEY = "SE_VOLUME_KEY";
-    private const float BGM_VOLUME_DEFULT = 1.0f;
+    private const float BGM_VOLUME_DEFULT = 0.5f;
 
     public const float BGM_FADE_SPEED_RATE_HIGH = 0.9f;
     public const float BGM_FADE_SPEED_RATE_LOW = 0.3f;
